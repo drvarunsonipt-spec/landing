@@ -123,7 +123,7 @@
     var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
     // Static blend on touch / reduced-motion — a scroll-driven full-screen
     // gradient repaint is a major cost on phones. Desktop keeps the scroll travel.
-    if (reduced || !finePointer) p = 0.4;
+    if (reduced) p = 0.4;
     var seg = p * (stops.length - 1);
     var i = Math.min(stops.length - 2, Math.floor(seg));
     var t = seg - i;
@@ -136,8 +136,8 @@
     if (ang !== _g.ang) { doc.style.setProperty("--g-angle", ang); _g.ang = ang; }
   }
   function initGradient() {
-    if (finePointer && !reduced) { onScroll(gradientNow); }  // scroll-interpolated on desktop
-    else { gradientNow(); }                                   // set once, static, on touch — no per-scroll repaint
+    if (!reduced) { onScroll(gradientNow); }  // scroll-interpolated (desktop + touch)
+    else { gradientNow(); }                    // set once, static, for reduced-motion
   }
 
   /* ---------- header: glass + hide on scroll down ---------- */
