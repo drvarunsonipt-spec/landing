@@ -1,82 +1,72 @@
-# Dr. Varun Soni (PT) — Online Physiotherapy Landing Page
+# Dr. Varun Soni (PT) — Online Physiotherapy · **V3 "Liquid Glass"**
 
-A fast, self-contained, single-page marketing website for an online physiotherapy
-practice. No build step, no backend, no frameworks — just three files you can host
-on any static host.
+V2's structure and features wearing a liquid-glass skin: frosted translucent surfaces with specular top edges, hover shine sweeps, and a site-wide field of slowly morphing color blobs glowing through every pane. Everything else — scroll-driven animation, custom-crafted iconography,
+real photography, and a WhatsApp **appointment booker** — still 100% static
+(no build step, no backend, no frameworks).
 
-**Design system:** *Clinical Premium* — deep navy `#16255A` + teal `#2E8B8F` on an
-off-white canvas, with red reserved strictly for anatomy highlights. Typeset in
-Sora + Inter, with a single Fraunces-italic accent.
+## What's new vs V2 (`../ProjectV2`)
 
----
+- **Liquid glass surfaces**: every card, chip, button, header, band and the mobile menu is frosted (`backdrop-filter: blur(24px) saturate(175%)`) with specular 1px highlights; solid-color fallback via `@supports` for old browsers.
+- **Morphing blob field**: four theme-tinted radial blobs (teal/sapphire/violet/mint) drift and morph behind the glass, site-wide.
+- **Shine sweeps**: a light band sweeps across cards on hover.
+- **Chromatic scroll gradient**: the scroll-driven background now travels ink → sapphire → teal → violet (dark) / porcelain → aqua → lilac → mint (light).
+
+## Inherited from V2
+
+| Area | V2 |
+|---|---|
+| **Animations** | Word-by-word hero headline, aurora background, scroll-reveal variants (fade/slide/zoom/blur/clip), photo parallax, drawing step-line, floating glass chips, hero 3D tilt (desktop), magnetic buttons, credential marquee, scroll-progress bar |
+| **Spine scrollspy** | Vertebra-shaped section dots on the right edge (desktop) — the brand motif as navigation |
+| **Icons** | Fully redesigned custom SVG family — anatomical spine/knee/ACL/neck diagrams + Olympic-pictogram people (built & iterated in `assets/icon-lab.html`) |
+| **Photos** | Real Unsplash photography (license-free): hero home session, home stretching, hands-on knee assessment (`assets/img/`) |
+| **Book an Appointment** | Name + date (past dates blocked) + tappable time slots + issue description → opens WhatsApp with the request pre-filled. **Live WhatsApp-style preview bubble** shows the exact message as you type |
+| **Quick Enquiry** | Second tab keeps the V1-style enquiry form (also → WhatsApp) |
+| **Mobile UX** | Fullscreen radial menu, hide-on-scroll header, sticky WhatsApp + Book bar, safe-area aware |
+| **Theming** | **Dark mode by default** with a sun/moon toggle in the header (persisted in `localStorage`, `?theme=light\|dark` URL override, smooth cross-fade). Both themes use a **scroll-dependent gradient backdrop** — the page background interpolates through a 5-stop color journey as you scroll (ink → navy → teal depths → indigo in dark; porcelain → teal wash → periwinkle in light) |
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `index.html` | All page markup + inline SVG icons/illustrations |
-| `styles.css` | Full design system, layout, responsive rules, animations |
-| `script.js`  | Sticky header, reveal-on-scroll, FAQ accordion, timeline, mobile CTA bar, form → WhatsApp handoff |
-| `assets/favicon.svg` | Browser-tab icon (the illuminated-spine logomark) |
-| `assets/og-image.png` | Social-share preview image (1200×630, referenced by the meta tags) |
-| `assets/og-image.svg` | Editable source for the share image (regenerate the PNG if you change it) |
+- `index.html` — markup + inline SVG sprite (all icons)
+- `styles.css` — design system + motion system
+- `script.js` — rAF scroll engine, spine nav, tilt/parallax/magnetic, carousel, tabs, forms
+- `assets/img/` — photos (Unsplash license, free for commercial use)
+- `assets/icon-lab.html` — the icon workshop: open it in a browser to view/edit every icon
+- `assets/favicon.svg`, `assets/og-image.png`
 
----
-
-## Preview locally
-
-Because the page loads Google Fonts, open it through a local web server (not by
-double-clicking the file):
+## Run locally
 
 ```bash
-cd Project
+cd ProjectV2
 python -m http.server 8000
-# then visit http://localhost:8000
+# → http://localhost:8000
 ```
-
-Any static server works (`npx serve`, VS Code "Live Server", etc.).
-
----
 
 ## Deploy
 
-It's plain static files — drop the whole `Project` folder onto any of:
-
-- **Netlify** — drag-and-drop the folder at app.netlify.com/drop
-- **Vercel** — `vercel` in the folder, or import the repo
-- **GitHub Pages** — push and enable Pages on the branch/folder
-- **Cloudflare Pages / Firebase Hosting / any web host** — upload as-is
-
-No environment variables or build command are needed.
-
----
+Static files — drag the folder to Netlify Drop, run `vercel` in it, or upload to
+any web host. Nothing to configure.
 
 ## Customize
 
-Everything is plain HTML/CSS/JS — search-and-replace friendly.
+- **WhatsApp number**: replace `919680049176` in `index.html` (12 links) and the
+  `WA` constant at the top of `script.js`.
+- **Time slots**: edit the `SLOTS` array in `script.js`.
+- **Colors/spacing**: design tokens at the top of `styles.css` — constants in `:root`,
+  light theme in `:root, [data-theme="light"]`, dark theme in `[data-theme="dark"]`.
+- **Scroll gradient**: edit the `GRADIENTS` palettes (5 stops × 3 colors per theme)
+  at the top of `script.js`.
+- **Icons**: tweak in `assets/icon-lab.html`, then copy the `<symbol>` into the
+  sprite at the top of `index.html`.
 
-**Phone / WhatsApp number** — the number appears in `index.html` (`wa.me/919680049176`
-links, the big number in the enquiry section, and the footer) and once in
-`script.js` (`WA_NUMBER`). Replace `919680049176` everywhere to change it
-(`91` = India country code).
+## Engineering notes
 
-**Colors** — edit the CSS custom properties in the `:root { ... }` block at the top
-of `styles.css` (e.g. `--navy`, `--teal`, `--accent-red`).
-
-**Content** — service cards, testimonials, FAQ, and credentials are all literal text
-in `index.html`. Edit in place.
-
-**The enquiry form** — by design it needs **no backend**: on submit it validates the
-inputs and opens WhatsApp with the details pre-filled, so the enquiry reaches
-Dr. Varun instantly. If you later want submissions emailed or stored instead, point
-the form at a form service (Formspree, Getform, Netlify Forms) — the handoff logic
-lives in `initForm()` in `script.js`.
-
----
-
-## Notes
-
-- Fully responsive (tested 375 px – 1440 px) with no horizontal scroll.
-- Respects `prefers-reduced-motion`.
-- Accessible: semantic landmarks, labelled form fields, keyboard-operable FAQ.
-- The enquiry form makes **no reply-time promise** beyond "usually within a few hours."
+- All animation is **progressive enhancement**: content is fully visible with JS
+  disabled (`html.js` gate), a 3s failsafe un-hides everything, and
+  `prefers-reduced-motion` switches to a static page.
+- Motion is scroll-driven via one rAF loop (no IntersectionObserver — it doesn't
+  fire in some embedded/background contexts); a `visibilitychange` hook re-syncs state
+  when a background tab becomes visible.
+- `?shot=1` in the URL neutralizes viewport-height hero sizing — useful for
+  full-page screenshot tools.
+- WCAG-minded: AA contrast tokens, labelled fields with `aria-invalid`,
+  keyboard-operable tabs/accordion/menu, real radio inputs behind the time chips.
