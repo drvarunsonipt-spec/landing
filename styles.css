@@ -792,12 +792,14 @@ html.menu-open, .menu-open body { overflow: hidden; }
   transition: border-color .5s var(--ease), background .5s var(--ease), transform .5s var(--spring), box-shadow .5s var(--ease);
 }
 .step__badge .ic { font-size: 54px; }
+/* Number sits INSIDE the badge's top-right corner — no part sticks out to
+   overlap/clip against the tile edge or the section. */
 .step__badge i {
-  position: absolute; top: -12px; right: -12px;
-  width: 34px; height: 34px; border-radius: 12px;
+  position: absolute; top: 8px; right: 8px;
+  width: 28px; height: 28px; border-radius: 10px;
   display: grid; place-items: center;
   background: var(--teal); color: #fff;
-  font: 700 14px/1 var(--f-head); font-style: normal; font-variant-numeric: tabular-nums;
+  font: 700 13px/1 var(--f-head); font-style: normal; font-variant-numeric: tabular-nums;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
 }
 .step.lit .step__badge {
@@ -1271,6 +1273,10 @@ html.shotmode .scroll-cue { display: none; }
   .checklist { gap: 12px; margin-top: 22px; }
   .benefit-rows { margin-top: 28px; }
   .physio__body { padding-top: 2px; }
+  .steps { gap: 34px; }
+  .step__badge { width: 90px; height: 90px; border-radius: 28px; margin-bottom: 18px; }
+  .step__badge .ic { font-size: 46px; }
+  .step h3 { font-size: 19px; }
 }
 @media (max-width: 620px) {
   .container { padding-inline: 20px; }
