@@ -9,6 +9,15 @@
   var WA_NUMBER = "919680049176";
   var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Shared, rAF-throttled scroll/resize dispatcher. Deliberately NOT built on
+  // IntersectionObserver: IO callbacks don't fire in some contexts (background
+  // tab loads, certain headless/embedded renderers), which would leave
+  // opacity:0 reveal content permanently invisible. getBoundingClientRect on
+  // scroll is universally reliable.
+  var scrollFns = [];
+  function registerScroll(fn) { scrollFns.push(fn); fn(); } // run once immediately
+  function runScrollFns() { for (var i = 0; i < scrollFns.length; i++) scrollFns[i](); }
+
   document.addEventListener("DOMContentLoaded", function () {
     setYear();
     initHeaderScroll();
@@ -17,6 +26,22 @@
     initSteps();
     initMobileBar();
     initForm();
+
+    var ticking = false;
+    function tick() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { runScrollFns(); ticking = false; });
+    }
+    window.addEventListener("scroll", tick, { passive: true });
+    window.addEventListener("resize", tick, { passive: true });
+    window.addEventListener("load", runScrollFns);
+
+    // Absolute failsafe: never leave reveal content hidden, whatever happens.
+    setTimeout(function () {
+      var els = document.querySelectorAll(".reveal");
+      for (var i = 0; i < els.length; i++) els[i].classList.add("in");
+    }, 3000);
   });
 
   /* ----- Footer year ----------------------------------------------------- */
@@ -29,11 +54,9 @@
   function initHeaderScroll() {
     var header = document.getElementById("siteHeader");
     if (!header) return;
-    var onScroll = function () {
+    registerScroll(function () {
       header.classList.toggle("scrolled", window.scrollY > 24);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    });
   }
 
   /* ----- Reveal on scroll ------------------------------------------------ */
@@ -41,25 +64,24 @@
     var items = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
     if (!items.length) return;
 
-    if (prefersReduced || !("IntersectionObserver" in window)) {
+    if (prefersReduced) {
       items.forEach(function (el) { el.classList.add("in"); });
       return;
     }
 
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        var el = entry.target;
-        // Stagger siblings within the same grid for a gentle cascade.
-        var siblings = el.parentElement ? el.parentElement.querySelectorAll(":scope > .reveal") : [el];
-        var idx = Array.prototype.indexOf.call(siblings, el);
-        var delay = Math.min(idx, 5) * 80;
-        setTimeout(function () { el.classList.add("in"); }, delay);
-        io.unobserve(el);
+    registerScroll(function () {
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      items.forEach(function (el) {
+        if (el.classList.contains("in")) return;
+        var r = el.getBoundingClientRect();
+        if (r.top < vh * 0.88 && r.bottom > 0) {
+          // Stagger siblings within the same grid for a gentle cascade.
+          var sibs = el.parentElement ? el.parentElement.querySelectorAll(":scope > .reveal") : [el];
+          var idx = Array.prototype.indexOf.call(sibs, el);
+          setTimeout(function () { el.classList.add("in"); }, Math.min(idx, 5) * 80);
+        }
       });
-    }, { threshold: 0.14, rootMargin: "0px 0px -8% 0px" });
-
-    items.forEach(function (el) { io.observe(el); });
+    });
   }
 
   /* ----- FAQ accordion --------------------------------------------------- */
@@ -67,36 +89,42 @@
     var items = Array.prototype.slice.call(document.querySelectorAll(".faq-item"));
     if (!items.length) return;
 
+    // data-open drives the CSS state (aria-expanded belongs only on the button).
     function setOpen(item, open) {
-      item.setAttribute("aria-expanded", open ? "true" : "false");
+      item.setAttribute("data-open", open ? "true" : "false");
       var btn = item.querySelector(".faq-item__q");
       var panel = item.querySelector(".faq-item__a");
       if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
       if (panel) panel.style.maxHeight = open ? panel.scrollHeight + "px" : "0px";
     }
 
+    function recomputeOpen() {
+      items.forEach(function (item) {
+        if (item.getAttribute("data-open") === "true") {
+          var panel = item.querySelector(".faq-item__a");
+          if (panel) panel.style.maxHeight = panel.scrollHeight + "px";
+        }
+      });
+    }
+
     items.forEach(function (item) {
       var btn = item.querySelector(".faq-item__q");
-      // Initialise from markup state.
-      setOpen(item, item.getAttribute("aria-expanded") === "true");
+      // Initialise from markup state (the button carries the source of truth).
+      setOpen(item, btn && btn.getAttribute("aria-expanded") === "true");
       if (!btn) return;
       btn.addEventListener("click", function () {
-        var isOpen = item.getAttribute("aria-expanded") === "true";
+        var isOpen = item.getAttribute("data-open") === "true";
         // Close others (single-open accordion).
         items.forEach(function (other) { if (other !== item) setOpen(other, false); });
         setOpen(item, !isOpen);
       });
     });
 
-    // Recompute open panel height on resize (text reflow).
-    window.addEventListener("resize", function () {
-      items.forEach(function (item) {
-        if (item.getAttribute("aria-expanded") === "true") {
-          var panel = item.querySelector(".faq-item__a");
-          if (panel) panel.style.maxHeight = panel.scrollHeight + "px";
-        }
-      });
-    });
+    // The default-open panel is measured before webfonts swap in; re-measure
+    // once fonts are ready (and on resize) so no answer text gets clipped.
+    window.addEventListener("resize", recomputeOpen);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(recomputeOpen);
+    window.addEventListener("load", recomputeOpen);
   }
 
   /* ----- How-it-works timeline ------------------------------------------ */
@@ -114,24 +142,25 @@
       } catch (e) { /* getTotalLength unsupported — CSS fallback handles it */ }
     }
 
-    if (prefersReduced || !("IntersectionObserver" in window)) {
+    if (prefersReduced) {
       steps.forEach(function (s) { s.classList.add("lit"); });
       if (wave) wave.classList.add("drawn");
       return;
     }
 
-    var io = new IntersectionObserver(function (entries, obs) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
+    var triggered = false;
+    registerScroll(function () {
+      if (triggered) return;
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var r = section.getBoundingClientRect();
+      if (r.top < vh * 0.65 && r.bottom > 0) {
+        triggered = true;
         if (wave) wave.classList.add("drawn");
         steps.forEach(function (s, i) {
           setTimeout(function () { s.classList.add("lit"); }, 250 + i * 320);
         });
-        obs.disconnect();
-      });
-    }, { threshold: 0.35 });
-
-    io.observe(section);
+      }
+    });
   }
 
   /* ----- Mobile sticky bar ---------------------------------------------- */
@@ -139,17 +168,10 @@
     var bar = document.getElementById("mobileBar");
     var hero = document.querySelector(".hero");
     if (!bar || !hero) return;
-
-    if (!("IntersectionObserver" in window)) { bar.classList.add("show"); return; }
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        // Show the bar once the hero has scrolled mostly out of view.
-        bar.classList.toggle("show", !entry.isIntersecting);
-      });
-    }, { threshold: 0, rootMargin: "-70% 0px 0px 0px" });
-
-    io.observe(hero);
+    registerScroll(function () {
+      // Show the bar once the hero has mostly scrolled out of view.
+      bar.classList.toggle("show", hero.getBoundingClientRect().bottom < 90);
+    });
   }
 
   /* ----- Enquiry form ---------------------------------------------------- */
@@ -158,9 +180,18 @@
     if (!form) return;
 
     var phoneField = document.getElementById("phoneField");
-    var phoneInput = document.getElementById("f-phone");
+    // Look controls up via form.elements — `form.name` resolves to the form's
+    // own `name` IDL property (a string), NOT the <input name="name">.
+    var nameInput = form.elements["name"];
+    var phoneInput = form.elements["phone"];
+    var concernInput = form.elements["concern"];
+    var messageInput = form.elements["message"];
     var status = document.getElementById("formStatus");
     var submitBtn = document.getElementById("submitBtn");
+
+    function clearInvalid(el) {
+      if (el) { el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby"); }
+    }
 
     // Keep only digits; flag validity once a 10-digit Indian mobile is entered.
     if (phoneInput) {
@@ -169,6 +200,7 @@
         if (phoneInput.value !== digits) phoneInput.value = digits;
         var valid = /^[6-9]\d{9}$/.test(digits);
         if (phoneField) phoneField.classList.toggle("is-valid", valid);
+        if (valid) clearInvalid(phoneInput);
       });
     }
 
@@ -176,15 +208,16 @@
       e.preventDefault();
       status.dataset.state = "";
       status.textContent = "";
+      [nameInput, phoneInput, concernInput].forEach(clearInvalid);
 
-      var name = form.name.value.trim();
-      var phone = (form.phone.value || "").replace(/\D/g, "");
-      var concern = form.concern.value;
-      var message = form.message.value.trim();
+      var name = (nameInput.value || "").trim();
+      var phone = (phoneInput.value || "").replace(/\D/g, "");
+      var concern = concernInput.value;
+      var message = (messageInput.value || "").trim();
 
-      if (!name) { fail("Please enter your name."); form.name.focus(); return; }
-      if (!/^[6-9]\d{9}$/.test(phone)) { fail("Please enter a valid 10-digit WhatsApp number."); if (phoneInput) phoneInput.focus(); return; }
-      if (!concern) { fail("Please choose your primary concern."); form.concern.focus(); return; }
+      if (!name) { return fail("Please enter your name.", nameInput); }
+      if (!/^[6-9]\d{9}$/.test(phone)) { return fail("Please enter a valid 10-digit WhatsApp number.", phoneInput); }
+      if (!concern) { return fail("Please choose your primary concern.", concernInput); }
 
       // Show a brief in-place "sending" state, then hand off to WhatsApp so the
       // enquiry reaches Dr. Varun instantly (no backend required to deploy).
@@ -207,17 +240,23 @@
         submitBtn.innerHTML = original;
         status.dataset.state = "ok";
         status.textContent = "Opening WhatsApp — we'll reply shortly. ✓";
-        var win = window.open(url, "_blank", "noopener");
-        // Popup blocked? Navigate the current tab as a fallback.
-        if (!win) window.location.href = url;
+        // window.open returns null when a popup is blocked; open normally and
+        // sever the opener manually, falling back to same-tab navigation.
+        var win = window.open(url, "_blank");
+        if (win) { win.opener = null; } else { window.location.href = url; }
         form.reset();
         if (phoneField) phoneField.classList.remove("is-valid");
       }, prefersReduced ? 0 : 650);
     });
 
-    function fail(msg) {
+    function fail(msg, el) {
       status.dataset.state = "error";
       status.textContent = msg;
+      if (el) {
+        el.setAttribute("aria-invalid", "true");
+        el.setAttribute("aria-describedby", "formStatus");
+        el.focus();
+      }
     }
   }
 })();

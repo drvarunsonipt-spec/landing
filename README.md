@@ -18,7 +18,8 @@ Sora + Inter, with a single Fraunces-italic accent.
 | `styles.css` | Full design system, layout, responsive rules, animations |
 | `script.js`  | Sticky header, reveal-on-scroll, FAQ accordion, timeline, mobile CTA bar, form → WhatsApp handoff |
 | `assets/favicon.svg` | Browser-tab icon (the illuminated-spine logomark) |
-| `assets/og-image.svg` | Social-share preview image |
+| `assets/og-image.png` | Social-share preview image (1200×630, referenced by the meta tags) |
+| `assets/og-image.svg` | Editable source for the share image (regenerate the PNG if you change it) |
 
 ---
 
