@@ -779,9 +779,15 @@
                 <input id="a-date" name="date" type="date" required />
               </div>
 
-              <fieldset class="slots">
+              <fieldset class="slots" id="durationFs">
+                <legend>Session Length <span class="req">*</span></legend>
+                <div class="seg" id="durationSeg" role="radiogroup" aria-label="Session length"></div>
+              </fieldset>
+
+              <fieldset class="slots" id="timeFs">
                 <legend>Preferred Time <span class="req">*</span></legend>
-                <div class="slot-grid" id="slotGrid"></div>
+                <div class="slot-scroll" id="slotGrid"></div>
+                <p class="slot-selected" id="slotSelected" aria-live="polite"></p>
               </fieldset>
 
               <div class="field">

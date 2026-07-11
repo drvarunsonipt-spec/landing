@@ -6,10 +6,17 @@ real photography, and a WhatsApp **appointment booker** — still 100% static
 
 ## What's new vs V2 (`../ProjectV2`)
 
-- **Liquid glass surfaces**: every card, chip, button, header, band and the mobile menu is frosted (`backdrop-filter: blur(24px) saturate(175%)`) with specular 1px highlights; solid-color fallback via `@supports` for old browsers.
+- **Liquid glass surfaces** — "faux glass": translucent tint + top-light sheen (`--glass-sheen`) + a specular 1px inset highlight + border. **No `backdrop-filter` on rounded cards** — the blob field still glows through the `rgba` transparency, but with none of the Chromium/Edge/Android "sharp corner" artifact or the per-frame blur cost. Real `backdrop-filter` is kept on only 3 fixed, non-rounded surfaces (header, mobile bar, mobile menu) on desktop, and disabled entirely on mobile/touch (`@media (max-width:780px),(hover:none)`).
 - **Morphing blob field**: four theme-tinted radial blobs (teal/sapphire/violet/mint) drift and morph behind the glass, site-wide.
 - **Shine sweeps**: a light band sweeps across cards on hover.
-- **Chromatic scroll gradient**: the scroll-driven background now travels ink → sapphire → teal → violet (dark) / porcelain → aqua → lilac → mint (light).
+- **Chromatic scroll gradient**: the scroll-driven background travels ink → sapphire → teal → violet (dark) / porcelain → aqua → lilac → mint (light). `gradientNow` only writes CSS vars when a value actually changes.
+
+### Fix pass (real-device review)
+- **Performance**: cut live `backdrop-filter` elements from ~67 → ~1 (desktop) / 0 (mobile); parallax disabled on touch; throttled gradient writes. Fixes scroll/animation lag and the corner-shadow artifact together.
+- **Booking**: time slots now **6:00 AM–10:00 PM at 30-min granularity** in a single scrollable list, grouped Morning/Afternoon/Evening, with a **Session Length** selector (30 / 45 / 60 min, default 45). The WhatsApp message shows the computed range, e.g. `Time: 3:00 PM – 3:45 PM (45 min)`. Data model + `initSlots` in `script.js`.
+- **Mobile density**: 16px base font, tighter section/card padding, smaller headings on phones — a shorter, less "zoomed" page.
+- **Mobile hero**: floating chips shrunk to tidy corner badges; the shield chip + photo caption are hidden and the spine card tucks within the photo, so nothing piles onto the image.
+- **How-It-Works**: step badges made opaque so the connector line hides behind them (visible only in the gaps).
 
 ## Inherited from V2
 

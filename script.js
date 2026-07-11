@@ -115,6 +115,7 @@
     var bl = Math.round((A & 255) + ((B & 255) - (A & 255)) * t);
     return "rgb(" + r + "," + g + "," + bl + ")";
   }
+  var _g = { g1: "", g2: "", g3: "", ang: "" };  // last-written values (skip redundant per-frame writes)
   function gradientNow() {
     var stops = GRADIENTS[currentTheme()];
     var doc = document.documentElement;
@@ -125,10 +126,12 @@
     var i = Math.min(stops.length - 2, Math.floor(seg));
     var t = seg - i;
     var A = stops[i], B = stops[i + 1];
-    doc.style.setProperty("--g1", hexLerp(A[0], B[0], t));
-    doc.style.setProperty("--g2", hexLerp(A[1], B[1], t));
-    doc.style.setProperty("--g3", hexLerp(A[2], B[2], t));
-    doc.style.setProperty("--g-angle", (150 + p * 60).toFixed(1) + "deg");
+    var g1 = hexLerp(A[0], B[0], t), g2 = hexLerp(A[1], B[1], t), g3 = hexLerp(A[2], B[2], t);
+    var ang = (150 + p * 60).toFixed(1) + "deg";
+    if (g1 !== _g.g1) { doc.style.setProperty("--g1", g1); _g.g1 = g1; }
+    if (g2 !== _g.g2) { doc.style.setProperty("--g2", g2); _g.g2 = g2; }
+    if (g3 !== _g.g3) { doc.style.setProperty("--g3", g3); _g.g3 = g3; }
+    if (ang !== _g.ang) { doc.style.setProperty("--g-angle", ang); _g.ang = ang; }
   }
   function initGradient() { onScroll(gradientNow); }
 
@@ -190,7 +193,7 @@
 
   /* ---------- parallax (images inside clipped cards + aurora) ---------- */
   function initParallax() {
-    if (reduced) return;
+    if (reduced || !finePointer) return;   // off on touch/coarse pointers (perf)
     var els = Array.prototype.slice.call(document.querySelectorAll("[data-parallax]"));
     if (!els.length) return;
     onScroll(function () {
@@ -445,30 +448,87 @@
   }
 
   /* ---------- time slots ---------- */
-  var SLOTS = ["09:00 AM","10:00 AM","11:00 AM","12:00 PM","01:00 PM","02:00 PM",
-               "03:00 PM","04:00 PM","05:00 PM","06:00 PM","07:00 PM","08:00 PM"];
+  var STEP = 30;                              // 30-min granularity
+  var DURATIONS = [30, 45, 60];               // session lengths (minutes)
+  var DEFAULT_DURATION = 45;
+  var PERIODS = [                             // 6:00 AM – 10:00 PM, grouped for orientation
+    { label: "Morning",   start: 6 * 60,  end: 11 * 60 + 30 },   // 06:00 – 11:30
+    { label: "Afternoon", start: 12 * 60, end: 16 * 60 + 30 },   // 12:00 – 16:30
+    { label: "Evening",   start: 17 * 60, end: 22 * 60 }         // 17:00 – 22:00
+  ];
+  function fmtTime(mins) {                    // 900 -> "3:00 PM"
+    var h = Math.floor(mins / 60), m = mins % 60;
+    var ap = h < 12 ? "AM" : "PM", h12 = ((h + 11) % 12) + 1;
+    return h12 + ":" + String(m).padStart(2, "0") + " " + ap;
+  }
+  function minutesList(a, b) { var out = []; for (var m = a; m <= b; m += STEP) out.push(m); return out; }
+  function selectedDuration() {
+    var d = document.querySelector('input[name="duration"]:checked');
+    return d ? parseInt(d.value, 10) : DEFAULT_DURATION;
+  }
+
   function initSlots() {
+    var seg = document.getElementById("durationSeg");
     var grid = document.getElementById("slotGrid");
+    var readout = document.getElementById("slotSelected");
     if (!grid) return;
-    SLOTS.forEach(function (t) {
-      var label = document.createElement("label");
-      label.className = "slot";
-      var input = document.createElement("input");
-      input.type = "radio";
-      input.name = "time";
-      input.value = t;
-      input.className = "visually-hidden";
-      var span = document.createElement("span");
-      span.textContent = t;
-      label.appendChild(input);
-      label.appendChild(span);
-      input.addEventListener("change", function () {
-        grid.querySelectorAll(".slot").forEach(function (s) { s.classList.remove("checked"); });
-        label.classList.add("checked");
-        updatePreview();
+
+    // --- Session-length segmented control ---
+    if (seg) {
+      DURATIONS.forEach(function (v) {
+        var label = document.createElement("label");
+        label.className = "seg-opt";
+        var input = document.createElement("input");
+        input.type = "radio"; input.name = "duration"; input.value = String(v);
+        input.className = "visually-hidden";
+        if (v === DEFAULT_DURATION) { input.checked = true; label.classList.add("checked"); }
+        var span = document.createElement("span");
+        span.textContent = v + " min";
+        label.appendChild(input); label.appendChild(span);
+        input.addEventListener("change", function () {
+          seg.querySelectorAll(".seg-opt").forEach(function (o) { o.classList.remove("checked"); });
+          label.classList.add("checked");
+          reflect(); updatePreview();
+        });
+        seg.appendChild(label);
       });
-      grid.appendChild(label);
+    }
+
+    // --- Scrollable time list: day-part sub-labels + 30-min chips ---
+    PERIODS.forEach(function (p) {
+      var head = document.createElement("div");
+      head.className = "slot-daylabel";
+      head.textContent = p.label;
+      grid.appendChild(head);
+
+      var row = document.createElement("div");
+      row.className = "slot-row";
+      minutesList(p.start, p.end).forEach(function (mins) {
+        var label = document.createElement("label");
+        label.className = "slot";
+        var input = document.createElement("input");
+        input.type = "radio"; input.name = "time"; input.value = String(mins);
+        input.className = "visually-hidden";
+        var span = document.createElement("span");
+        span.textContent = fmtTime(mins);
+        label.appendChild(input); label.appendChild(span);
+        input.addEventListener("change", function () {
+          grid.querySelectorAll(".slot.checked").forEach(function (s) { s.classList.remove("checked"); });
+          label.classList.add("checked");
+          reflect(); updatePreview();
+        });
+        row.appendChild(label);
+      });
+      grid.appendChild(row);
     });
+
+    function reflect() {
+      if (!readout) return;
+      var t = grid.querySelector('input[name="time"]:checked');
+      if (!t) { readout.textContent = ""; return; }
+      var s = parseInt(t.value, 10), dur = selectedDuration();
+      readout.textContent = "Selected: " + fmtTime(s) + " – " + fmtTime(s + dur) + " (" + dur + " min)";
+    }
   }
 
   /* ---------- appointment form + live WhatsApp preview ---------- */
@@ -486,11 +546,16 @@
     var date = form.elements["date"].value;
     var timeEl = form.querySelector('input[name="time"]:checked');
     var issue = (form.elements["issue"].value || "").trim();
+    var timeStr = "—";
+    if (timeEl) {
+      var s = parseInt(timeEl.value, 10), dur = selectedDuration();
+      timeStr = fmtTime(s) + " – " + fmtTime(s + dur) + " (" + dur + " min)";
+    }
     var lines = ["Hi Dr. Varun, I'd like to book an appointment. 🗓"];
     lines.push("");
     lines.push("Name: " + (name || "—"));
     lines.push("Date: " + (date ? fmtDate(date) : "—"));
-    lines.push("Time: " + (timeEl ? timeEl.value : "—"));
+    lines.push("Time: " + timeStr);
     lines.push("Issue: " + (issue || "—"));
     return lines.join("\n");
   }
@@ -541,11 +606,13 @@
       var name = (nameEl.value || "").trim();
       var date = dateInput.value;
       var timeEl = form.querySelector('input[name="time"]:checked');
+      var durEl = form.querySelector('input[name="duration"]:checked');
       var issue = (issueEl.value || "").trim();
 
       if (!name) { fail("Please enter your name.", nameEl); return; }
       if (!date) { fail("Please pick a preferred date.", dateInput); return; }
       if (date < iso) { fail("Please pick today or a future date.", dateInput); return; }
+      if (!durEl) { fail("Please choose a session length."); var d0 = form.querySelector('input[name="duration"]'); if (d0) d0.focus(); return; }
       if (!timeEl) { fail("Please choose a preferred time slot."); var f = form.querySelector('input[name="time"]'); if (f) f.focus(); return; }
       if (!issue) { fail("Please describe the issue briefly.", issueEl); return; }
 
