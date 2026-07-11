@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b2f66"/>
+      <stop offset="1" stop-color="#0F1C42"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="82%" cy="20%" r="55%">
+      <stop offset="0" stop-color="#2E8B8F" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#2E8B8F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- logo -->
+  <g transform="translate(90,86)">
+    <rect x="0" y="0" width="58" height="42" rx="6" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <path d="M24 52h10M29 46v6" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <path d="M29 8c-3 1.3-3 4.5 0 5.8s3 4.5 0 5.8-3 4.5 0 5.8" fill="none" stroke="#6fd0d3" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <text x="168" y="122" fill="#ffffff" font-size="34" font-weight="700">Dr. Varun Soni (PT)</text>
+  <text x="168" y="152" fill="#6fd0d3" font-size="18" font-weight="600" letter-spacing="3">ONLINE PHYSIOTHERAPY</text>
+
+  <text x="90" y="320" fill="#ffffff" font-size="92" font-weight="800" letter-spacing="-2">Expert care.</text>
+  <text x="90" y="410" fill="#6fd0d3" font-size="92" font-weight="800" letter-spacing="-2">Anywhere, anytime.</text>
+
+  <text x="92" y="478" fill="#c3cee8" font-size="30">Recover from pain from the comfort of your home — across India.</text>
+
+  <g transform="translate(92,536)">
+    <rect x="0" y="0" width="290" height="58" rx="29" fill="#25D366"/>
+    <text x="145" y="38" fill="#ffffff" font-size="24" font-weight="700" text-anchor="middle">Chat on WhatsApp</text>
+    <text x="330" y="38" fill="#8ea0c8" font-size="22" font-weight="600">9680049176</text>
+  </g>
+
+  <text x="1110" y="600" fill="#7f8fc0" font-size="18" text-anchor="end" letter-spacing="2">BPT · COMT · CDCT · CDNT · CSTT · CIASTM</text>
+</svg>
