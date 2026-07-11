@@ -150,8 +150,8 @@
   --header-bg: rgba(7, 12, 30, .48);
   --header-border: rgba(255, 255, 255, .1);
 
-  --band-bg: rgba(8, 15, 38, .6);
-  --band-bg-deep: rgba(5, 10, 28, .68);
+  --band-bg: rgba(8, 15, 38, .48);
+  --band-bg-deep: rgba(5, 10, 28, .58);
   --marquee-bg: rgba(8, 15, 38, .66);
   --footer-bg: rgba(4, 7, 20, .8);
   --seal-bg: rgba(18, 32, 74, .88);
@@ -171,10 +171,10 @@
   --grain-blend: screen;
   --grain-op: .05;
 
-  --blob-a: rgba(64, 208, 214, .30);
-  --blob-b: rgba(92, 141, 255, .26);
-  --blob-c: rgba(150, 110, 255, .22);
-  --blob-d: rgba(70, 214, 170, .22);
+  --blob-a: rgba(64, 208, 214, .48);
+  --blob-b: rgba(92, 141, 255, .42);
+  --blob-c: rgba(150, 110, 255, .38);
+  --blob-d: rgba(70, 214, 170, .36);
 
   --sh-sm: 0 0 transparent;
   --sh-md: 0 0 transparent;

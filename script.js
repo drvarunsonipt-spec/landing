@@ -94,11 +94,11 @@
      interpolate through a per-theme palette as you scroll. */
   var GRADIENTS = {
     dark: [
-      ["#070E22", "#0A1430", "#05091A"],   // top — deep ink
-      ["#081426", "#0D2B4A", "#0A1838"],   // services — sapphire swell
-      ["#071A24", "#0D3440", "#0A2036"],   // mid — teal depths
-      ["#0B102E", "#1B2152", "#0A0F26"],   // stories/faq — violet indigo
-      ["#04081C", "#0A1634", "#03060F"]    // book/footer — deepest
+      ["#050B1E", "#0C1C44", "#03060F"],   // top — deep ink
+      ["#06132E", "#134E82", "#07152F"],   // services — sapphire swell
+      ["#052430", "#0F5C6E", "#062230"],   // mid — teal depths
+      ["#0E1140", "#2C2F8E", "#070A22"],   // stories/faq — violet indigo
+      ["#03061A", "#0A1A40", "#010308"]    // book/footer — deepest
     ],
     light: [
       ["#F3F7FE", "#EAF2FB", "#F6F9FD"],   // top — porcelain blue
@@ -129,7 +129,7 @@
     var t = seg - i;
     var A = stops[i], B = stops[i + 1];
     var g1 = hexLerp(A[0], B[0], t), g2 = hexLerp(A[1], B[1], t), g3 = hexLerp(A[2], B[2], t);
-    var ang = (150 + p * 60).toFixed(1) + "deg";
+    var ang = (130 + p * 100).toFixed(1) + "deg";
     if (g1 !== _g.g1) { doc.style.setProperty("--g1", g1); _g.g1 = g1; }
     if (g2 !== _g.g2) { doc.style.setProperty("--g2", g2); _g.g2 = g2; }
     if (g3 !== _g.g3) { doc.style.setProperty("--g3", g3); _g.g3 = g3; }
