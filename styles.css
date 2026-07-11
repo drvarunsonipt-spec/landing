@@ -101,13 +101,14 @@
   --blob-c: rgba(168, 139, 255, .34);
   --blob-d: rgba(95, 224, 184, .38);
 
-  --sh-sm: 0 2px 6px rgba(30, 60, 120, .06), 0 12px 32px rgba(30, 60, 120, .10);
-  --sh-md: 0 4px 10px rgba(30, 60, 120, .08), 0 24px 54px rgba(30, 60, 120, .14);
-  --sh-lg: 0 12px 34px rgba(20, 45, 100, .18), 0 46px 100px rgba(20, 45, 100, .20);
-  /* drop-shadow variants for permanently-animated (layer-promoted) elements —
-     these follow the rounded shape, unlike box-shadow on a compositor layer */
-  --drop-md: drop-shadow(0 6px 16px rgba(30, 60, 120, .16));
-  --drop-lg: drop-shadow(0 14px 30px rgba(20, 45, 100, .22));
+  /* Outer shadows removed entirely — on some GPUs they square/leak at rounded
+     corners. Invisible placeholder keeps the (comma-separated) box-shadow lists
+     valid so the inset highlights survive. Depth = border + translucent fill + glow. */
+  --sh-sm: 0 0 transparent;
+  --sh-md: 0 0 transparent;
+  --sh-lg: 0 0 transparent;
+  --drop-md: none;
+  --drop-lg: none;
 
   --sb-track: #E9EFF8; --sb-thumb: #B0C0DC;
 }
@@ -175,11 +176,11 @@
   --blob-c: rgba(150, 110, 255, .22);
   --blob-d: rgba(70, 214, 170, .22);
 
-  --sh-sm: 0 2px 6px rgba(0, 0, 0, .35), 0 12px 30px rgba(0, 0, 0, .4);
-  --sh-md: 0 4px 12px rgba(0, 0, 0, .4), 0 26px 56px rgba(0, 0, 0, .5);
-  --sh-lg: 0 14px 38px rgba(0, 0, 0, .55), 0 50px 110px rgba(0, 0, 0, .6);
-  --drop-md: drop-shadow(0 6px 16px rgba(0, 0, 0, .5));
-  --drop-lg: drop-shadow(0 14px 30px rgba(0, 0, 0, .55));
+  --sh-sm: 0 0 transparent;
+  --sh-md: 0 0 transparent;
+  --sh-lg: 0 0 transparent;
+  --drop-md: none;
+  --drop-lg: none;
 
   --sb-track: #0A1226; --sb-thumb: #2C3B66;
 }
@@ -295,21 +296,10 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
   border: 1px solid var(--glass-border);
 }
 
-/* hover shine sweep (liquid specular) across glass surfaces */
+/* NOTE: the old hover "shine sweep" was removed — its permanently-transformed
+   ::after inside these rounded overflow:hidden cards forced them onto GPU layers,
+   where rounded-corner clipping fails (squared corners) on some devices. */
 .card, .physio__card, .story, .faq2-item { overflow: hidden; }
-.card::after, .physio__card::after, .story::after {
-  content: ""; position: absolute; inset: 0; z-index: 1;
-  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .30) 50%, transparent 60%);
-  transform: translateX(-130%) skewX(-8deg);
-  transition: transform .9s var(--ease);
-  pointer-events: none;
-}
-.card:hover::after, .physio__card:hover::after, .story:hover::after { transform: translateX(130%) skewX(-8deg); }
-[data-theme="dark"] .card::after,
-[data-theme="dark"] .physio__card::after,
-[data-theme="dark"] .story::after {
-  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .12) 50%, transparent 60%);
-}
 .story { position: relative; }
 .physio__card { position: relative; }
 
@@ -368,11 +358,11 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 .btn--wa {
   background: linear-gradient(180deg, #0E9450, var(--wa-btn) 60%);
   border-color: rgba(255, 255, 255, .35);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 10px 26px rgba(37, 211, 102, .3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4);
 }
 .btn--wa:hover {
   background: linear-gradient(180deg, #0D8A4A, var(--wa-btn-hover) 60%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 0 0 7px rgba(37, 211, 102, .14), 0 14px 30px rgba(37, 211, 102, .32);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4);
 }
 .btn--ghost {
   background: var(--ghost-bg);
@@ -385,14 +375,8 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 .btn--sm { padding: 12px 20px; font-size: 14.5px; }
 .btn--block { width: 100%; }
 
-.btn--pulse::after {
-  content: ""; position: absolute; inset: 0; border-radius: inherit;
-  animation: pulse 2.6s var(--ease) infinite; pointer-events: none;
-}
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, .45); }
-  70%, 100% { box-shadow: 0 0 0 18px rgba(37, 211, 102, 0); }
-}
+/* The pulse ring was removed: it animated box-shadow on the rounded button,
+   promoting it to a GPU layer where the green glow squared off and "leaked". */
 
 .link-arrow {
   display: inline-flex; align-items: center; gap: 8px;
@@ -651,9 +635,8 @@ html.menu-open, .menu-open body { overflow: hidden; }
 .g-chip--live .live-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: inherit; animation: ping 1.8s var(--ease) infinite; }
 @keyframes ping { 0% { transform: scale(1); opacity: .8; } 80%, 100% { transform: scale(2.6); opacity: 0; } }
 .g-chip--shield { bottom: 84px; right: -22px; }
-.float { animation: floaty 6.5s ease-in-out infinite; }
-.float--b { animation-duration: 7.8s; animation-delay: -2.4s; }
-@keyframes floaty { 50% { transform: translateY(-9px); } }
+/* float bob removed — its infinite transform composited the chips (rounded clip
+   can fail on some GPUs). Chips are static now; the pulsing live-dot stays. */
 
 .spine-card {
   position: absolute; z-index: 3;
@@ -667,12 +650,8 @@ html.menu-open, .menu-open body { overflow: hidden; }
   padding: 14px 14px 12px;
   overflow: hidden;
 }
-.spine-card::after {
-  content: ""; position: absolute; left: 0; right: 0; height: 42px; top: -42px;
-  background: linear-gradient(180deg, transparent, rgba(127, 214, 217, .3), transparent);
-  animation: scan 3.6s linear infinite;
-}
-@keyframes scan { to { transform: translateY(calc(42px + 190px)); } }
+/* scan sweep removed — its infinite transform composited the spine card,
+   where rounded clipping can fail on some GPUs. */
 .spine-card svg { width: 56px; margin: 2px auto 8px; }
 .spine-card b { display: block; text-align: center; font: 700 12px/1.3 var(--f-head); color: #fff; letter-spacing: .04em; }
 .spine-card span { display: block; text-align: center; font: 500 10.5px/1.4 var(--f-body); color: var(--teal-on-navy); }
@@ -819,13 +798,13 @@ html.menu-open, .menu-open body { overflow: hidden; }
   display: grid; place-items: center;
   background: var(--teal); color: #fff;
   font: 700 14px/1 var(--f-head); font-style: normal; font-variant-numeric: tabular-nums;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 6px 16px rgba(0, 0, 0, .3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
 }
 .step.lit .step__badge {
   border-color: var(--teal-on-navy);
   background: rgba(40, 110, 120, .62);
   transform: translateY(-6px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28), 0 0 0 6px rgba(127, 214, 217, .1), 0 18px 40px rgba(0, 0, 0, .3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28);
 }
 .step h3 { color: #fff; font-size: 21px; font-weight: 600; margin-bottom: 9px; }
 .step p { color: var(--on-navy-muted); font-size: 15px; max-width: 30ch; margin-inline: auto; }
@@ -1005,7 +984,7 @@ html.menu-open, .menu-open body { overflow: hidden; }
   color: var(--text);
   background: var(--glass-strong);
   border-radius: calc(var(--r-lg) + 6px);
-  box-shadow: inset 0 1px 0 var(--glass-hi), 0 40px 90px rgba(0, 0, 0, .4);
+  box-shadow: inset 0 1px 0 var(--glass-hi);
   max-width: 980px; margin-inline: auto;
   overflow: hidden;
 }
@@ -1339,8 +1318,14 @@ html.shotmode .scroll-cue { display: none; }
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
-  /* lighten the site-wide blob field a touch on phones */
+  /* Performance: on phones, stop the continuously-animating layers. The blob
+     field stays (static, still tinted); the scroll-gradient goes static in JS.
+     This removes most of the per-frame GPU work that caused the lag. */
   .fluid { filter: blur(60px) saturate(120%); }
+  .fluid i { animation: none !important; }
+  .float, .float--b { animation: none !important; }
+  .spine-card::after { display: none !important; }   /* scan sweep off */
+  .marquee__track { animation-duration: 48s; }        /* slower = fewer repaints */
 }
 
 /* ---------- Reduced motion -------------------------------------------------------------------------------------------------- */
