@@ -16,23 +16,31 @@
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
-  <title>Dr. Varun Soni (PT) — Online Physiotherapy | Expert Care. Anywhere, Anytime.</title>
-  <meta name="description" content="Evidence-based online physiotherapy with Dr. Varun Soni (PT). Recover from back, neck, knee and ACL pain with a personalized plan you can follow from home — anywhere in India. Book an appointment on WhatsApp." />
+  <title>Dr. Varun Soni (PT) — Online Physiotherapy | Book a Free Consultation</title>
+  <meta name="description" content="Evidence-based online physiotherapy with Dr. Varun Soni (PT). Recover from back, neck, knee and ACL pain with a personalized plan you can follow from home — anywhere in India. Start with a free consultation." />
   <meta name="theme-color" content="#0F1C42" />
+
+  <!-- ⚠ TODO before launch: replace every occurrence of https://drvarunsoni.in with the
+       real production domain (canonical, og:image, twitter:image, JSON-LD url + image).
+       Relative social-image URLs are not reliably resolved by crawlers, which is why
+       these must stay absolute. -->
+  <link rel="canonical" href="https://drvarunsoni.in/" />
+  <meta name="robots" content="index, follow" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://drvarunsoni.in/" />
   <meta property="og:title" content="Dr. Varun Soni (PT) — Online Physiotherapy" />
-  <meta property="og:description" content="Expert Care. Anywhere, Anytime. Recover from pain from the comfort of your home." />
-  <meta property="og:image" content="assets/og-image.png" />
+  <meta property="og:description" content="Expert Care. Anywhere, Anytime. Book a free consultation and recover from home." />
+  <meta property="og:image" content="https://drvarunsoni.in/assets/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:alt" content="Dr. Varun Soni (PT) — Online Physiotherapy. Expert care, anywhere, anytime." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Dr. Varun Soni (PT) — Online Physiotherapy" />
-  <meta name="twitter:description" content="Expert Care. Anywhere, Anytime. Recover from pain from the comfort of your home." />
-  <meta name="twitter:image" content="assets/og-image.png" />
+  <meta name="twitter:description" content="Expert Care. Anywhere, Anytime. Book a free consultation and recover from home." />
+  <meta name="twitter:image" content="https://drvarunsoni.in/assets/og-image.jpg" />
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="preload" as="image" href="assets/img/hero-home-session.jpg" fetchpriority="high" />
@@ -41,7 +49,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500;1,9..144,700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=9" />
+  <link rel="stylesheet" href="styles.css?v=10" />
 
   <script type="application/ld+json">
   {
@@ -51,8 +59,8 @@
     "description": "Evidence-based online physiotherapy: personalized assessment, guided exercises and follow-up support, delivered from home across India.",
     "medicalSpecialty": "Physiotherapy",
     "telephone": "+919680049176",
-    "url": "https://wa.me/919680049176",
-    "image": "assets/og-image.png",
+    "url": "https://drvarunsoni.in/",
+    "image": "https://drvarunsoni.in/assets/og-image.jpg",
     "areaServed": { "@type": "Country", "name": "India" },
     "availableService": [
       { "@type": "MedicalTherapy", "name": "Online Consultation & Treatment" },
@@ -61,6 +69,35 @@
       { "@type": "MedicalTherapy", "name": "Knee Pain & Mobility Rehabilitation" },
       { "@type": "MedicalTherapy", "name": "ACL Injury / Reconstruction Rehabilitation" },
       { "@type": "MedicalTherapy", "name": "Full-Body Mobility, Strength & Conditioning" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is online physiotherapy effective?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, for many pain, posture, mobility, and rehabilitation needs, online physiotherapy can provide a thorough assessment, guided exercises, and follow-up support." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I book a consultation?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Fill in the booking form on this page with your details and preferred date and time. Your first consultation is free. Submitting the form opens WhatsApp with your request pre-filled so you can confirm in one tap." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you support clients across India?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. The service is designed for people anywhere in India who want expert physiotherapy guidance from home." }
+      },
+      {
+        "@type": "Question",
+        "name": "What should I prepare before the session?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Keep a phone or laptop ready, wear comfortable clothing, and be prepared to show the area of concern and perform a few simple movements if needed." }
+      }
     ]
   }
   </script>
@@ -303,7 +340,7 @@
     <nav class="nav" aria-label="Primary" id="primaryNav">
       <a href="#services">Services</a>
       <a href="#how">How It Works</a>
-      <a href="#stories">Stories</a>
+      <a href="#results">Results</a>
       <a href="#faq">FAQ</a>
       <a href="#book">Book</a>
     </nav>
@@ -313,8 +350,8 @@
         <svg class="ic tb-sun"><use href="#ic-sun"/></svg>
         <svg class="ic tb-moon"><use href="#ic-moon"/></svg>
       </button>
-      <a class="btn btn--wa btn--sm" href="https://wa.me/919680049176?text=Can%20I%20get%20more%20info%20about%20your%20online%20physiotherapy%20services%3F" target="_blank" rel="noopener">
-        <svg class="ic"><use href="#ic-wa"/></svg><span class="full">WhatsApp</span>
+      <a class="btn btn--wa btn--sm" href="#book" data-cta="header">
+        <svg class="ic"><use href="#ic-cal"/></svg><span class="full">Free Consultation</span>
       </a>
       <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
         <span></span><span></span><span></span>
@@ -328,12 +365,12 @@
   <a class="mm-link" style="--i:0" href="#home"><small>01</small>Home</a>
   <a class="mm-link" style="--i:1" href="#services"><small>02</small>Services</a>
   <a class="mm-link" style="--i:2" href="#how"><small>03</small>How It Works</a>
-  <a class="mm-link" style="--i:3" href="#stories"><small>04</small>Stories</a>
+  <a class="mm-link" style="--i:3" href="#results"><small>04</small>Results</a>
   <a class="mm-link" style="--i:4" href="#faq"><small>05</small>FAQ</a>
-  <a class="mm-link" style="--i:5" href="#book"><small>06</small>Book Appointment</a>
+  <a class="mm-link" style="--i:5" href="#book"><small>06</small>Book Free Consultation</a>
   <div class="mm-cta">
-    <a class="btn btn--wa btn--block" href="https://wa.me/919680049176?text=Can%20I%20get%20more%20info%20about%20your%20online%20physiotherapy%20services%3F" target="_blank" rel="noopener">
-      <svg class="ic"><use href="#ic-wa"/></svg> Chat on WhatsApp
+    <a class="btn btn--wa btn--block" href="#book" data-cta="mobile-menu">
+      <svg class="ic"><use href="#ic-cal"/></svg> Book Your Free Consultation
     </a>
   </div>
 </div>
@@ -346,7 +383,7 @@
       <div class="hero__copy">
         <span class="hero__chip" data-reveal="up">
           <span class="dot"><svg class="ic"><use href="#ic-video"/></svg></span>
-          Online Physiotherapy · Pan-India
+          First consultation free · Pan-India
         </span>
 
         <h1>
@@ -357,20 +394,20 @@
         <p class="hero__sub" data-reveal="up" style="--d:120ms">
           Recover from pain from the comfort of your home — evidence-based physiotherapy
           with Dr.&nbsp;Varun&nbsp;Soni&nbsp;(PT), guided entirely online across India.
+          <b>Your first consultation is free.</b>
         </p>
 
         <div class="hero__cta" data-reveal="up" style="--d:220ms">
-          <a class="btn btn--wa btn--lg btn--pulse" data-magnetic href="https://wa.me/919680049176?text=Can%20I%20get%20more%20info%20about%20your%20online%20physiotherapy%20services%3F" target="_blank" rel="noopener">
-            <svg class="ic"><use href="#ic-wa"/></svg> Chat on WhatsApp
+          <a class="btn btn--wa btn--lg btn--pulse" data-magnetic href="#book" data-cta="hero">
+            <svg class="ic"><use href="#ic-cal"/></svg> Book Your Free Consultation
           </a>
-          <a class="btn btn--ghost btn--lg" data-magnetic href="#book">
-            <svg class="ic"><use href="#ic-cal"/></svg> Book Appointment
+          <a class="btn btn--ghost btn--lg" data-magnetic href="#how">
+            <svg class="ic"><use href="#ic-arrow"/></svg> See how it works
           </a>
         </div>
 
         <p class="hero__meta" data-reveal="up" style="--d:320ms">
-          <span class="stars" aria-hidden="true">★★★★★</span>
-          <span>Trusted by patients in Bengaluru, Pune &amp; Delhi&nbsp;NCR</span>
+          <span>No payment to book · Consultations across India</span>
           <span class="creds">BPT · COMT · CDCT · CDNT · CSTT · CIASTM</span>
         </p>
       </div>
@@ -465,7 +502,7 @@
           <span class="ic-wrap"><svg class="ic"><use href="#ic-consult"/></svg></span>
           <h3>Online Consultation &amp; Treatment</h3>
           <p>A complete assessment and treatment session over video — understand your condition and start care the same day.</p>
-          <a class="link-arrow" href="https://wa.me/919680049176?text=Hi%20Dr%20Varun%2C%20I%20would%20like%20to%20book%20an%20online%20consultation." target="_blank" rel="noopener">Ask on WhatsApp <svg class="ic"><use href="#ic-arrow"/></svg></a>
+          <a class="link-arrow" href="#book" data-cta="svc-consult" data-concern="Online Consultation &amp; Treatment">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
         </article>
 
         <article class="card svc-card" data-reveal="up" style="--d:90ms">
@@ -473,7 +510,7 @@
           <span class="ic-wrap"><svg class="ic"><use href="#ic-spine"/></svg></span>
           <h3>Back Pain Treatment</h3>
           <p>Relieve lower-back and spinal pain with targeted mobility, strengthening and posture correction you do at home.</p>
-          <a class="link-arrow" href="https://wa.me/919680049176?text=Hi%20Dr%20Varun%2C%20I%20would%20like%20help%20with%20back%20pain." target="_blank" rel="noopener">Ask on WhatsApp <svg class="ic"><use href="#ic-arrow"/></svg></a>
+          <a class="link-arrow" href="#book" data-cta="svc-back" data-concern="Back Pain Treatment">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
         </article>
 
         <article class="card svc-card" data-reveal="up" style="--d:180ms">
@@ -481,7 +518,7 @@
           <span class="ic-wrap"><svg class="ic"><use href="#ic-neck"/></svg></span>
           <h3>Neck Pain &amp; Posture</h3>
           <p>Ease stiffness, tension headaches and “tech neck” with posture retraining and gentle, guided release work.</p>
-          <a class="link-arrow" href="https://wa.me/919680049176?text=Hi%20Dr%20Varun%2C%20I%20would%20like%20help%20with%20neck%20pain%20and%20posture." target="_blank" rel="noopener">Ask on WhatsApp <svg class="ic"><use href="#ic-arrow"/></svg></a>
+          <a class="link-arrow" href="#book" data-cta="svc-neck" data-concern="Neck Pain &amp; Posture">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
         </article>
 
         <article class="card svc-card" data-reveal="up">
@@ -489,7 +526,7 @@
           <span class="ic-wrap"><svg class="ic"><use href="#ic-knee"/></svg></span>
           <h3>Knee Pain &amp; Mobility Rehab</h3>
           <p>Rebuild pain-free movement after injury, arthritis or overuse with progressive strengthening and load control.</p>
-          <a class="link-arrow" href="https://wa.me/919680049176?text=Hi%20Dr%20Varun%2C%20I%20would%20like%20help%20with%20knee%20pain%20and%20mobility." target="_blank" rel="noopener">Ask on WhatsApp <svg class="ic"><use href="#ic-arrow"/></svg></a>
+          <a class="link-arrow" href="#book" data-cta="svc-knee" data-concern="Knee Pain &amp; Mobility Rehab">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
         </article>
 
         <article class="card svc-card" data-reveal="up" style="--d:90ms">
@@ -497,7 +534,7 @@
           <span class="ic-wrap"><svg class="ic"><use href="#ic-acl"/></svg></span>
           <h3>ACL Injury / Reconstruction Rehabilitation</h3>
           <p>Structured post-surgical and non-surgical ACL rehab to restore strength, stability and confidence to return to sport.</p>
-          <a class="link-arrow" href="https://wa.me/919680049176?text=Hi%20Dr%20Varun%2C%20I%20would%20like%20help%20with%20ACL%20rehabilitation." target="_blank" rel="noopener">Ask on WhatsApp <svg class="ic"><use href="#ic-arrow"/></svg></a>
+          <a class="link-arrow" href="#book" data-cta="svc-acl" data-concern="ACL Injury / Reconstruction Rehabilitation">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
         </article>
 
         <article class="card svc-card" data-reveal="up" style="--d:180ms">
@@ -505,7 +542,7 @@
           <span class="ic-wrap"><svg class="ic"><use href="#ic-mobility"/></svg></span>
           <h3>Full-Body Mobility, Strength &amp; Conditioning</h3>
           <p>Move better and stay resilient with a progressive mobility, strength and conditioning plan for everyday life.</p>
-          <a class="link-arrow" href="https://wa.me/919680049176?text=Hi%20Dr%20Varun%2C%20I%20would%20like%20help%20with%20mobility%20and%20conditioning." target="_blank" rel="noopener">Ask on WhatsApp <svg class="ic"><use href="#ic-arrow"/></svg></a>
+          <a class="link-arrow" href="#book" data-cta="svc-mobility" data-concern="Full-Body Mobility, Strength &amp; Conditioning">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
         </article>
       </div>
     </div>
@@ -577,8 +614,8 @@
       </div>
 
       <div class="how__cta" data-reveal="up">
-        <a class="btn btn--wa btn--lg" data-magnetic href="https://wa.me/919680049176?text=Hi%20Dr%20Varun%2C%20I%20would%20like%20to%20start%20with%20step%201%20and%20share%20my%20symptoms." target="_blank" rel="noopener">
-          <svg class="ic"><use href="#ic-wa"/></svg> Start Step 1 on WhatsApp
+        <a class="btn btn--wa btn--lg" data-magnetic href="#book" data-cta="how">
+          <svg class="ic"><use href="#ic-cal"/></svg> Start Step 1 — Book Free
         </a>
       </div>
     </div>
@@ -665,44 +702,48 @@
     </div>
   </section>
 
-  <!-- ==================== STORIES ==================== -->
-  <section class="section" id="stories" data-spy="Stories" aria-labelledby="st-title">
+  <!-- ==================== RESULTS ====================
+       V3's three testimonials and the ★★★★★ rating were removed here: they were
+       unattributed and unsourced, which is a real ASCI / Consumer Protection Act
+       exposure on a medical practice page. Genuine, patient-submitted reviews are
+       rendered below by initReviews() once Phase 3 is deployed — the block stays
+       hidden until there are real approved ones.
+
+       ⚠ TODO: the four figures below are PLACEHOLDERS. Replace data-count and the
+       label text with your real numbers, or delete any tile you cannot substantiate.
+  -->
+  <section class="section" id="results" data-spy="Results" aria-labelledby="st-title">
     <div class="container">
-      <div class="stories-head section-head" data-reveal="up">
-        <div>
-          <span class="eyebrow">Patient Stories</span>
-          <h2 class="h2" id="st-title">Real recoveries, <span class="accent">in their words.</span></h2>
+      <div class="section-head section-head--center" data-reveal="up">
+        <span class="eyebrow">By the numbers</span>
+        <h2 class="h2" id="st-title">Care that <span class="accent">adds up.</span></h2>
+        <p class="lead">Straightforward numbers from the practice — no exaggeration, no stock quotes.</p>
+      </div>
+
+      <div class="stats-grid" data-reveal="up" style="--d:100ms">
+        <div class="card stat">
+          <b class="stat__num" data-count="0" data-suffix="+">0+</b>
+          <span class="stat__label">Patients treated</span>
         </div>
-        <div class="stories-ctl">
-          <button class="ctl-btn" id="stPrev" aria-label="Previous story"><svg class="ic" style="transform:rotate(180deg)"><use href="#ic-arrow"/></svg></button>
-          <button class="ctl-btn" id="stNext" aria-label="Next story"><svg class="ic"><use href="#ic-arrow"/></svg></button>
+        <div class="card stat">
+          <b class="stat__num" data-count="0" data-suffix="+">0+</b>
+          <span class="stat__label">Years of practice</span>
+        </div>
+        <div class="card stat">
+          <b class="stat__num" data-count="0" data-suffix="+">0+</b>
+          <span class="stat__label">Sessions delivered</span>
+        </div>
+        <div class="card stat">
+          <b class="stat__num" data-count="0" data-suffix="+">0+</b>
+          <span class="stat__label">Conditions covered</span>
         </div>
       </div>
 
-      <div class="stories-track" id="storiesTrack" tabindex="0" aria-label="Patient testimonials, scrollable">
-        <figure class="story" data-reveal="up">
-          <blockquote>I finally understood what was causing my back pain and got a practical routine I could do at home.</blockquote>
-          <figcaption>
-            <span class="avatar" aria-hidden="true">B</span>
-            <span class="who"><b>Working professional</b><span><svg class="ic"><use href="#ic-pin"/></svg>Bengaluru</span></span>
-          </figcaption>
-        </figure>
-        <figure class="story" data-reveal="up" style="--d:100ms">
-          <blockquote>The consultation was clear, professional, and much easier than traveling across the city for every follow-up.</blockquote>
-          <figcaption>
-            <span class="avatar" aria-hidden="true">P</span>
-            <span class="who"><b>Home-based parent</b><span><svg class="ic"><use href="#ic-pin"/></svg>Pune</span></span>
-          </figcaption>
-        </figure>
-        <figure class="story" data-reveal="up" style="--d:200ms">
-          <blockquote>My rehab plan was easy to follow and helped me return to training with more confidence.</blockquote>
-          <figcaption>
-            <span class="avatar" aria-hidden="true">D</span>
-            <span class="who"><b>Recreational athlete</b><span><svg class="ic"><use href="#ic-pin"/></svg>Delhi NCR</span></span>
-          </figcaption>
-        </figure>
+      <!-- Populated at runtime from approved reviews only. Stays hidden when empty. -->
+      <div class="reviews" id="reviewsBlock" hidden>
+        <h3 class="reviews__title">What patients say</h3>
+        <div class="reviews__grid" id="reviewsGrid"></div>
       </div>
-      <div class="dots" id="stDots" aria-hidden="true"></div>
     </div>
   </section>
 
@@ -727,7 +768,7 @@
             How do I book a consultation?
             <span class="tgl"><svg class="ic"><use href="#ic-chev"/></svg></span>
           </button>
-          <div class="faq2-a" id="fa2"><div><p>Use the WhatsApp booking button on this page to start the consultation process and share your symptoms in a convenient, direct way.</p></div></div>
+          <div class="faq2-a" id="fa2"><div><p>Fill in the booking form on this page with your details and preferred date and time. Your first consultation is free. Submitting the form opens WhatsApp with your request pre-filled, so you can confirm in one tap.</p></div></div>
         </div>
         <div class="faq2-item" data-open="false" data-reveal="up" style="--d:160ms">
           <button class="faq2-q" aria-expanded="false" aria-controls="fa3">
@@ -751,84 +792,51 @@
   <section class="section book on-navy grain" id="book" data-spy="Book" aria-labelledby="bk-title">
     <div class="container">
       <div class="section-head section-head--center" data-reveal="up">
-        <span class="eyebrow">Book Your Session</span>
-        <h2 class="h2" id="bk-title">Ready to feel better — <span class="accent">from home?</span></h2>
-        <p class="lead">Pick a date and time that suits you, describe the issue, and confirm on WhatsApp — it takes under a minute.</p>
+        <span class="eyebrow">Free Consultation</span>
+        <h2 class="h2" id="bk-title">Book your <span class="accent">free consultation.</span></h2>
+        <p class="lead">Tell us who you are and when suits you. No payment, no card — it takes under a minute.</p>
       </div>
 
       <div class="book__card" data-reveal="up" style="--d:120ms">
-        <div class="tabs" role="tablist" aria-label="Contact options">
-          <button class="tab" id="tab-appt" role="tab" aria-selected="true" aria-controls="panel-appt">
-            <svg class="ic"><use href="#ic-cal"/></svg> Book an Appointment
-          </button>
-          <button class="tab" id="tab-enq" role="tab" aria-selected="false" aria-controls="panel-enq" tabindex="-1">
-            <svg class="ic"><use href="#ic-chat"/></svg> Quick Enquiry
-          </button>
-        </div>
+        <div class="book__grid">
+          <form id="apptForm" novalidate>
+            <!-- Honeypot: hidden from humans, filled by bots. Server drops any row with it set. -->
+            <div class="hp" aria-hidden="true">
+              <label for="a-website">Leave this field empty</label>
+              <input id="a-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
 
-        <!-- ---- Appointment panel ---- -->
-        <div class="tabpanel" id="panel-appt" role="tabpanel" aria-labelledby="tab-appt">
-          <div class="book__grid">
-            <form id="apptForm" novalidate>
+            <div class="two-col">
               <div class="field">
                 <label for="a-name">Your Name <span class="req">*</span></label>
                 <input id="a-name" name="name" type="text" autocomplete="name" placeholder="Full name" required />
               </div>
               <div class="field">
-                <label for="a-date">Preferred Date <span class="req">*</span></label>
-                <input id="a-date" name="date" type="date" required />
-              </div>
-
-              <fieldset class="slots" id="durationFs">
-                <legend>Session Length <span class="req">*</span></legend>
-                <div class="seg" id="durationSeg" role="radiogroup" aria-label="Session length"></div>
-              </fieldset>
-
-              <fieldset class="slots" id="timeFs">
-                <legend>Preferred Time <span class="req">*</span></legend>
-                <div class="slot-scroll" id="slotGrid"></div>
-                <p class="slot-selected" id="slotSelected" aria-live="polite"></p>
-              </fieldset>
-
-              <div class="field">
-                <label for="a-issue">What's troubling you? <span class="req">*</span></label>
-                <textarea id="a-issue" name="issue" placeholder="Briefly describe the issue — where it hurts, since when, and what makes it worse." required></textarea>
-              </div>
-
-              <button class="btn btn--wa btn--lg btn--block" type="submit" id="apptSubmit">
-                <svg class="ic"><use href="#ic-wa"/></svg> Confirm on WhatsApp
-              </button>
-              <p class="form-status" id="apptStatus" role="status" aria-live="polite"></p>
-              <p class="form-note">Opens WhatsApp with your request pre-filled — sending it books your slot request.</p>
-            </form>
-
-            <aside class="wa-preview" aria-label="Preview of your WhatsApp message">
-              <div class="wa-preview__head">
-                <span class="pfp">VS</span>
-                <span><b>Dr. Varun Soni (PT)</b><span>Online Physiotherapy</span></span>
-              </div>
-              <div class="wa-bubble" id="waPreview">Hi Dr. Varun, I'd like to book an appointment. 🗓</div>
-              <p class="wa-preview__note">Live preview — this is exactly what you'll send.</p>
-            </aside>
-          </div>
-        </div>
-
-        <!-- ---- Enquiry panel ---- -->
-        <div class="tabpanel" id="panel-enq" role="tabpanel" aria-labelledby="tab-enq" hidden>
-          <form id="enqForm" novalidate>
-            <div class="two-col">
-              <div class="field">
-                <label for="e-name">Full Name <span class="req">*</span></label>
-                <input id="e-name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
-              </div>
-              <div class="field">
-                <label for="e-phone">WhatsApp Number <span class="req">*</span></label>
-                <input id="e-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile number" required />
+                <label for="a-phone">WhatsApp Number <span class="req">*</span></label>
+                <input id="a-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile number" required />
               </div>
             </div>
+
+            <div class="two-col">
+              <div class="field">
+                <label for="a-email">Email <span class="req">*</span></label>
+                <input id="a-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+                <small class="field__hint">Used to send your calendar invite.</small>
+              </div>
+              <div class="field">
+                <label for="a-age">Age <span class="req">*</span></label>
+                <input id="a-age" name="age" type="number" inputmode="numeric" min="1" max="120" placeholder="e.g. 34" required />
+              </div>
+            </div>
+
+            <fieldset class="field">
+              <legend>Gender <span class="req">*</span></legend>
+              <div class="seg" id="genderSeg" role="radiogroup" aria-label="Gender"></div>
+            </fieldset>
+
             <div class="field">
-              <label for="e-concern">Primary Concern <span class="req">*</span></label>
-              <select id="e-concern" name="concern" required>
+              <label for="a-concern">Primary Concern <span class="req">*</span></label>
+              <select id="a-concern" name="concern" required>
                 <option value="" selected disabled>Select a concern</option>
                 <option>Online Consultation &amp; Treatment</option>
                 <option>Back Pain Treatment</option>
@@ -838,14 +846,54 @@
                 <option>Full-Body Mobility, Strength &amp; Conditioning</option>
               </select>
             </div>
+
+            <fieldset class="field wheel-field" id="whenFs">
+              <legend>Preferred Date &amp; Time <span class="req">*</span></legend>
+              <div class="wheel" id="wheel">
+                <div class="wheel__band" aria-hidden="true"></div>
+                <div class="wheel__col wheel__col--date" data-wheel="date" tabindex="0" role="listbox" aria-label="Date"></div>
+                <div class="wheel__col" data-wheel="hour" tabindex="0" role="listbox" aria-label="Hour"></div>
+                <div class="wheel__col" data-wheel="minute" tabindex="0" role="listbox" aria-label="Minute"></div>
+                <div class="wheel__col" data-wheel="ampm" tabindex="0" role="listbox" aria-label="AM or PM"></div>
+              </div>
+              <p class="wheel__out" id="whenOut" aria-live="polite"></p>
+              <p class="field__hint">Sessions run 6:00 AM – 11:00 PM IST.</p>
+            </fieldset>
+
             <div class="field">
-              <label for="e-msg">Message</label>
-              <textarea id="e-msg" name="message" placeholder="Tell us where it hurts, how long it has been happening, and what's limited."></textarea>
+              <label for="a-issue">What's troubling you? <span class="req">*</span></label>
+              <textarea id="a-issue" name="issue" placeholder="Briefly describe the issue — where it hurts, since when, and what makes it worse." required></textarea>
             </div>
-            <button class="btn btn--lg btn--block" type="submit" id="enqSubmit">Send Enquiry</button>
-            <p class="form-status" id="enqStatus" role="status" aria-live="polite"></p>
-            <p class="form-note">We reply on WhatsApp, usually within a few hours.</p>
+
+            <!-- Mobile: the preview belongs above the button, where it can still be read. -->
+            <aside class="wa-preview wa-preview--inline" aria-hidden="true">
+              <div class="wa-bubble" id="waPreviewMobile"></div>
+            </aside>
+
+            <div class="field field--consent">
+              <label class="consent">
+                <input id="a-consent" name="consent" type="checkbox" required />
+                <span>I agree that my details and description of symptoms will be used to arrange
+                and deliver my consultation, as set out in the
+                <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. <span class="req">*</span></span>
+              </label>
+            </div>
+
+            <button class="btn btn--wa btn--lg btn--block" type="submit" id="apptSubmit">
+              <svg class="ic"><use href="#ic-wa"/></svg> Book Free Consultation
+            </button>
+            <p class="form-status" id="apptStatus" role="status" aria-live="polite"></p>
+            <p class="form-note">Opens WhatsApp with your request pre-filled — send it to confirm your slot.</p>
           </form>
+
+          <aside class="wa-preview" aria-label="Preview of your WhatsApp message">
+            <div class="wa-preview__head">
+              <span class="pfp">VS</span>
+              <span><b>Dr. Varun Soni (PT)</b><span>Online Physiotherapy</span></span>
+            </div>
+            <div class="wa-bubble" id="waPreview">Hi Dr. Varun, I'd like to book a free consultation. 🗓</div>
+            <p class="wa-preview__note">Live preview — this is exactly what you'll send.</p>
+          </aside>
         </div>
       </div>
     </div>
@@ -875,16 +923,17 @@
         <div class="footer__links">
           <a href="#services">Services</a>
           <a href="#how">How It Works</a>
-          <a href="#stories">Stories</a>
+          <a href="#results">Results</a>
           <a href="#faq">FAQ</a>
-          <a href="#book">Book Appointment</a>
+          <a href="#book">Book Free Consultation</a>
+          <a href="privacy.html">Privacy Policy</a>
         </div>
       </nav>
 
       <div class="footer__contact">
         <h3>Get in Touch</h3>
-        <a class="footer__wa" href="https://wa.me/919680049176?text=Can%20I%20get%20more%20info%20about%20your%20online%20physiotherapy%20services%3F" target="_blank" rel="noopener">
-          <svg class="ic"><use href="#ic-wa"/></svg> 9680049176
+        <a class="footer__wa" href="#book" data-cta="footer">
+          <svg class="ic"><use href="#ic-cal"/></svg> Book a Free Consultation
         </a>
         <p>Expert Care. Anywhere, Anytime.<br/>Consultations available across India.</p>
       </div>
@@ -899,12 +948,11 @@
 
 <!-- ==================== MOBILE STICKY BAR ==================== -->
 <div class="mobile-bar" id="mobileBar">
-  <a class="btn btn--wa" href="https://wa.me/919680049176?text=Can%20I%20get%20more%20info%20about%20your%20online%20physiotherapy%20services%3F" target="_blank" rel="noopener">
-    <svg class="ic"><use href="#ic-wa"/></svg> WhatsApp
+  <a class="btn btn--wa btn--block" href="#book" data-cta="mobile-bar">
+    <svg class="ic"><use href="#ic-cal"/></svg> Book Your Free Consultation
   </a>
-  <a class="btn" href="#book"><svg class="ic"><use href="#ic-cal"/></svg> Book</a>
 </div>
 
-<script src="script.js?v=9" defer></script>
+<script src="script.js?v=10" defer></script>
 </body>
 </html>

@@ -1,79 +1,99 @@
-# Dr. Varun Soni (PT) — Online Physiotherapy · **V3 "Liquid Glass"**
+# Dr. Varun Soni (PT) — Online Physiotherapy · **V4 "Booking-Gated"**
 
-V2's structure and features wearing a liquid-glass skin: frosted translucent surfaces with specular top edges, hover shine sweeps, and a site-wide field of slowly morphing color blobs glowing through every pane. Everything else — scroll-driven animation, custom-crafted iconography,
-real photography, and a WhatsApp **appointment booker** — still 100% static
-(no build step, no backend, no frameworks).
+V3's liquid-glass design, rebuilt around one idea: **the only way to reach the
+practice is a completed booking form.** The offer up front is a free
+consultation, every booking is recorded before the WhatsApp handoff, and the
+practice gets an admin panel that turns a request into a real calendar invite
+in one click.
 
-## What's new vs V2 (`../ProjectV2`)
+The site itself is still plain HTML/CSS/JS — no npm, no framework, no build
+step. The data layer is a Google Sheet driven by two Apps Script projects.
 
-- **Liquid glass surfaces** — "faux glass": translucent tint + top-light sheen (`--glass-sheen`) + a specular 1px inset highlight + border. **No `backdrop-filter` on rounded cards** — the blob field still glows through the `rgba` transparency, but with none of the Chromium/Edge/Android "sharp corner" artifact or the per-frame blur cost. Real `backdrop-filter` is kept on only 3 fixed, non-rounded surfaces (header, mobile bar, mobile menu) on desktop, and disabled entirely on mobile/touch (`@media (max-width:780px),(hover:none)`).
-- **Morphing blob field**: four theme-tinted radial blobs (teal/sapphire/violet/mint) drift and morph behind the glass, site-wide.
-- **Shine sweeps**: a light band sweeps across cards on hover.
-- **Chromatic scroll gradient**: the scroll-driven background travels ink → sapphire → teal → violet (dark) / porcelain → aqua → lilac → mint (light). `gradientNow` only writes CSS vars when a value actually changes.
+## Why V4 exists
 
-### Fix pass (real-device review)
-- **Performance**: cut live `backdrop-filter` elements from ~67 → ~1 (desktop) / 0 (mobile); parallax disabled on touch; throttled gradient writes. Fixes scroll/animation lag and the corner-shadow artifact together.
-- **Booking**: time slots now **6:00 AM–10:00 PM at 30-min granularity** in a single scrollable list, grouped Morning/Afternoon/Evening, with a **Session Length** selector (30 / 45 / 60 min, default 45). The WhatsApp message shows the computed range, e.g. `Time: 3:00 PM – 3:45 PM (45 min)`. Data model + `initSlots` in `script.js`.
-- **Mobile density**: 16px base font, tighter section/card padding, smaller headings on phones — a shorter, less "zoomed" page.
-- **Mobile hero**: floating chips shrunk to tidy corner badges; the shield chip + photo caption are hidden and the spine card tucks within the photo, so nothing piles onto the image.
-- **How-It-Works**: step badges made opaque so the connector line hides behind them (visible only in the gaps).
+An audit of V3 found the funnel, not the design, was the problem:
 
-## Inherited from V2
-
-| Area | V2 |
+| Problem in V3 | Fix in V4 |
 |---|---|
-| **Animations** | Word-by-word hero headline, aurora background, scroll-reveal variants (fade/slide/zoom/blur/clip), photo parallax, drawing step-line, floating glass chips, hero 3D tilt (desktop), magnetic buttons, credential marquee, scroll-progress bar |
-| **Spine scrollspy** | Vertebra-shaped section dots on the right edge (desktop) — the brand motif as navigation |
-| **Icons** | Fully redesigned custom SVG family — anatomical spine/knee/ACL/neck diagrams + Olympic-pictogram people (built & iterated in `assets/icon-lab.html`) |
-| **Photos** | Real Unsplash photography (license-free): hero home session, home stretching, hands-on knee assessment (`assets/img/`) |
-| **Book an Appointment** | Name + date (past dates blocked) + tappable time slots + issue description → opens WhatsApp with the request pre-filled. **Live WhatsApp-style preview bubble** shows the exact message as you type |
-| **Quick Enquiry** | Second tab keeps the V1-style enquiry form (also → WhatsApp) |
-| **Mobile UX** | Fullscreen radial menu, hide-on-scroll header, sticky WhatsApp + Book bar, safe-area aware |
-| **Theming** | **Dark mode by default** with a sun/moon toggle in the header (persisted in `localStorage`, `?theme=light\|dark` URL override, smooth cross-fade). Both themes use a **scroll-dependent gradient backdrop** — the page background interpolates through a 5-stop color journey as you scroll (ink → navy → teal depths → indigo in dark; porcelain → teal wash → periwinkle in light) |
+| `window.open` fired inside a 600 ms cosmetic `setTimeout`, breaking the user-gesture chain that iOS Safari requires — the site's only conversion action was popup-blocker exposed, and "✓ Opening WhatsApp" was shown *before* anyone knew it worked | The timer is gone. The handoff is synchronous inside the submit handler. |
+| Nothing was ever captured — a blocked or abandoned handoff left no trace | Every submission is POSTed to a Sheet *before* the handoff, with `keepalive` so it survives the app switch |
+| 10 of 12 WhatsApp links sent identical prefilled text, so CTA attribution was impossible | Every CTA carries `data-cta`; the source is recorded on the booking row |
+| A 33-chip time picker in a 208 px inner scroller with ~37 px tap targets | A four-column scroll wheel with 44 px targets that cannot produce an invalid time |
+| Three unattributed testimonials and an unsourced ★★★★★ on a medical page | Removed. Replaced by a real-numbers band and reviews that only patients you invite can submit, published only after you approve |
+| No canonical, relative OG/JSON-LD image URLs, JSON-LD `url` pointing at `wa.me`, no `FAQPage` schema | All fixed |
+
+## What's new
+
+- **Free consultation** is the offer everywhere — hero, header, cards, footer.
+- **No direct-DM links.** All 12 static `wa.me` hrefs became `#book` anchors.
+  Service cards additionally pre-select the matching concern in the form.
+- **Scroll-wheel date/time picker** — Date · Hour · Minute · AM/PM. The hour
+  column is rebuilt from the AM/PM choice, and the minute column from the hour,
+  which is what enforces the 6:00 AM–11:00 PM window and hides times that have
+  already passed today (60-minute lead). At 11 PM only `:00` remains, so the
+  last bookable start is exactly 11:00 PM. Keyboard-operable, `role="listbox"`.
+- **New fields**: age, gender, email (needed for the calendar invite), phone,
+  and a required consent checkbox.
+- **Admin panel** with Google sign-in, calendar invites and review moderation —
+  see [`apps-script/SETUP.md`](apps-script/SETUP.md).
+- **`privacy.html`** — age, gender and symptom text are sensitive personal data
+  under India's DPDP Act 2023, which V3 collected with no policy and no consent.
+
+## ⚠ Before this goes live
+
+1. **Supply the real numbers.** The four tiles in the Results section are
+   `0+` placeholders (`index.html`, search `TODO`). Replace them with genuine
+   figures or delete the tiles — they are the site's only trust proof now.
+2. **Set the domain.** Replace `https://drvarunsoni.in` throughout `index.html`
+   and `privacy.html` (canonical, `og:image`, `twitter:image`, JSON-LD).
+3. **Fill in `privacy.html`** — publication date, grievance email, retention
+   period. It is a working draft, not legal advice; have it reviewed.
+4. **Deploy the backend** and set the `API` constant in `script.js` *and*
+   `review.html`. Without it the site still works; bookings just aren't recorded.
+5. **Re-encode `assets/og-image.png`** (380 KB) to JPEG/WebP at ~40–60 KB and
+   save it as `assets/og-image.jpg` — the meta tags already point at `.jpg`.
 
 ## Files
 
-- `index.html` — markup + inline SVG sprite (all icons)
-- `styles.css` — design system + motion system
-- `script.js` — rAF scroll engine, spine nav, tilt/parallax/magnetic, carousel, tabs, forms
-- `assets/img/` — photos (Unsplash license, free for commercial use)
-- `assets/icon-lab.html` — the icon workshop: open it in a browser to view/edit every icon
-- `assets/favicon.svg`, `assets/og-image.png`
+```
+index.html          landing page + inline SVG sprite (all icons)
+styles.css          design system + motion system
+script.js           rAF scroll engine, wheel picker, booking form, reviews
+privacy.html        DPDP-facing privacy policy (draft — needs review)
+review.html         private review submission, ?t=TOKEN
+assets/             photos, favicon, OG image
+apps-script/
+  SETUP.md          deploy guide — start here
+  public/Code.gs    write-only booking endpoint + approved-reviews feed
+  admin/Code.gs     panel logic: confirm, calendar invite, moderation
+  admin/Admin.html  the panel UI
+```
 
 ## Run locally
 
 ```bash
-cd ProjectV2
-python -m http.server 8000
-# → http://localhost:8000
+cd ProjectV4 && python -m http.server 8000
 ```
 
-## Deploy
+## Two things that will bite you if you edit this
 
-Static files — drag the folder to Netlify Drop, run `vercel` in it, or upload to
-any web host. Nothing to configure.
+**The wheel picker must never use `behavior: "auto"` or CSS `scroll-behavior`.**
+A smooth programmatic scroll is cancelled outright by `scroll-snap-type:
+mandatory`: the column stays visually stuck on the old value while the state
+moves on. `selectIndex()` passes `"instant"` explicitly, and keyboard input
+commits an explicit index rather than moving the scroller and reading the
+position back. Both are load-bearing, and both are commented in place.
 
-## Customize
+**The booking POST must stay `Content-Type: text/plain;charset=utf-8`.** That
+keeps it a CORS "simple request". `application/json` triggers a preflight that
+Apps Script cannot answer, and every booking would silently fail to record.
 
-- **WhatsApp number**: replace `919680049176` in `index.html` (12 links) and the
-  `WA` constant at the top of `script.js`.
-- **Time slots**: edit the `SLOTS` array in `script.js`.
-- **Colors/spacing**: design tokens at the top of `styles.css` — constants in `:root`,
-  light theme in `:root, [data-theme="light"]`, dark theme in `[data-theme="dark"]`.
-- **Scroll gradient**: edit the `GRADIENTS` palettes (5 stops × 3 colors per theme)
-  at the top of `script.js`.
-- **Icons**: tweak in `assets/icon-lab.html`, then copy the `<symbol>` into the
-  sprite at the top of `index.html`.
+## Inherited from V3
 
-## Engineering notes
-
-- All animation is **progressive enhancement**: content is fully visible with JS
-  disabled (`html.js` gate), a 3s failsafe un-hides everything, and
-  `prefers-reduced-motion` switches to a static page.
-- Motion is scroll-driven via one rAF loop (no IntersectionObserver — it doesn't
-  fire in some embedded/background contexts); a `visibilitychange` hook re-syncs state
-  when a background tab becomes visible.
-- `?shot=1` in the URL neutralizes viewport-height hero sizing — useful for
-  full-page screenshot tools.
-- WCAG-minded: AA contrast tokens, labelled fields with `aria-invalid`,
-  keyboard-operable tabs/accordion/menu, real radio inputs behind the time chips.
+Liquid-glass surfaces, the morphing blob field, the chromatic scroll gradient,
+word-by-word hero headline, scroll-reveal variants, photo parallax, the drawn
+step connector, hero 3D tilt and magnetic buttons (desktop), the spine
+scrollspy, the custom SVG icon family, dark/light theming with a persisted
+toggle, and the progressive-enhancement guarantees: content is fully visible
+with JS disabled, a 3 s failsafe un-hides everything, and
+`prefers-reduced-motion` switches to a static page.

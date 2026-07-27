@@ -291,7 +291,7 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
    still glows through the rgba alpha, but with none of the corner artifact /
    per-frame blur cost. Real backdrop-filter is reserved for the 3 fixed,
    non-rounded surfaces (header, mobile-bar, mobile-menu). */
-.card, .faq2-item, .check, .book__card, .hero__chip, .g-chip, .theme-btn, .menu-btn, .ctl-btn, .slot {
+.card, .faq2-item, .check, .book__card, .hero__chip, .g-chip, .theme-btn, .menu-btn {
   background: var(--glass-sheen), var(--glass-card);
   border: 1px solid var(--glass-border);
 }
@@ -299,8 +299,8 @@ html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *
 /* NOTE: the old hover "shine sweep" was removed — its permanently-transformed
    ::after inside these rounded overflow:hidden cards forced them onto GPU layers,
    where rounded-corner clipping fails (squared corners) on some devices. */
-.card, .physio__card, .story, .faq2-item { overflow: hidden; }
-.story { position: relative; }
+.card, .physio__card, .review, .faq2-item { overflow: hidden; }
+.review { position: relative; }
 .physio__card { position: relative; }
 
 /* ---------- Layout utils --------------------------------------------------------- */
@@ -876,66 +876,44 @@ html.menu-open, .menu-open body { overflow: hidden; }
 .physio__body p.bio { color: var(--muted); font-size: 15.5px; max-width: 56ch; }
 .physio__tag { margin-top: 22px; font-family: var(--f-serif); font-style: italic; font-size: 19px; color: var(--accent-text); }
 
-/* ---------- Stories ----------------------------------------------------------------------------------------- */
-.stories-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
-.stories-ctl { display: flex; gap: 10px; }
-.ctl-btn {
-  width: 52px; height: 52px; border-radius: 50%;
-  color: var(--heading);
-  display: grid; place-items: center;
-  box-shadow: inset 0 1px 0 var(--glass-hi), var(--sh-sm);
-  transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), transform .2s var(--spring);
-}
-.ctl-btn .ic { font-size: 20px; }
-.ctl-btn:hover { background: var(--teal); color: #fff; border-color: var(--teal); transform: scale(1.06); }
-.ctl-btn:disabled { opacity: .35; pointer-events: none; }
-
-.stories-track {
-  display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 48px) / 3);
-  gap: 24px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  padding: 8px 4px 26px;
-  margin: 0 -4px;
-}
-.stories-track::-webkit-scrollbar { display: none; }
-.story {
-  scroll-snap-align: start;
+/* ---------- Results: stat band + approved reviews ------------------------------------------------------------- */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.stat {
   border-radius: var(--r-lg);
-  padding: 32px 30px 26px;
+  padding: 30px 22px;
+  text-align: center;
+  background: var(--glass-card);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-hi), var(--sh-sm);
+}
+.stat__num {
+  display: block;
+  font: 800 clamp(34px, 4.4vw, 46px)/1 var(--f-head);
+  color: var(--h-accent);
+  font-variant-numeric: tabular-nums;
+}
+.stat__label { display: block; margin-top: 10px; font: 500 14px/1.4 var(--f-body); color: var(--muted); }
+
+.reviews { margin-top: 54px; }
+.reviews__title { text-align: center; font: 600 20px/1.3 var(--f-head); color: var(--heading); margin-bottom: 26px; }
+.reviews__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+.review {
+  border-radius: var(--r-lg);
+  padding: 30px 28px 24px;
   position: relative;
-  display: flex; flex-direction: column;
   overflow: hidden;
   background: var(--glass-card);
   border: 1px solid var(--glass-border);
   box-shadow: inset 0 1px 0 var(--glass-hi), var(--sh-sm);
 }
-.story::before {
+.review::before {
   content: "\201C";
   position: absolute; top: -14px; right: 14px;
   font: italic 700 130px/1 var(--f-serif);
   color: var(--ic-bg);
 }
-.story blockquote { margin: 0; position: relative; font: italic 500 19px/1.55 var(--f-serif); color: var(--heading); flex: 1; }
-.story figcaption { margin-top: 24px; display: flex; align-items: center; gap: 13px; }
-.story .avatar {
-  width: 46px; height: 46px; border-radius: 50%; flex: none;
-  display: grid; place-items: center;
-  background: var(--seal-bg); color: var(--teal-on-navy);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25);
-  font: 700 15px/1 var(--f-head);
-}
-.story .who b { display: block; font: 600 14.5px/1.3 var(--f-body); color: var(--heading); }
-.story .who span { display: flex; align-items: center; gap: 5px; font: 500 12.5px/1.4 var(--f-body); color: var(--muted); }
-.story .who .ic { font-size: 13px; color: var(--h-accent); }
-.dots { display: flex; justify-content: center; gap: 8px; }
-.dot {
-  width: 8px; height: 8px; border-radius: 6px;
-  background: var(--dot); border: 0; padding: 0;
-  transition: width .3s var(--ease), background .3s var(--ease);
-}
-.dot.active { width: 26px; background: var(--teal); }
+.review blockquote { margin: 0; position: relative; font: italic 500 18px/1.55 var(--f-serif); color: var(--heading); }
+.review figcaption { margin-top: 20px; font: 600 13.5px/1.3 var(--f-body); color: var(--muted); }
 
 /* ---------- FAQ ------------------------------------------------------------------------------------------------ */
 .faq2 { max-width: 780px; margin-inline: auto; }
@@ -986,28 +964,11 @@ html.menu-open, .menu-open body { overflow: hidden; }
   max-width: 980px; margin-inline: auto;
   overflow: hidden;
 }
-.tabs { display: flex; background: var(--tab-rail); padding: 8px; gap: 8px; border-bottom: 1px solid var(--glass-border); }
-.tab {
-  flex: 1;
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  font: 600 15px/1 var(--f-body);
-  color: var(--muted);
-  padding: 15px 12px;
-  border-radius: 15px;
-  border: 1px solid transparent;
-  transition: background .25s var(--ease), color .25s var(--ease), box-shadow .25s var(--ease), border-color .25s var(--ease);
+.book__grid {
+  display: grid; grid-template-columns: 1.15fr .85fr;
+  gap: clamp(26px, 3.5vw, 44px); align-items: start;
+  padding: clamp(26px, 4vw, 44px);
 }
-.tab .ic { font-size: 20px; }
-.tab[aria-selected="true"] {
-  background: var(--glass-card);
-  border-color: var(--glass-border);
-  color: var(--heading);
-  box-shadow: inset 0 1px 0 var(--glass-hi), var(--sh-sm);
-}
-.tabpanel { padding: clamp(26px, 4vw, 44px); }
-.tabpanel[hidden] { display: none; }
-
-.book__grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(26px, 3.5vw, 44px); align-items: start; }
 
 .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
 .field label { font: 600 13.5px/1 var(--f-body); color: var(--heading); }
@@ -1037,11 +998,24 @@ html.menu-open, .menu-open body { overflow: hidden; }
 .field:focus-within label { color: var(--accent-text); }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
 
-fieldset.slots { border: 0; padding: 0; margin: 0 0 18px; }
-fieldset.slots legend { font: 600 13.5px/1 var(--f-body); color: var(--heading); padding: 0; margin-bottom: 10px; }
-.slot-grid { display: flex; flex-wrap: wrap; gap: 9px; }
+fieldset.field { border: 0; padding: 0; margin: 0 0 18px; }
+fieldset.field legend { font: 600 13.5px/1 var(--f-body); color: var(--heading); padding: 0; margin-bottom: 10px; }
+.field__hint { font: 400 12.5px/1.45 var(--f-body); color: var(--muted); }
 
-/* --- Session-length segmented control --- */
+/* Honeypot — off-screen for humans, irresistible to bots. */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* --- Consent --- */
+.field--consent { margin-top: 4px; }
+.consent { display: flex; align-items: flex-start; gap: 11px; cursor: pointer; }
+.consent input {
+  width: 20px; height: 20px; flex: none; margin-top: 2px;
+  accent-color: var(--teal); cursor: pointer;
+}
+.consent > span { font: 400 13px/1.55 var(--f-body); color: var(--muted); }
+.consent a { color: var(--accent-text); text-decoration: underline; }
+
+/* --- Segmented control (gender) --- */
 .seg {
   display: inline-flex; gap: 6px;
   background: var(--tab-rail);
@@ -1052,6 +1026,8 @@ fieldset.slots legend { font: 600 13.5px/1 var(--f-body); color: var(--heading);
 .seg-opt {
   position: relative; text-align: center; white-space: nowrap; cursor: pointer;
   font: 600 13.5px/1 var(--f-body); color: var(--muted);
+  /* 44px min height — V3's chips were ~37px, below the tap-target guideline. */
+  min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
   padding: 10px 20px; border-radius: var(--r-pill);
   transition: background .2s var(--ease), color .2s var(--ease);
   user-select: none;
@@ -1060,44 +1036,67 @@ fieldset.slots legend { font: 600 13.5px/1 var(--f-body); color: var(--heading);
 .seg-opt.checked { background: var(--teal); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.28); }
 .seg-opt:has(input:focus-visible) { outline: 3px solid var(--teal); outline-offset: 2px; }
 
-/* --- Scrollable time list (day-part sub-labels + 30-min chips) --- */
-.slot-scroll {
-  max-height: 208px; overflow-y: auto;
-  padding: 4px 10px 4px 4px; margin-top: 2px;
+/* --- Date/time scroll wheel ---
+   Item height and row count are fixed here and read back by script.js
+   (itemH()), so the two never drift. Column padding is exactly the space
+   needed to bring the first and last options to the centre band. */
+.wheel {
+  --wh-item: 44px;                 /* also the tap-target height */
+  --wh-rows: 5;                    /* odd, so one row sits dead centre */
+  --wh-h: calc(var(--wh-item) * var(--wh-rows));
+  position: relative;
+  display: grid; grid-template-columns: 2.1fr 1fr 1fr 1.1fr; gap: 6px;
+  height: var(--wh-h);
+  padding: 0 8px;
   border: 1px solid var(--glass-border);
-  border-radius: 16px;
+  border-radius: 18px;
   background: var(--glass-sheen), var(--glass-card);
   box-shadow: inset 0 1px 0 var(--glass-hi);
-  scrollbar-width: thin; scrollbar-color: var(--sb-thumb) transparent;
+  overflow: hidden;
 }
-.slot-scroll::-webkit-scrollbar { width: 9px; }
-.slot-scroll::-webkit-scrollbar-track { background: transparent; }
-.slot-scroll::-webkit-scrollbar-thumb { background: var(--sb-thumb); border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }
-.slot-scroll::-webkit-scrollbar-thumb:hover { background: var(--teal); }
-.slot-daylabel {
-  display: flex; align-items: center; gap: 10px;
-  font: 700 11px/1 var(--f-body); letter-spacing: .14em; text-transform: uppercase;
-  color: var(--accent-text);
-  padding: 12px 6px 8px;
+/* Centre highlight band — purely decorative, sits under the options. */
+.wheel__band {
+  position: absolute; left: 6px; right: 6px;
+  top: calc((var(--wh-h) - var(--wh-item)) / 2);
+  height: var(--wh-item);
+  border-radius: 12px;
+  background: var(--ic-bg);
+  border-block: 1px solid var(--glass-border);
+  pointer-events: none;
 }
-.slot-daylabel::after { content: ""; flex: 1; height: 1px; background: var(--glass-border); }
-.slot-daylabel:first-child { padding-top: 6px; }
-.slot-row { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 4px 4px; }
-.slot-selected { margin: 10px 2px 0; min-height: 16px; font: 600 13px/1.3 var(--f-body); color: var(--accent-text); }
-.slot {
+.wheel__col {
   position: relative;
-  font: 600 13.5px/1 var(--f-body); color: var(--heading);
-  border-radius: var(--r-pill);
-  box-shadow: inset 0 1px 0 var(--glass-hi);
-  padding: 11px 16px;
-  cursor: pointer;
-  transition: border-color .2s var(--ease), background .2s var(--ease), color .2s var(--ease), transform .2s var(--spring);
+  height: var(--wh-h);
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* Lets the first and last option reach the centre band. */
+  padding-block: calc((var(--wh-h) - var(--wh-item)) / 2);
+  /* NOTE: deliberately no `scroll-behavior: smooth` here. It would make JS
+     `behavior:"auto"` resolve to smooth, and a smooth programmatic scroll
+     gets cancelled by `scroll-snap-type: mandatory` — the column then never
+     moves at all. script.js passes "smooth" or "instant" explicitly instead.
+     User-driven touch/wheel scrolling is unaffected either way. */
+}
+.wheel__col::-webkit-scrollbar { display: none; }
+.wheel__col:focus-visible { outline: 3px solid var(--teal); outline-offset: -3px; border-radius: 12px; }
+.wheel__opt {
+  height: var(--wh-item);
+  display: flex; align-items: center; justify-content: center;
+  scroll-snap-align: center;
+  font: 600 15px/1 var(--f-body);
+  color: var(--muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  transition: color .18s var(--ease), transform .18s var(--ease);
   user-select: none;
 }
-.slot:hover { border-color: var(--teal); transform: translateY(-2px); }
-.slot:has(input:checked) { background: var(--teal); border-color: var(--teal); color: #fff; }
-.slot:has(input:focus-visible) { outline: 3px solid var(--teal); outline-offset: 2px; }
-.slot.checked { background: var(--teal); border-color: var(--teal); color: #fff; }
+.wheel__opt.is-sel { color: var(--heading); transform: scale(1.06); }
+.wheel__out {
+  margin: 12px 2px 0; min-height: 18px;
+  font: 600 13.5px/1.4 var(--f-body); color: var(--accent-text);
+}
 
 .wa-preview {
   position: sticky; top: 96px;
@@ -1135,6 +1134,11 @@ fieldset.slots legend { font: 600 13.5px/1 var(--f-body); color: var(--heading);
   border-right-color: var(--wa-bub-bg);
 }
 .wa-preview__note { margin-top: 12px; font: 500 11.5px/1.5 var(--f-body); color: var(--muted); text-align: center; }
+
+/* The inline copy exists only for narrow screens, where the sticky aside
+   collapses below the submit button and stops being read. Desktop keeps
+   the aside and hides this one. */
+.wa-preview--inline { display: none; }
 
 .form-status { margin-top: 14px; text-align: center; font: 600 15px/1.5 var(--f-body); color: var(--accent-text); min-height: 24px; }
 .form-status[data-state="error"] { color: var(--error); }
@@ -1225,14 +1229,17 @@ html.shotmode .scroll-cue { display: none; }
   .scroll-cue { display: none; }
   .svc-grid { grid-template-columns: 1fr 1fr; }
   .persona-grid { grid-template-columns: repeat(2, 1fr); }
-  .stories-track { grid-auto-columns: calc((100% - 24px) / 2); }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .why__grid { grid-template-columns: 1fr; }
   .physio__card { grid-template-columns: 1fr; }
   .physio__photo { min-height: 280px; }
   .physio__photo::after { background: linear-gradient(180deg, transparent 60%, var(--card-solid) 99%); }
   .physio__body { padding: 6px clamp(26px, 4vw, 44px) clamp(28px, 4vw, 44px); }
   .book__grid { grid-template-columns: 1fr; }
-  .wa-preview { position: static; }
+  /* The sticky aside stops working once stacked; swap in the inline copy
+     that sits directly above the submit button instead of below it. */
+  .book__grid > .wa-preview { display: none; }
+  .wa-preview--inline { display: block; position: static; min-height: 0; padding: 0; border: 0; background: none; box-shadow: none; margin-bottom: 18px; }
 }
 @media (max-width: 900px) {
   .nav { display: none; }
@@ -1248,7 +1255,6 @@ html.shotmode .scroll-cue { display: none; }
 @media (max-width: 780px) {
   .mobile-bar { display: flex; }
   body { font-size: 16px; padding-bottom: calc(86px + env(safe-area-inset-bottom)); }
-  .stories-track { grid-auto-columns: 88%; }
   /* --- density: shorter, less "zoomed" page on phones --- */
   .section { padding-block: clamp(36px, 7vw, 60px); }
   .section--tight { padding-block: clamp(28px, 6vw, 46px); }
@@ -1257,8 +1263,9 @@ html.shotmode .scroll-cue { display: none; }
   .hero h1 { font-size: clamp(34px, 9vw, 56px); }
   .lead { margin-top: 14px; }
   .vp-card, .svc-card { padding: 22px 20px; }
-  .story { padding: 24px 22px 20px; }
-  .tabpanel { padding: clamp(20px, 4vw, 44px); }
+  .review { padding: 24px 22px 20px; }
+  .stat { padding: 24px 16px; }
+  .book__grid { padding: clamp(20px, 4vw, 44px); }
   .hero { padding-top: calc(var(--header-h) + 20px); padding-bottom: 54px; }
   .hero .container { gap: 40px; }
   .hero__sub { margin-top: 18px; }
@@ -1293,14 +1300,19 @@ html.shotmode .scroll-cue { display: none; }
   .spine-card { left: -6px; bottom: 26px; width: 112px; }  /* tucked into the lower-left, within the photo */
   .two-col { grid-template-columns: 1fr; }
   .hero__cta .btn { flex: 1 1 100%; }
-  .stories-head { flex-direction: column; align-items: flex-start; }
   .footer__top { grid-template-columns: 1fr; gap: 30px; }
+  /* The date column carries the longest string ("Wed, 23 Sept" ≈ 102px), so it
+     gets the extra room; hour/minute/AM-PM never exceed two glyphs. */
+  .wheel { grid-template-columns: 2.4fr 1fr 1fr 1fr; gap: 2px; padding: 0 6px; }
+  .wheel__opt { font-size: 14px; }
+  .seg { flex-wrap: wrap; }
 }
 @media (max-width: 480px) {
   .brand__tag { display: none; }
 }
 @media (max-width: 400px) {
   .persona-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr; }
 }
 
 /* ---------- Mobile / touch: kill the last backdrop-filters for performance,
@@ -1348,4 +1360,7 @@ html.shotmode .scroll-cue { display: none; }
   .spine-card::after { display: none; }
   .fluid i { animation: none !important; }
   .shine::after { display: none; }
+  /* Wheel columns still snap and still work — they just stop gliding
+     (script.js passes "instant" when reduced motion is set). */
+  .wheel__opt.is-sel { transform: none; }
 }

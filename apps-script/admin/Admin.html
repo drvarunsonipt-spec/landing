@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<style>
+  :root { --bg:#0F1C42; --panel:#16234d; --line:#2a3766; --text:#E7EEF9; --muted:#93A0C4;
+          --teal:#2E8B8F; --teal-l:#7FD6D9; --amber:#C88A3A; --red:#C8453B; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:22px; background:var(--bg); color:var(--text);
+         font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+  h1 { font-size:21px; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:13.5px; margin-bottom:20px; }
+  .tabs { display:flex; gap:8px; margin-bottom:18px; }
+  .tabs button { flex:0 0 auto; background:var(--panel); color:var(--muted); border:1px solid var(--line);
+                 padding:10px 18px; border-radius:10px; cursor:pointer; font-size:14px; font-weight:600; }
+  .tabs button.on { background:var(--teal); color:#fff; border-color:var(--teal); }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:12px;
+          padding:16px 18px; margin-bottom:12px; }
+  .top { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; }
+  .who { font-weight:700; font-size:16px; }
+  .meta { color:var(--muted); font-size:13px; margin-top:3px; }
+  .when { color:var(--teal-l); font-weight:600; font-size:14.5px; margin-top:8px; }
+  .issue { margin-top:10px; padding-top:10px; border-top:1px solid var(--line);
+           color:var(--muted); font-size:13.5px; white-space:pre-wrap; }
+  .pill { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+          padding:4px 9px; border-radius:20px; }
+  .pill.pending{ background:rgba(200,138,58,.2); color:#E0A860; }
+  .pill.confirmed{ background:rgba(46,139,143,.24); color:var(--teal-l); }
+  .pill.declined{ background:rgba(200,69,59,.2); color:#E08A80; }
+  .pill.approved{ background:rgba(46,139,143,.24); color:var(--teal-l); }
+  .row { display:flex; gap:8px; flex-wrap:wrap; margin-top:13px; }
+  .row a, .row button { font-size:13px; font-weight:600; padding:9px 15px; border-radius:9px;
+                        border:1px solid var(--line); background:transparent; color:var(--text);
+                        cursor:pointer; text-decoration:none; display:inline-block; }
+  .row .go { background:var(--teal); border-color:var(--teal); color:#fff; }
+  .row .wa { background:#25D366; border-color:#25D366; color:#07301a; }
+  .row .bad { border-color:rgba(200,69,59,.5); color:#E08A80; }
+  .row button[disabled] { opacity:.5; cursor:default; }
+  .empty { color:var(--muted); padding:26px 0; text-align:center; }
+  .note { background:rgba(46,139,143,.14); border:1px solid var(--teal); color:var(--teal-l);
+          padding:11px 14px; border-radius:9px; font-size:13px; margin-top:11px; word-break:break-all; }
+  .err { background:rgba(200,69,59,.16); border-color:var(--red); color:#E08A80; }
+</style>
+</head>
+<body>
+  <h1>Bookings</h1>
+  <div class="sub">Signed in as the practice. One click confirms a slot, sends the calendar invite, and prepares the WhatsApp reply.</div>
+
+  <div class="tabs">
+    <button id="tB" class="on" onclick="show('b')">Bookings</button>
+    <button id="tR" onclick="show('r')">Reviews</button>
+  </div>
+
+  <div id="b"><div class="empty">Loading…</div></div>
+  <div id="r" style="display:none"><div class="empty">Loading…</div></div>
+
+<script>
+  var esc = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  };
+
+  function show(which) {
+    document.getElementById('b').style.display = which === 'b' ? '' : 'none';
+    document.getElementById('r').style.display = which === 'r' ? '' : 'none';
+    document.getElementById('tB').className = which === 'b' ? 'on' : '';
+    document.getElementById('tR').className = which === 'r' ? 'on' : '';
+  }
+
+  /* ---------- bookings ---------- */
+  function loadBookings() {
+    google.script.run.withSuccessHandler(renderBookings)
+      .withFailureHandler(function (e) {
+        document.getElementById('b').innerHTML = '<div class="note err">' + esc(e.message) + '</div>';
+      }).listBookings();
+  }
+
+  function renderBookings(list) {
+    var el = document.getElementById('b');
+    if (!list || !list.length) { el.innerHTML = '<div class="empty">No bookings yet.</div>'; return; }
+    el.innerHTML = list.map(function (x) {
+      var st = String(x.status || 'pending').toLowerCase();
+      return '<div class="card" id="bk' + x.row + '">' +
+        '<div class="top"><div>' +
+          '<div class="who">' + esc(x.name) + '</div>' +
+          '<div class="meta">' + esc(x.age) + ' · ' + esc(x.gender) + ' · ' + esc(x.phone) +
+            ' · ' + esc(x.email) + '</div>' +
+          '<div class="meta">' + esc(x.concern) + ' · via ' + esc(x.source || '—') +
+            ' · received ' + esc(x.timestamp) + '</div>' +
+          '<div class="when">' + esc(x.date) + ' at ' + esc(x.time) + ' IST</div>' +
+        '</div><span class="pill ' + esc(st) + '">' + esc(st) + '</span></div>' +
+        '<div class="issue">' + esc(x.issue) + '</div>' +
+        '<div class="row">' +
+          (st === 'pending'
+            ? '<button class="go" onclick="confirmIt(' + x.row + ',this)">Confirm + send invite</button>' +
+              '<button class="bad" onclick="setStatus(' + x.row + ',\'declined\')">Decline</button>'
+            : '<button onclick="setStatus(' + x.row + ',\'pending\')">Reopen</button>') +
+          '<button class="bad" onclick="del(' + x.row + ')">Delete</button>' +
+        '</div><div id="out' + x.row + '"></div></div>';
+    }).join('');
+  }
+
+  function confirmIt(row, btn) {
+    btn.disabled = true; btn.textContent = 'Working…';
+    google.script.run.withSuccessHandler(function (res) {
+      document.getElementById('out' + row).innerHTML =
+        '<div class="note">' +
+          (res.invited ? 'Calendar invite sent to the patient and added to your calendar.'
+                       : 'Added to your calendar. No valid email on file, so no invite was sent.') +
+        '</div>' +
+        '<div class="row">' +
+          '<a class="wa" href="' + res.wa + '" target="_blank" rel="noopener">Send WhatsApp confirmation</a>' +
+          '<a href="' + res.reviewLink + '" target="_blank" rel="noopener">Copy review link</a>' +
+        '</div>';
+      loadBookings();
+    }).withFailureHandler(function (e) {
+      btn.disabled = false; btn.textContent = 'Confirm + send invite';
+      document.getElementById('out' + row).innerHTML = '<div class="note err">' + esc(e.message) + '</div>';
+    }).confirmBooking(row);
+  }
+
+  function setStatus(row, s) {
+    google.script.run.withSuccessHandler(loadBookings).setBookingStatus(row, s);
+  }
+  function del(row) {
+    if (!confirm('Delete this booking permanently?')) return;
+    google.script.run.withSuccessHandler(loadBookings).deleteBooking(row);
+  }
+
+  /* ---------- reviews ---------- */
+  function loadReviews() {
+    google.script.run.withSuccessHandler(renderReviews).listReviews();
+  }
+  function renderReviews(list) {
+    var el = document.getElementById('r');
+    if (!list || !list.length) { el.innerHTML = '<div class="empty">No reviews submitted yet.</div>'; return; }
+    el.innerHTML = list.map(function (x) {
+      var st = String(x.status || 'pending').toLowerCase();
+      return '<div class="card">' +
+        '<div class="top"><div>' +
+          '<div class="who">' + esc(x.name) + (x.city ? ' · ' + esc(x.city) : '') + '</div>' +
+          '<div class="meta">' + esc(x.rating) + '/5 · ' + esc(x.timestamp) + '</div>' +
+        '</div><span class="pill ' + esc(st) + '">' + esc(st) + '</span></div>' +
+        '<div class="issue">' + esc(x.text) + '</div>' +
+        '<div class="row">' +
+          (st === 'approved'
+            ? '<button onclick="rev(' + x.row + ',\'pending\')">Unpublish</button>'
+            : '<button class="go" onclick="rev(' + x.row + ',\'approved\')">Approve &amp; publish</button>') +
+          '<button class="bad" onclick="delRev(' + x.row + ')">Delete</button>' +
+        '</div></div>';
+    }).join('');
+  }
+  function rev(row, s) { google.script.run.withSuccessHandler(loadReviews).setReviewStatus(row, s); }
+  function delRev(row) {
+    if (!confirm('Delete this review permanently?')) return;
+    google.script.run.withSuccessHandler(loadReviews).deleteReview(row);
+  }
+
+  loadBookings();
+  loadReviews();
+</script>
+</body>
+</html>

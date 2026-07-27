@@ -1,13 +1,23 @@
 /* =========================================================================
-   Dr. Varun Soni (PT) — Online Physiotherapy · V2
+   Dr. Varun Soni (PT) — Online Physiotherapy · V4
    Scroll-driven motion engine (rAF-based — reliable where IO isn't),
-   spine section nav, tilt/parallax/magnetic details, stories carousel,
-   tabs, FAQ, and appointment/enquiry → WhatsApp handoff.
+   spine section nav, tilt/parallax/magnetic details, FAQ,
+   scroll-wheel date/time picker, and the booking → WhatsApp handoff.
+
+   V4 funnel rule: there are no direct-DM WhatsApp links anywhere. The only
+   route to WhatsApp is a completed booking form, so every conversation
+   starts with the patient's details already in hand.
    ========================================================================= */
 (function () {
   "use strict";
 
   var WA = "919680049176";
+
+  /* Apps Script public web-app URL — set this once Phase 2 is deployed.
+     Left empty the page still works end-to-end: the booking simply goes
+     straight to WhatsApp without being recorded first. */
+  var API = "";
+
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var finePointer = window.matchMedia("(pointer: fine)").matches;
 
@@ -32,12 +42,12 @@
     initHowLine();
     initTilt();
     initMagnetic();
-    initStories();
     initFaq();
-    initTabs();
-    initSlots();
+    initCtaTracking();
+    initGenderSeg();
+    initWheel();
     initApptForm();
-    initEnqForm();
+    initReviews();
 
     var ticking = false;
     function tick() {
@@ -334,82 +344,6 @@
     });
   }
 
-  /* ---------- stories carousel ---------- */
-  function initStories() {
-    var track = document.getElementById("storiesTrack");
-    var prev = document.getElementById("stPrev");
-    var next = document.getElementById("stNext");
-    var dotsWrap = document.getElementById("stDots");
-    if (!track) return;
-    var cards = Array.prototype.slice.call(track.children);
-    var timer = null;
-
-    function overflow() { return track.scrollWidth > track.clientWidth + 8; }
-    function positions() {
-      // distinct snap lefts
-      var seen = [], out = [];
-      cards.forEach(function (c) {
-        var l = Math.min(c.offsetLeft, track.scrollWidth - track.clientWidth);
-        l = Math.max(0, l);
-        if (seen.indexOf(l) === -1) { seen.push(l); out.push(l); }
-      });
-      return out;
-    }
-    function current() {
-      var pos = positions(), x = track.scrollLeft, best = 0, bd = 1e9;
-      pos.forEach(function (p, i) { var d = Math.abs(p - x); if (d < bd) { bd = d; best = i; } });
-      return best;
-    }
-    function renderDots() {
-      dotsWrap.innerHTML = "";
-      if (!overflow()) { updateCtl(); return; }
-      positions().forEach(function (p, i) {
-        var d = document.createElement("button");
-        d.className = "dot" + (i === current() ? " active" : "");
-        d.type = "button";
-        d.setAttribute("aria-label", "Go to story " + (i + 1));
-        d.addEventListener("click", function () { go(i); });
-        dotsWrap.appendChild(d);
-      });
-      updateCtl();
-    }
-    function go(i) {
-      var pos = positions();
-      if (!pos.length) return;
-      i = (i + pos.length) % pos.length;
-      track.scrollTo({ left: pos[i], behavior: reduced ? "auto" : "smooth" });
-    }
-    function updateCtl() {
-      var has = overflow();
-      if (prev) prev.disabled = !has;
-      if (next) next.disabled = !has;
-    }
-    function sync() {
-      var idx = current();
-      Array.prototype.forEach.call(dotsWrap.children, function (d, i) {
-        d.classList.toggle("active", i === idx);
-      });
-    }
-
-    if (prev) prev.addEventListener("click", function () { go(current() - 1); });
-    if (next) next.addEventListener("click", function () { go(current() + 1); });
-    track.addEventListener("scroll", function () { requestAnimationFrame(sync); }, { passive: true });
-    window.addEventListener("resize", renderDots);
-
-    // gentle auto-advance when scrollable; pauses on interaction
-    function play() {
-      if (reduced) return;
-      stop();
-      timer = setInterval(function () { if (overflow()) go(current() + 1); }, 5500);
-    }
-    function stop() { if (timer) { clearInterval(timer); timer = null; } }
-    ["pointerenter", "focusin", "touchstart"].forEach(function (ev) { track.addEventListener(ev, stop, { passive: true }); });
-    ["pointerleave", "focusout"].forEach(function (ev) { track.addEventListener(ev, play); });
-
-    renderDots();
-    play();
-  }
-
   /* ---------- FAQ (single open) ---------- */
   function initFaq() {
     var items = Array.prototype.slice.call(document.querySelectorAll(".faq2-item"));
@@ -429,111 +363,241 @@
     });
   }
 
-  /* ---------- tabs ---------- */
-  function initTabs() {
-    var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
-    if (!tabs.length) return;
-    function select(tab) {
-      tabs.forEach(function (t) {
-        var on = t === tab;
-        t.setAttribute("aria-selected", on ? "true" : "false");
-        t.tabIndex = on ? 0 : -1;
-        var panel = document.getElementById(t.getAttribute("aria-controls"));
-        if (panel) panel.hidden = !on;
-      });
-      tab.focus({ preventScroll: true });
-    }
-    tabs.forEach(function (t, i) {
-      t.addEventListener("click", function () { select(t); });
-      t.addEventListener("keydown", function (e) {
-        var dir = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-        if (dir) { e.preventDefault(); select(tabs[(i + dir + tabs.length) % tabs.length]); }
+  /* ---------- CTA attribution + concern prefill ----------
+     Every CTA carries data-cta, so the WhatsApp message records which part of
+     the page produced the booking. In V3 ten of twelve links sent identical
+     text, which made attribution impossible. */
+  var lastCta = "direct";
+  function initCtaTracking() {
+    document.querySelectorAll("[data-cta]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        lastCta = el.getAttribute("data-cta") || "direct";
+        var concern = el.getAttribute("data-concern");
+        if (!concern) return;
+        var sel = document.getElementById("a-concern");
+        if (!sel) return;
+        for (var i = 0; i < sel.options.length; i++) {
+          if (sel.options[i].text === concern) { sel.selectedIndex = i; break; }
+        }
+        updatePreview();
       });
     });
   }
 
-  /* ---------- time slots ---------- */
-  var STEP = 30;                              // 30-min granularity
-  var DURATIONS = [30, 45, 60];               // session lengths (minutes)
-  var DEFAULT_DURATION = 45;
-  var PERIODS = [                             // 6:00 AM – 10:00 PM, grouped for orientation
-    { label: "Morning",   start: 6 * 60,  end: 11 * 60 + 30 },   // 06:00 – 11:30
-    { label: "Afternoon", start: 12 * 60, end: 16 * 60 + 30 },   // 12:00 – 16:30
-    { label: "Evening",   start: 17 * 60, end: 22 * 60 }         // 17:00 – 22:00
-  ];
-  function fmtTime(mins) {                    // 900 -> "3:00 PM"
-    var h = Math.floor(mins / 60), m = mins % 60;
-    var ap = h < 12 ? "AM" : "PM", h12 = ((h + 11) % 12) + 1;
-    return h12 + ":" + String(m).padStart(2, "0") + " " + ap;
-  }
-  function minutesList(a, b) { var out = []; for (var m = a; m <= b; m += STEP) out.push(m); return out; }
-  function selectedDuration() {
-    var d = document.querySelector('input[name="duration"]:checked');
-    return d ? parseInt(d.value, 10) : DEFAULT_DURATION;
-  }
-
-  function initSlots() {
-    var seg = document.getElementById("durationSeg");
-    var grid = document.getElementById("slotGrid");
-    var readout = document.getElementById("slotSelected");
-    if (!grid) return;
-
-    // --- Session-length segmented control ---
-    if (seg) {
-      DURATIONS.forEach(function (v) {
-        var label = document.createElement("label");
-        label.className = "seg-opt";
-        var input = document.createElement("input");
-        input.type = "radio"; input.name = "duration"; input.value = String(v);
-        input.className = "visually-hidden";
-        if (v === DEFAULT_DURATION) { input.checked = true; label.classList.add("checked"); }
-        var span = document.createElement("span");
-        span.textContent = v + " min";
-        label.appendChild(input); label.appendChild(span);
-        input.addEventListener("change", function () {
-          seg.querySelectorAll(".seg-opt").forEach(function (o) { o.classList.remove("checked"); });
-          label.classList.add("checked");
-          reflect(); updatePreview();
-        });
-        seg.appendChild(label);
+  /* ---------- gender segmented control ---------- */
+  var GENDERS = ["Female", "Male", "Other", "Prefer not to say"];
+  function initGenderSeg() {
+    var seg = document.getElementById("genderSeg");
+    if (!seg) return;
+    GENDERS.forEach(function (g) {
+      var label = document.createElement("label");
+      label.className = "seg-opt";
+      var input = document.createElement("input");
+      input.type = "radio"; input.name = "gender"; input.value = g;
+      input.className = "visually-hidden";
+      var span = document.createElement("span");
+      span.textContent = g;
+      label.appendChild(input); label.appendChild(span);
+      input.addEventListener("change", function () {
+        seg.querySelectorAll(".seg-opt").forEach(function (o) { o.classList.remove("checked"); });
+        label.classList.add("checked");
+        updatePreview();
       });
+      seg.appendChild(label);
+    });
+  }
+
+  /* ---------- date + time scroll wheel ----------
+     Four snap-scrolling columns. Hour/minute/AM-PM are rebuilt whenever an
+     earlier column changes — that rebuild is what enforces the 6:00 AM–11:00 PM
+     window and removes times that have already passed today, so an invalid
+     combination can never be selected in the first place. */
+  var WHEEL_DAYS  = 60;
+  var OPEN_MIN    = 6 * 60;    // 06:00 — first bookable start
+  var CLOSE_MIN   = 23 * 60;   // 23:00 — last bookable start
+  var LEAD_MIN    = 60;        // never offer a slot less than an hour away
+
+  var wheelSel  = { date: "", hour: 0, minute: 0, ampm: "AM" };
+  var wheelCols = {};
+
+  function pad2(n) { return String(n).padStart(2, "0"); }
+  function isoOf(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+  function to24(h12, ampm) {
+    if (ampm === "AM") return h12 === 12 ? 0 : h12;
+    return h12 === 12 ? 12 : h12 + 12;
+  }
+  function minAllowed(iso) {
+    var now = new Date();
+    if (iso !== isoOf(now)) return OPEN_MIN;
+    return Math.max(OPEN_MIN, now.getHours() * 60 + now.getMinutes() + LEAD_MIN);
+  }
+  function slotOk(iso, mins) { return mins >= minAllowed(iso) && mins <= CLOSE_MIN; }
+
+  function minuteOptions(iso, h12, ampm) {
+    var base = to24(h12, ampm) * 60, out = [];
+    for (var m = 0; m < 60; m++) {
+      if (slotOk(iso, base + m)) out.push({ value: m, label: pad2(m) });
     }
-
-    // --- Scrollable time list: day-part sub-labels + 30-min chips ---
-    PERIODS.forEach(function (p) {
-      var head = document.createElement("div");
-      head.className = "slot-daylabel";
-      head.textContent = p.label;
-      grid.appendChild(head);
-
-      var row = document.createElement("div");
-      row.className = "slot-row";
-      minutesList(p.start, p.end).forEach(function (mins) {
-        var label = document.createElement("label");
-        label.className = "slot";
-        var input = document.createElement("input");
-        input.type = "radio"; input.name = "time"; input.value = String(mins);
-        input.className = "visually-hidden";
-        var span = document.createElement("span");
-        span.textContent = fmtTime(mins);
-        label.appendChild(input); label.appendChild(span);
-        input.addEventListener("change", function () {
-          grid.querySelectorAll(".slot.checked").forEach(function (s) { s.classList.remove("checked"); });
-          label.classList.add("checked");
-          reflect(); updatePreview();
+    return out;
+  }
+  function hourOptions(iso, ampm) {
+    // AM tops out at 11; PM runs 12 → 11 in clock order.
+    var base = ampm === "AM" ? [6, 7, 8, 9, 10, 11] : [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    var out = [];
+    base.forEach(function (h12) {
+      if (minuteOptions(iso, h12, ampm).length) out.push({ value: h12, label: String(h12) });
+    });
+    return out;
+  }
+  function dateOptions() {
+    var out = [], d = new Date(), today = isoOf(new Date());
+    var tmr = new Date(); tmr.setDate(tmr.getDate() + 1); tmr = isoOf(tmr);
+    for (var i = 0; i < WHEEL_DAYS; i++) {
+      var iso = isoOf(d);
+      // Drops today automatically once the last slot has passed.
+      if (minAllowed(iso) <= CLOSE_MIN) {
+        out.push({
+          value: iso,
+          label: iso === today ? "Today" : iso === tmr ? "Tomorrow"
+            : new Intl.DateTimeFormat("en-IN", { weekday: "short", day: "numeric", month: "short" }).format(d)
         });
-        row.appendChild(label);
-      });
-      grid.appendChild(row);
+      }
+      d.setDate(d.getDate() + 1);
+    }
+    return out;
+  }
+
+  function itemH(col) {
+    var f = col.firstElementChild;
+    return f ? f.offsetHeight : 44;
+  }
+  function indexOfScroll(col) { return Math.round(col.scrollTop / itemH(col)); }
+
+  function markSelected(key, idx) {
+    var col = wheelCols[key];
+    Array.prototype.forEach.call(col.children, function (c, i) {
+      c.classList.toggle("is-sel", i === idx);
+      c.setAttribute("aria-selected", i === idx ? "true" : "false");
+    });
+    if (col.children[idx]) col.setAttribute("aria-activedescendant", col.children[idx].id);
+  }
+  /* Always "instant". A smooth programmatic scroll is cancelled outright by
+     `scroll-snap-type: mandatory`, which left the column visually stuck on the
+     old value while the state moved on. The snap animation the browser runs
+     for real touch/wheel input is unaffected — that still glides. */
+  function selectIndex(key, idx) {
+    var col = wheelCols[key], opts = col._options || [];
+    if (!opts.length) return;
+    idx = Math.max(0, Math.min(opts.length - 1, idx));
+    col.scrollTo({ top: idx * itemH(col), behavior: "instant" });
+    markSelected(key, idx);
+  }
+  function buildCol(key, options) {
+    var col = wheelCols[key];
+    col.innerHTML = "";
+    options.forEach(function (o, i) {
+      var el = document.createElement("div");
+      el.className = "wheel__opt";
+      el.setAttribute("role", "option");
+      el.id = "wh-" + key + "-" + i;
+      el.textContent = o.label;
+      col.appendChild(el);
+    });
+    col._options = options;
+  }
+  function sameOpts(a, b) {
+    if (!a || a.length !== b.length) return false;
+    for (var i = 0; i < a.length; i++) if (String(a[i].value) !== String(b[i].value)) return false;
+    return true;
+  }
+  function applyCol(key, options, want) {
+    var col = wheelCols[key];
+    if (!col) return;
+    if (!sameOpts(col._options, options)) buildCol(key, options);
+    var idx = 0;
+    for (var i = 0; i < options.length; i++) {
+      if (String(options[i].value) === String(want)) { idx = i; break; }
+    }
+    // If the previous choice is no longer valid, idx stays 0 — the earliest
+    // remaining option, which is always a safe clamp.
+    wheelSel[key] = options.length ? options[idx].value : "";
+    selectIndex(key, idx);
+  }
+  function syncWheel() {
+    applyCol("date", dateOptions(), wheelSel.date);
+    var iso = wheelSel.date;
+
+    var ap = [];
+    ["AM", "PM"].forEach(function (a) {
+      if (hourOptions(iso, a).length) ap.push({ value: a, label: a });
+    });
+    applyCol("ampm", ap, wheelSel.ampm);
+    applyCol("hour", hourOptions(iso, wheelSel.ampm), wheelSel.hour);
+    applyCol("minute", minuteOptions(iso, wheelSel.hour, wheelSel.ampm), wheelSel.minute);
+
+    var out = document.getElementById("whenOut");
+    if (out) out.textContent = wheelText();
+    updatePreview();
+  }
+  function wheelText() {
+    if (!wheelSel.date || !wheelSel.hour) return "";
+    return fmtDate(wheelSel.date) + " at " + wheelSel.hour + ":" + pad2(wheelSel.minute) + " " + wheelSel.ampm + " IST";
+  }
+  /* Commits an explicit index. Keyboard uses this directly rather than moving
+     the scroller and reading the position back — that round-trip is what made
+     arrow keys unreliable. */
+  function commitIndex(key, idx) {
+    var col = wheelCols[key], opts = col._options || [];
+    if (!opts.length) return;
+    idx = Math.max(0, Math.min(opts.length - 1, idx));
+    selectIndex(key, idx);
+    if (String(wheelSel[key]) === String(opts[idx].value)) return;
+    wheelSel[key] = opts[idx].value;
+    syncWheel();
+  }
+  /* Touch/wheel path: the snap has already settled, so derive from position. */
+  function commit(key) {
+    var col = wheelCols[key];
+    if (col && col._options && col._options.length) commitIndex(key, indexOfScroll(col));
+  }
+
+  function initWheel() {
+    var wrap = document.getElementById("wheel");
+    if (!wrap) return;
+    ["date", "hour", "minute", "ampm"].forEach(function (k) {
+      wheelCols[k] = wrap.querySelector('[data-wheel="' + k + '"]');
     });
 
-    function reflect() {
-      if (!readout) return;
-      var t = grid.querySelector('input[name="time"]:checked');
-      if (!t) { readout.textContent = ""; return; }
-      var s = parseInt(t.value, 10), dur = selectedDuration();
-      readout.textContent = "Selected: " + fmtTime(s) + " – " + fmtTime(s + dur) + " (" + dur + " min)";
-    }
+    // Default to the earliest slot that is actually still bookable.
+    var d0 = dateOptions();
+    wheelSel.date = d0.length ? d0[0].value : isoOf(new Date());
+    wheelSel.ampm = hourOptions(wheelSel.date, "AM").length ? "AM" : "PM";
+    var h0 = hourOptions(wheelSel.date, wheelSel.ampm);
+    wheelSel.hour = h0.length ? h0[0].value : 6;
+    wheelSel.minute = 0;
+    syncWheel();
+
+    ["date", "hour", "minute", "ampm"].forEach(function (k) {
+      var col = wheelCols[k];
+      if (!col) return;
+      var t = null;
+      // Debounced rather than `scrollend` — Safari still lacks that event.
+      col.addEventListener("scroll", function () {
+        clearTimeout(t);
+        t = setTimeout(function () { commit(k); }, 110);
+      }, { passive: true });
+      col.addEventListener("keydown", function (e) {
+        var opts = col._options || [], cur = indexOfScroll(col), next;
+        if (e.key === "ArrowDown") next = cur + 1;
+        else if (e.key === "ArrowUp") next = cur - 1;
+        else if (e.key === "Home") next = 0;
+        else if (e.key === "End") next = opts.length - 1;
+        else return;
+        e.preventDefault();
+        clearTimeout(t);              // don't let the scroll debounce re-derive
+        commitIndex(k, next);
+      });
+    });
   }
 
   /* ---------- appointment form + live WhatsApp preview ---------- */
@@ -544,35 +608,58 @@
       return new Intl.DateTimeFormat("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" }).format(d);
     } catch (e) { return v; }
   }
+  function fieldVal(form, n) {
+    var el = form.elements[n];
+    return el && el.value ? String(el.value).trim() : "";
+  }
   function apptMessage() {
     var form = document.getElementById("apptForm");
     if (!form) return "";
-    var name = (form.elements["name"].value || "").trim();
-    var date = form.elements["date"].value;
-    var timeEl = form.querySelector('input[name="time"]:checked');
-    var issue = (form.elements["issue"].value || "").trim();
-    var timeStr = "—";
-    if (timeEl) {
-      var s = parseInt(timeEl.value, 10), dur = selectedDuration();
-      timeStr = fmtTime(s) + " – " + fmtTime(s + dur) + " (" + dur + " min)";
-    }
-    var lines = ["Hi Dr. Varun, I'd like to book an appointment. 🗓"];
-    lines.push("");
-    lines.push("Name: " + (name || "—"));
-    lines.push("Date: " + (date ? fmtDate(date) : "—"));
-    lines.push("Time: " + timeStr);
-    lines.push("Issue: " + (issue || "—"));
+    var g = form.querySelector('input[name="gender"]:checked');
+    var lines = ["Hi Dr. Varun, I'd like to book a free consultation. 🗓", ""];
+    lines.push("Name: "     + (fieldVal(form, "name")    || "—"));
+    lines.push("Age: "      + (fieldVal(form, "age")     || "—"));
+    lines.push("Gender: "   + (g ? g.value : "—"));
+    lines.push("Phone: "    + (fieldVal(form, "phone")   || "—"));
+    lines.push("Email: "    + (fieldVal(form, "email")   || "—"));
+    lines.push("Concern: "  + (fieldVal(form, "concern") || "—"));
+    lines.push("Preferred: " + (wheelText()              || "—"));
+    lines.push("Issue: "    + (fieldVal(form, "issue")   || "—"));
     return lines.join("\n");
   }
   function updatePreview() {
-    var bubble = document.getElementById("waPreview");
-    if (bubble) bubble.textContent = apptMessage();
+    var text = apptMessage();
+    ["waPreview", "waPreviewMobile"].forEach(function (id) {
+      var b = document.getElementById(id);
+      if (b) b.textContent = text;
+    });
   }
 
   function openWhatsApp(text) {
     var url = "https://wa.me/" + WA + "?text=" + encodeURIComponent(text);
+    // Must stay synchronous inside the click handler. V3 wrapped this in a
+    // 600ms setTimeout for a spinner, which detached it from the user gesture
+    // and let iOS Safari block the site's only conversion action.
     var win = window.open(url, "_blank");
-    if (win) { win.opener = null; } else { window.location.href = url; }
+    if (win) { try { win.opener = null; } catch (e) {} return true; }
+    window.location.href = url;   // popup blocked / in-app browser
+    return true;
+  }
+
+  /* Fire-and-forget capture. keepalive lets it finish even as WhatsApp takes
+     over the foreground. text/plain keeps it a CORS "simple request" — Apps
+     Script cannot answer the preflight that application/json would trigger. */
+  function record(payload) {
+    if (!API) return;
+    try {
+      fetch(API, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(function () {});
+    } catch (e) { /* never block the handoff on telemetry */ }
   }
 
   function clearInvalid(el) {
@@ -590,62 +677,6 @@
     var form = document.getElementById("apptForm");
     if (!form) return;
     var status = document.getElementById("apptStatus");
-    var submit = document.getElementById("apptSubmit");
-    var dateInput = form.elements["date"];
-
-    // no past dates
-    var today = new Date();
-    var iso = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
-    if (dateInput) dateInput.min = iso;
-
-    ["input", "change"].forEach(function (ev) { form.addEventListener(ev, updatePreview); });
-    updatePreview();
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      status.dataset.state = "";
-      status.textContent = "";
-      var nameEl = form.elements["name"], issueEl = form.elements["issue"];
-      [nameEl, dateInput, issueEl].forEach(clearInvalid);
-
-      var name = (nameEl.value || "").trim();
-      var date = dateInput.value;
-      var timeEl = form.querySelector('input[name="time"]:checked');
-      var durEl = form.querySelector('input[name="duration"]:checked');
-      var issue = (issueEl.value || "").trim();
-
-      if (!name) { fail("Please enter your name.", nameEl); return; }
-      if (!date) { fail("Please pick a preferred date.", dateInput); return; }
-      if (date < iso) { fail("Please pick today or a future date.", dateInput); return; }
-      if (!durEl) { fail("Please choose a session length."); var d0 = form.querySelector('input[name="duration"]'); if (d0) d0.focus(); return; }
-      if (!timeEl) { fail("Please choose a preferred time slot."); var f = form.querySelector('input[name="time"]'); if (f) f.focus(); return; }
-      if (!issue) { fail("Please describe the issue briefly.", issueEl); return; }
-
-      var original = submit.innerHTML;
-      submit.disabled = true;
-      submit.innerHTML = '<span class="spinner" aria-hidden="true"></span> Opening WhatsApp…';
-      setTimeout(function () {
-        submit.disabled = false;
-        submit.innerHTML = original;
-        status.dataset.state = "ok";
-        status.textContent = "Opening WhatsApp — press send to confirm. ✓";
-        openWhatsApp(apptMessage());
-      }, reduced ? 0 : 600);
-
-      function fail(msg, el) {
-        status.dataset.state = "error";
-        status.textContent = msg;
-        if (el) markInvalid(el, "apptStatus");
-      }
-    });
-  }
-
-  /* ---------- enquiry form ---------- */
-  function initEnqForm() {
-    var form = document.getElementById("enqForm");
-    if (!form) return;
-    var status = document.getElementById("enqStatus");
-    var submit = document.getElementById("enqSubmit");
     var phone = form.elements["phone"];
 
     if (phone) {
@@ -656,43 +687,100 @@
       });
     }
 
+    ["input", "change"].forEach(function (ev) { form.addEventListener(ev, updatePreview); });
+    updatePreview();
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       status.dataset.state = "";
       status.textContent = "";
-      var nameEl = form.elements["name"], concernEl = form.elements["concern"], msgEl = form.elements["message"];
-      [nameEl, phone, concernEl].forEach(clearInvalid);
 
-      var name = (nameEl.value || "").trim();
-      var ph = (phone.value || "").replace(/\D/g, "");
+      var nameEl    = form.elements["name"],
+          ageEl     = form.elements["age"],
+          emailEl   = form.elements["email"],
+          concernEl = form.elements["concern"],
+          issueEl   = form.elements["issue"],
+          consentEl = form.elements["consent"];
+      [nameEl, phone, ageEl, emailEl, concernEl, issueEl, consentEl].forEach(clearInvalid);
+
+      var name    = (nameEl.value || "").trim();
+      var ph      = (phone.value || "").replace(/\D/g, "");
+      var email   = (emailEl.value || "").trim();
+      var age     = parseInt(ageEl.value, 10);
+      var gender  = form.querySelector('input[name="gender"]:checked');
       var concern = concernEl.value;
-      var message = (msgEl.value || "").trim();
+      var issue   = (issueEl.value || "").trim();
 
-      if (!name) { fail("Please enter your name.", nameEl); return; }
-      if (!/^[6-9]\d{9}$/.test(ph)) { fail("Please enter a valid 10-digit WhatsApp number.", phone); return; }
-      if (!concern) { fail("Please choose your primary concern.", concernEl); return; }
+      if (!name) return fail("Please enter your name.", nameEl);
+      if (!/^[6-9]\d{9}$/.test(ph)) return fail("Please enter a valid 10-digit WhatsApp number.", phone);
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail("Please enter a valid email — your calendar invite goes there.", emailEl);
+      if (!age || age < 1 || age > 120) return fail("Please enter a valid age.", ageEl);
+      if (!gender) {
+        fail("Please select your gender.");
+        var g0 = form.querySelector('input[name="gender"]');
+        if (g0) g0.focus();
+        return;
+      }
+      if (!concern) return fail("Please choose your primary concern.", concernEl);
+      if (!wheelText()) return fail("Please pick a preferred date and time.");
+      if (!issue) return fail("Please describe the issue briefly.", issueEl);
+      if (!consentEl.checked) return fail("Please accept the privacy terms to continue.", consentEl);
 
-      var lines = ["New enquiry from the website", "", "Name: " + name, "WhatsApp: " + ph, "Concern: " + concern];
-      if (message) lines.push("Message: " + message);
-
-      var original = submit.innerHTML;
-      submit.disabled = true;
-      submit.innerHTML = '<span class="spinner" aria-hidden="true"></span> Sending…';
-      setTimeout(function () {
-        submit.disabled = false;
-        submit.innerHTML = original;
+      // Honeypot: humans never see this field. Accept quietly, send nothing.
+      if (fieldVal(form, "website")) {
         status.dataset.state = "ok";
-        status.textContent = "Opening WhatsApp — we'll reply shortly. ✓";
-        openWhatsApp(lines.join("\n"));
-        form.reset();
-      }, reduced ? 0 : 600);
+        status.textContent = "Thanks — we'll be in touch.";
+        return;
+      }
+
+      // Record first so an abandoned or blocked handoff still leaves a trace,
+      // then hand off to WhatsApp synchronously while the gesture is live.
+      record({
+        name: name, age: age, gender: gender.value, email: email, phone: ph,
+        date: wheelSel.date,
+        time: wheelSel.hour + ":" + pad2(wheelSel.minute) + " " + wheelSel.ampm,
+        concern: concern, issue: issue, source: lastCta
+      });
+
+      openWhatsApp(apptMessage());
+      status.dataset.state = "ok";
+      status.textContent = "Opening WhatsApp — press send to confirm. ✓";
 
       function fail(msg, el) {
         status.dataset.state = "error";
         status.textContent = msg;
-        if (el) markInvalid(el, "enqStatus");
+        if (el) markInvalid(el, "apptStatus");
       }
     });
+  }
+
+  /* ---------- approved reviews (Phase 3) ----------
+     Renders only what the practice has approved. Stays hidden when the
+     endpoint is unset, unreachable, or has nothing to show — an empty
+     section is better than a padded one. All text goes in via textContent. */
+  function initReviews() {
+    var block = document.getElementById("reviewsBlock");
+    var grid = document.getElementById("reviewsGrid");
+    if (!block || !grid || !API) return;
+    fetch(API + "?action=reviews")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        var list = (data && data.reviews) || [];
+        if (!list.length) return;
+        list.forEach(function (rv) {
+          var fig = document.createElement("figure");
+          fig.className = "card review";
+          var q = document.createElement("blockquote");
+          q.textContent = rv.text || "";
+          var cap = document.createElement("figcaption");
+          cap.textContent = (rv.name || "Patient") + (rv.city ? " · " + rv.city : "");
+          fig.appendChild(q);
+          fig.appendChild(cap);
+          grid.appendChild(fig);
+        });
+        block.hidden = false;
+      })
+      .catch(function () { /* leave hidden */ });
   }
 
   /* ---------- mobile bar ---------- */
