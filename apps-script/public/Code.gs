@@ -14,7 +14,10 @@ var TAB_REVIEWS    = 'Reviews';
 var MAX_PER_WINDOW = 5;          // submissions allowed per IP-ish key
 var WINDOW_SECONDS = 3600;
 
-var BOOKING_COLS = ['timestamp', 'name', 'age', 'gender', 'email', 'phone',
+/* No phone column: the booking arrives as a WhatsApp message from the
+   patient's own number, so the practice already has their contact the moment
+   it lands — asking for it again in the form would be redundant. */
+var BOOKING_COLS = ['timestamp', 'name', 'age', 'gender', 'email',
                     'date', 'time', 'concern', 'issue', 'status', 'source', 'reviewToken'];
 var REVIEW_COLS  = ['timestamp', 'token', 'name', 'city', 'rating', 'text', 'status'];
 
@@ -74,18 +77,18 @@ function doPost(e) {
 
     if (body.action === 'review') return submitReview_(body);
 
-    // Crude rate limit. Apps Script cannot see the client IP, so this keys on
-    // the submitted phone number: enough to stop a naive replay loop.
-    var key = 'rl_' + str_(body.phone, 20);
+    var name  = str_(body.name, 120);
+    var email = str_(body.email, 160);   // optional — may be blank
+    if (!name) return json_({ ok: false, error: 'invalid' });
+
+    // Crude rate limit. Apps Script cannot see the client IP and there's no
+    // phone field to key on, so this uses email when given, else name —
+    // weaker than a phone key, but the honeypot above catches most bots.
+    var key = 'rl_' + str_(email || name, 60).toLowerCase();
     var cache = CacheService.getScriptCache();
     var seen = Number(cache.get(key) || 0);
     if (seen >= MAX_PER_WINDOW) return json_({ ok: false, error: 'rate_limited' });
     cache.put(key, String(seen + 1), WINDOW_SECONDS);
-
-    var name  = str_(body.name, 120);
-    var phone = str_(body.phone, 20).replace(/\D/g, '');
-    var email = str_(body.email, 160);
-    if (!name || !/^[6-9]\d{9}$/.test(phone)) return json_({ ok: false, error: 'invalid' });
 
     var token = Utilities.getUuid().replace(/-/g, '').slice(0, 20);
 
@@ -95,7 +98,6 @@ function doPost(e) {
       str_(body.age, 4),
       str_(body.gender, 40),
       email,
-      phone,
       str_(body.date, 20),
       str_(body.time, 20),
       str_(body.concern, 120),
@@ -120,7 +122,7 @@ function submitReview_(body) {
   var bk = sheet_(TAB_BOOKINGS, BOOKING_COLS).getDataRange().getValues();
   var matched = null;
   for (var i = 1; i < bk.length; i++) {
-    if (String(bk[i][12]) === token) { matched = bk[i]; break; }
+    if (String(bk[i][11]) === token) { matched = bk[i]; break; }
   }
   if (!matched) return json_({ ok: false, error: 'bad_token' });
 

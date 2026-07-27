@@ -33,7 +33,6 @@
                         border:1px solid var(--line); background:transparent; color:var(--text);
                         cursor:pointer; text-decoration:none; display:inline-block; }
   .row .go { background:var(--teal); border-color:var(--teal); color:#fff; }
-  .row .wa { background:#25D366; border-color:#25D366; color:#07301a; }
   .row .bad { border-color:rgba(200,69,59,.5); color:#E08A80; }
   .row button[disabled] { opacity:.5; cursor:default; }
   .empty { color:var(--muted); padding:26px 0; text-align:center; }
@@ -84,8 +83,8 @@
       return '<div class="card" id="bk' + x.row + '">' +
         '<div class="top"><div>' +
           '<div class="who">' + esc(x.name) + '</div>' +
-          '<div class="meta">' + esc(x.age) + ' · ' + esc(x.gender) + ' · ' + esc(x.phone) +
-            ' · ' + esc(x.email) + '</div>' +
+          '<div class="meta">' + esc(x.age) + ' · ' + esc(x.gender) +
+            (x.email ? ' · ' + esc(x.email) : ' · no email given') + '</div>' +
           '<div class="meta">' + esc(x.concern) + ' · via ' + esc(x.source || '—') +
             ' · received ' + esc(x.timestamp) + '</div>' +
           '<div class="when">' + esc(x.date) + ' at ' + esc(x.time) + ' IST</div>' +
@@ -101,18 +100,39 @@
     }).join('');
   }
 
+  function copyText(text, btn) {
+    var done = function () { var old = btn.textContent; btn.textContent = 'Copied ✓'; setTimeout(function () { btn.textContent = old; }, 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  }
+  function fallbackCopy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
   function confirmIt(row, btn) {
     btn.disabled = true; btn.textContent = 'Working…';
     google.script.run.withSuccessHandler(function (res) {
+      // No phone on file — the patient already messaged us on WhatsApp to
+      // book, so the reply belongs in that same thread, not a fresh wa.me
+      // link (which needs a number we don't have).
       document.getElementById('out' + row).innerHTML =
         '<div class="note">' +
           (res.invited ? 'Calendar invite sent to the patient and added to your calendar.'
-                       : 'Added to your calendar. No valid email on file, so no invite was sent.') +
+                       : 'Added to your calendar. No email on file, so no invite was sent.') +
         '</div>' +
+        '<div class="note" style="white-space:pre-wrap">' + esc(res.message) + '</div>' +
         '<div class="row">' +
-          '<a class="wa" href="' + res.wa + '" target="_blank" rel="noopener">Send WhatsApp confirmation</a>' +
-          '<a href="' + res.reviewLink + '" target="_blank" rel="noopener">Copy review link</a>' +
-        '</div>';
+          '<button class="go" onclick="copyText(' + JSON.stringify(res.message) + ', this)">Copy confirmation message</button>' +
+          '<button onclick="copyText(' + JSON.stringify(res.reviewLink) + ', this)">Copy review link</button>' +
+        '</div>' +
+        '<div class="meta" style="margin-top:8px">Paste the confirmation into the WhatsApp chat this patient already started with you.</div>';
       loadBookings();
     }).withFailureHandler(function (e) {
       btn.disabled = false; btn.textContent = 'Confirm + send invite';

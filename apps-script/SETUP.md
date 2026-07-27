@@ -102,9 +102,15 @@ WhatsApp without being recorded, and the reviews block stays hidden.
 - **Calendar block length** is 45 minutes (`EVENT_MINUTES` in `admin/Code.gs`).
   The booking form only collects a start time, so this is just how much space
   the event reserves in your calendar. Change it freely.
-- **Rate limiting** keys on the submitted phone number — Apps Script can't see
-  client IPs. It stops a naive replay loop, not a determined attacker. The
+- **Rate limiting** keys on the submitted email (or name, if no email was
+  given) — Apps Script can't see client IPs, and there's no phone field to key
+  on instead. It stops a naive replay loop, not a determined attacker. The
   honeypot field catches ordinary form-spam bots.
+- **No phone field on the form.** The booking arrives as a WhatsApp message
+  from the patient's own number, so the practice already has their contact
+  the moment it lands — there's nothing to look up in the Sheet. That's also
+  why `confirmBooking()` hands back a message to paste into that same
+  WhatsApp thread instead of a `wa.me` link (which needs a number we don't have).
 - **If reviews don't render** on the site, it is almost always a CORS response
   on the `?action=reviews` GET. The page is built to fail silently and keep the
   section hidden, so a broken fetch never leaves an empty shell on the page.

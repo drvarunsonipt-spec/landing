@@ -973,6 +973,7 @@ html.menu-open, .menu-open body { overflow: hidden; }
 .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
 .field label { font: 600 13.5px/1 var(--f-body); color: var(--heading); }
 .field label .req { color: var(--accent-text); }
+.field label .opt { font-weight: 500; color: var(--muted); }
 .field input, .field select, .field textarea {
   font: 400 16px/1.45 var(--f-body);
   color: var(--text);

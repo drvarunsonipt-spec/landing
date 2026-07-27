@@ -616,12 +616,13 @@
     var form = document.getElementById("apptForm");
     if (!form) return "";
     var g = form.querySelector('input[name="gender"]:checked');
+    var email = fieldVal(form, "email");
     var lines = ["Hi Dr. Varun, I'd like to book a free consultation. 🗓", ""];
     lines.push("Name: "     + (fieldVal(form, "name")    || "—"));
     lines.push("Age: "      + (fieldVal(form, "age")     || "—"));
     lines.push("Gender: "   + (g ? g.value : "—"));
-    lines.push("Phone: "    + (fieldVal(form, "phone")   || "—"));
-    lines.push("Email: "    + (fieldVal(form, "email")   || "—"));
+    // WhatsApp already carries the sender's contact — no phone field to ask for.
+    if (email) lines.push("Email: " + email);
     lines.push("Concern: "  + (fieldVal(form, "concern") || "—"));
     lines.push("Preferred: " + (wheelText()              || "—"));
     lines.push("Issue: "    + (fieldVal(form, "issue")   || "—"));
@@ -677,15 +678,6 @@
     var form = document.getElementById("apptForm");
     if (!form) return;
     var status = document.getElementById("apptStatus");
-    var phone = form.elements["phone"];
-
-    if (phone) {
-      phone.addEventListener("input", function () {
-        var digits = phone.value.replace(/\D/g, "").slice(0, 10);
-        if (phone.value !== digits) phone.value = digits;
-        if (/^[6-9]\d{9}$/.test(digits)) clearInvalid(phone);
-      });
-    }
 
     ["input", "change"].forEach(function (ev) { form.addEventListener(ev, updatePreview); });
     updatePreview();
@@ -701,10 +693,9 @@
           concernEl = form.elements["concern"],
           issueEl   = form.elements["issue"],
           consentEl = form.elements["consent"];
-      [nameEl, phone, ageEl, emailEl, concernEl, issueEl, consentEl].forEach(clearInvalid);
+      [nameEl, ageEl, emailEl, concernEl, issueEl, consentEl].forEach(clearInvalid);
 
       var name    = (nameEl.value || "").trim();
-      var ph      = (phone.value || "").replace(/\D/g, "");
       var email   = (emailEl.value || "").trim();
       var age     = parseInt(ageEl.value, 10);
       var gender  = form.querySelector('input[name="gender"]:checked');
@@ -712,9 +703,9 @@
       var issue   = (issueEl.value || "").trim();
 
       if (!name) return fail("Please enter your name.", nameEl);
-      if (!/^[6-9]\d{9}$/.test(ph)) return fail("Please enter a valid 10-digit WhatsApp number.", phone);
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail("Please enter a valid email — your calendar invite goes there.", emailEl);
       if (!age || age < 1 || age > 120) return fail("Please enter a valid age.", ageEl);
+      // Email is optional — only validated if the patient chose to give one.
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail("Please enter a valid email, or leave it blank.", emailEl);
       if (!gender) {
         fail("Please select your gender.");
         var g0 = form.querySelector('input[name="gender"]');
@@ -735,8 +726,10 @@
 
       // Record first so an abandoned or blocked handoff still leaves a trace,
       // then hand off to WhatsApp synchronously while the gesture is live.
+      // No phone field: the booking arrives as a WhatsApp message, so the
+      // sender's number is already known the moment it lands.
       record({
-        name: name, age: age, gender: gender.value, email: email, phone: ph,
+        name: name, age: age, gender: gender.value, email: email,
         date: wheelSel.date,
         time: wheelSel.hour + ":" + pad2(wheelSel.minute) + " " + wheelSel.ampm,
         concern: concern, issue: issue, source: lastCta

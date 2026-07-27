@@ -31,7 +31,10 @@ function sh_(name) {
   return SpreadsheetApp.openById(SHEET_ID).getSheetByName(name);
 }
 
-/* ---------- bookings ---------- */
+/* ---------- bookings ----------
+   Column layout (no phone — see public/Code.gs for why):
+   0 timestamp, 1 name, 2 age, 3 gender, 4 email, 5 date, 6 time,
+   7 concern, 8 issue, 9 status, 10 source, 11 reviewToken */
 function listBookings() {
   var sh = sh_(TAB_BOOKINGS);
   if (!sh) return [];
@@ -42,9 +45,9 @@ function listBookings() {
     out.push({
       row: i + 1,                       // 1-based sheet row
       timestamp: r[0] ? Utilities.formatDate(new Date(r[0]), Session.getScriptTimeZone(), 'd MMM, HH:mm') : '',
-      name: r[1], age: r[2], gender: r[3], email: r[4], phone: String(r[5]),
-      date: r[6], time: r[7], concern: r[8], issue: r[9],
-      status: r[10], source: r[11], token: r[12]
+      name: r[1], age: r[2], gender: r[3], email: r[4],
+      date: r[5], time: r[6], concern: r[7], issue: r[8],
+      status: r[9], source: r[10], token: r[11]
     });
   }
   return out.reverse();                 // newest first
@@ -61,18 +64,21 @@ function parseWhen_(dateStr, timeStr) {
 }
 
 /* One click: real Google Calendar invite to the patient and to you, status
-   flipped, and a prefilled WhatsApp link handed back for you to press send. */
+   flipped. There is no phone number on file — the patient's booking arrived
+   as a WhatsApp message from their own number, so the confirmation reply
+   goes in that same existing thread. This hands back the message text to
+   paste there rather than a wa.me link (which needs a number we don't have). */
 function confirmBooking(row) {
   var sh = sh_(TAB_BOOKINGS);
-  var r = sh.getRange(row, 1, 1, 13).getValues()[0];
-  var name = r[1], email = r[4], phone = String(r[5]);
-  var start = parseWhen_(r[6], r[7]);
+  var r = sh.getRange(row, 1, 1, 12).getValues()[0];
+  var name = r[1], email = r[4];
+  var start = parseWhen_(r[5], r[6]);
   var end = new Date(start.getTime() + EVENT_MINUTES * 60000);
 
   var opts = {
     description: 'Free online physiotherapy consultation.\n\n' +
                  'Patient: ' + name + '\nAge: ' + r[2] + '\nGender: ' + r[3] +
-                 '\nPhone: ' + phone + '\nConcern: ' + r[8] + '\n\nDescribed issue:\n' + r[9]
+                 '\nConcern: ' + r[7] + '\n\nDescribed issue:\n' + r[8]
   };
   if (email && /@/.test(email)) {
     opts.guests = email;
@@ -81,22 +87,23 @@ function confirmBooking(row) {
   CalendarApp.getDefaultCalendar()
     .createEvent('Free consultation — ' + name, start, end, opts);
 
-  sh.getRange(row, 11).setValue('confirmed');
+  sh.getRange(row, 10).setValue('confirmed');
 
-  var when = Utilities.formatDate(start, Session.getScriptTimeZone(), 'EEE d MMM') + ' at ' + r[7];
+  var when = Utilities.formatDate(start, Session.getScriptTimeZone(), 'EEE d MMM') + ' at ' + r[6];
+  var invited = !!(email && /@/.test(email));
   var msg = 'Hi ' + name + ', your free consultation with Dr. Varun Soni (PT) is confirmed for ' +
-            when + ' IST. A calendar invite has been sent to ' + (email || 'your email') +
-            '. Please join a few minutes early.';
+            when + ' IST.' + (invited ? ' A calendar invite has been sent to ' + email + '.' : '') +
+            ' Please join a few minutes early.';
   return {
     ok: true,
-    invited: !!(email && /@/.test(email)),
-    wa: 'https://wa.me/91' + phone + '?text=' + encodeURIComponent(msg),
-    reviewLink: SITE_URL + '/review.html?t=' + r[12]
+    invited: invited,
+    message: msg,                       // paste into the patient's existing WhatsApp chat
+    reviewLink: SITE_URL + '/review.html?t=' + r[11]
   };
 }
 
 function setBookingStatus(row, status) {
-  sh_(TAB_BOOKINGS).getRange(row, 11).setValue(status);
+  sh_(TAB_BOOKINGS).getRange(row, 10).setValue(status);
   return { ok: true };
 }
 

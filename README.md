@@ -32,8 +32,10 @@ An audit of V3 found the funnel, not the design, was the problem:
   which is what enforces the 6:00 AM–11:00 PM window and hides times that have
   already passed today (60-minute lead). At 11 PM only `:00` remains, so the
   last bookable start is exactly 11:00 PM. Keyboard-operable, `role="listbox"`.
-- **New fields**: age, gender, email (needed for the calendar invite), phone,
-  and a required consent checkbox.
+- **New fields**: age, gender, email (optional — only used to send a calendar
+  invite if given), and a required consent checkbox. No phone field: the
+  booking arrives as a WhatsApp message from the patient's own number, so the
+  practice already has their contact the moment it lands.
 - **Admin panel** with Google sign-in, calendar invites and review moderation —
   see [`apps-script/SETUP.md`](apps-script/SETUP.md).
 - **`privacy.html`** — age, gender and symptom text are sensitive personal data

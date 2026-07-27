@@ -812,21 +812,14 @@
                 <input id="a-name" name="name" type="text" autocomplete="name" placeholder="Full name" required />
               </div>
               <div class="field">
-                <label for="a-phone">WhatsApp Number <span class="req">*</span></label>
-                <input id="a-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile number" required />
-              </div>
-            </div>
-
-            <div class="two-col">
-              <div class="field">
-                <label for="a-email">Email <span class="req">*</span></label>
-                <input id="a-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
-                <small class="field__hint">Used to send your calendar invite.</small>
-              </div>
-              <div class="field">
                 <label for="a-age">Age <span class="req">*</span></label>
                 <input id="a-age" name="age" type="number" inputmode="numeric" min="1" max="120" placeholder="e.g. 34" required />
               </div>
+            </div>
+
+            <div class="field">
+              <label for="a-email">Email <span class="opt">(optional)</span></label>
+              <input id="a-email" name="email" type="email" autocomplete="email" placeholder="Submit your email to get a calendar invite" />
             </div>
 
             <fieldset class="field">
@@ -857,7 +850,6 @@
                 <div class="wheel__col" data-wheel="ampm" tabindex="0" role="listbox" aria-label="AM or PM"></div>
               </div>
               <p class="wheel__out" id="whenOut" aria-live="polite"></p>
-              <p class="field__hint">Sessions run 6:00 AM – 11:00 PM IST.</p>
             </fieldset>
 
             <div class="field">
