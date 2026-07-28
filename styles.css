@@ -165,10 +165,10 @@
   --header-bg: rgba(7, 12, 30, .48);
   --header-border: rgba(255, 255, 255, .1);
 
-  --band-bg: rgba(8, 15, 38, .48);
-  --band-bg-deep: rgba(5, 10, 28, .58);
-  --marquee-bg: rgba(8, 15, 38, .66);
-  --footer-bg: rgba(4, 7, 20, .8);
+  --band-bg: transparent;
+  --band-bg-deep: transparent;
+  --marquee-bg: transparent;
+  --footer-bg: rgba(4, 7, 20, .85);
   --seal-bg: rgba(18, 32, 74, .88);
 
   --tab-rail: rgba(8, 16, 38, .5);
@@ -1385,12 +1385,12 @@ html.menu-open,
 
 /* ---------- Credential marquee (glass band) -------------------------------------------------- */
 .marquee {
-  background: var(--marquee-bg);
+  background: transparent;
   overflow: hidden;
-  padding-block: 20px;
+  padding-block: 24px;
   position: relative;
-  border-block: 1px solid rgba(127, 214, 217, .14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+  border-block: 0;
+  box-shadow: none;
 }
 
 .marquee::before,
@@ -1607,10 +1607,8 @@ html.menu-open,
 
 /* ---------- How it works (translucent band) -------------------------------------------------------- */
 .how {
-  background:
-    radial-gradient(110% 130% at 12% -10%, rgba(46, 139, 143, .22), transparent 55%),
-    var(--band-bg);
-  border-block: 1px solid rgba(255, 255, 255, .1);
+  background: radial-gradient(80% 60% at 50% 30%, rgba(46, 139, 143, .16), transparent 70%);
+  border-block: 0;
   color: var(--on-navy);
   overflow: clip;
 }
