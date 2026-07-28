@@ -682,23 +682,34 @@
     if (!form) return "";
     var g = form.querySelector('input[name="gender"]:checked');
     var email = fieldVal(form, "email");
-    var lines = ["Hi Dr. Varun, I'd like to book a free consultation. 🗓", ""];
-    lines.push("Name: "     + (fieldVal(form, "name")    || "—"));
-    lines.push("Age: "      + (fieldVal(form, "age")     || "—"));
-    lines.push("Gender: "   + (g ? g.value : "—"));
-    // WhatsApp already carries the sender's contact — no phone field to ask for.
-    if (email) lines.push("Email: " + email);
-    lines.push("Concern: "  + (fieldVal(form, "concern") || "—"));
-    lines.push("Preferred: " + (wheelText()              || "—"));
-    lines.push("Issue: "    + (fieldVal(form, "issue")   || "—"));
+    var lines = ["Hi Dr. Varun, I'd like to book a free consultation. 🗓"];
+    
+    var details = [];
+    var name = fieldVal(form, "name");
+    var age = fieldVal(form, "age");
+    var concern = fieldVal(form, "concern");
+    var preferred = wheelText();
+    var issue = fieldVal(form, "issue");
+
+    if (name) details.push("Name: " + name);
+    if (age) details.push("Age: " + age);
+    if (g) details.push("Gender: " + g.value);
+    if (email) details.push("Email: " + email);
+    if (concern) details.push("Concern: " + concern);
+    if (preferred) details.push("Preferred: " + preferred);
+    if (issue) details.push("Issue: " + issue);
+
+    if (details.length > 0) {
+      lines.push("");
+      lines = lines.concat(details);
+    }
+
     return lines.join("\n");
   }
   function updatePreview() {
     var text = apptMessage();
-    ["waPreview", "waPreviewMobile"].forEach(function (id) {
-      var b = document.getElementById(id);
-      if (b) b.textContent = text;
-    });
+    var b = document.getElementById("waPreview");
+    if (b) b.textContent = text;
   }
 
   function openWhatsApp(text) {

@@ -1207,7 +1207,7 @@ fieldset.field legend { font: 600 13.5px/1 var(--f-body); color: var(--heading);
 /* The inline copy exists only for narrow screens, where the sticky aside
    collapses below the submit button and stops being read. Desktop keeps
    the aside and hides this one. */
-.wa-preview--inline { display: none; }
+
 
 .form-status { margin-top: 14px; text-align: center; font: 600 15px/1.5 var(--f-body); color: var(--accent-text); min-height: 24px; }
 .form-status[data-state="error"] { color: var(--error); }
@@ -1309,7 +1309,6 @@ html.shotmode .scroll-cue { display: none; }
   /* The sticky aside stops working once stacked; swap in the inline copy
      that sits directly above the submit button instead of below it. */
   .book__grid > .wa-preview { display: none; }
-  .wa-preview--inline { display: block; position: static; min-height: 0; padding: 0; border: 0; background: none; box-shadow: none; margin-bottom: 18px; }
 }
 @media (max-width: 900px) {
   .nav { display: none; }
