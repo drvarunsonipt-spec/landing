@@ -3599,16 +3599,37 @@ html.shotmode .scroll-cue {
 
 @media (max-width: 640px) {
   .result-card {
-    padding: 20px 16px;
+    padding: 18px 12px;
+    gap: 16px;
   }
   .result-card__badges {
-    position: static;
-    margin-top: 10px;
-    flex-direction: column;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .res-tag {
+    font-size: 10.5px;
+    padding: 5px 9px;
+    border-radius: 12px;
+    letter-spacing: 0.01em;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
   }
   .result-card__footer {
     flex-direction: column;
     align-items: stretch;
     text-align: center;
+    gap: 14px;
+  }
+  .res-meta {
+    text-align: left;
+    font-size: 13px;
   }
 }
