@@ -41,54 +41,9 @@ function str_(v, max) {
   return String(v == null ? '' : v).trim().slice(0, max || 500);
 }
 
-var TAB_BLOCKED   = 'BlockedSlots';
-var BLOCKED_COLS  = ['date', 'time', 'reason'];
-
-/* ---------- GET: approved reviews OR booked/blocked slots availability ---------- */
+/* ---------- GET: approved reviews only ---------- */
 function doGet(e) {
   var action = (e && e.parameter && e.parameter.action) || '';
-  
-  if (action === 'availability') {
-    try {
-      var unavailable = {};
-      
-      // 1. Fetch booked slots from Bookings tab (excluding cancelled)
-      var bkSh = sheet_(TAB_BOOKINGS, BOOKING_COLS);
-      var bkRows = bkSh.getDataRange().getValues();
-      for (var i = 1; i < bkRows.length; i++) {
-        var status = String(bkRows[i][9]).toLowerCase();
-        if (status === 'cancelled') continue;
-        var bDate = str_(bkRows[i][5], 20);
-        var bTime = str_(bkRows[i][6], 20);
-        if (bDate && bTime) {
-          if (!unavailable[bDate]) unavailable[bDate] = [];
-          if (unavailable[bDate].indexOf(bTime) === -1) unavailable[bDate].push(bTime);
-        }
-      }
-      
-      // 2. Fetch admin blocked slots from BlockedSlots tab
-      var blSh = sheet_(TAB_BLOCKED, BLOCKED_COLS);
-      var blRows = blSh.getDataRange().getValues();
-      for (var j = 1; j < blRows.length; j++) {
-        var lDate = str_(blRows[j][0], 20);
-        var lTime = str_(blRows[j][1], 20);
-        if (lDate) {
-          if (!unavailable[lDate]) unavailable[lDate] = [];
-          if (lTime && unavailable[lDate].indexOf(lTime) === -1) {
-            unavailable[lDate].push(lTime);
-          } else if (!lTime) {
-            // Full day blocked marker
-            unavailable[lDate].push('FULL_DAY');
-          }
-        }
-      }
-      
-      return json_({ availability: unavailable });
-    } catch (err) {
-      return json_({ availability: {} });
-    }
-  }
-
   if (action !== 'reviews') {
     // Never expose bookings. Anything else gets a flat refusal.
     return json_({ error: 'not_found' });
