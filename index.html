@@ -405,9 +405,9 @@
       </a>
 
       <nav class="nav" aria-label="Primary" id="primaryNav">
+        <a href="#results">Results</a>
         <a href="#services">Services</a>
         <a href="#how">How It Works</a>
-        <a href="#results">Results</a>
         <a href="#faq">FAQ</a>
         <a href="#book">Book</a>
       </nav>
@@ -551,6 +551,63 @@
       </div>
 
       <div class="scroll-cue" aria-hidden="true"><i></i>Scroll</div>
+    </section>
+
+    <!-- ==================== RESULTS ==================== -->
+    <section class="section" id="results" data-spy="Results" aria-labelledby="st-title">
+      <div class="container">
+        <div class="section-head section-head--center" data-reveal="up">
+          <span class="eyebrow">By the numbers</span>
+          <h2 class="h2" id="st-title">Care that <span class="accent">adds up.</span></h2>
+          <p class="lead">A straightforward number from the practice — no exaggeration, no stock quotes.</p>
+        </div>
+
+        <div class="stats-grid stats-grid--single" data-reveal="up" style="--d:100ms">
+          <div class="card stat">
+            <b class="stat__num" data-count="1600" data-suffix="+">1600+</b>
+            <span class="stat__label">Patients treated</span>
+          </div>
+        </div>
+
+        <!-- Posture & Spine Alignment Transformation Showcase -->
+        <div class="results-showcase" data-reveal="up" style="--d:150ms">
+          <div class="card result-card">
+            <div class="result-card__header">
+              <span class="eyebrow" style="margin-bottom: 6px;">Clinical Transformation</span>
+              <h3 class="result-card__title">Spine Alignment &amp; Posture Correction</h3>
+              <p class="result-card__sub">Real patient transformation achieved through guided online therapy &amp; targeted spinal alignment exercises.</p>
+            </div>
+
+            <div class="result-card__media">
+              <figure class="result-card__figure">
+                <img src="assets/img/spine-posture-result.jpg" 
+                     alt="Before and after posture alignment analysis showing visible spinal straightness improvement" 
+                     class="result-card__img" loading="lazy" />
+                <div class="result-card__badges">
+                  <span class="res-tag res-tag--before">Before: Spinal Deviation</span>
+                  <span class="res-tag res-tag--after">After: Corrected Alignment</span>
+                </div>
+              </figure>
+            </div>
+
+            <div class="result-card__footer">
+              <div class="res-meta">
+                <span class="res-meta__item"><strong>Target:</strong> Lateral Postural Shift &amp; Spine Curve</span>
+                <span class="res-meta__item"><strong>Outcome:</strong> Restored Symmetry &amp; Zero Pain</span>
+              </div>
+              <a class="btn btn--wa btn--sm" href="#book" data-cta="results-case">
+                <svg class="ic"><use href="#ic-cal" /></svg> Start Your Transformation
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Populated at runtime from approved reviews only. Stays hidden when empty. -->
+        <div class="reviews" id="reviewsBlock" hidden>
+          <h3 class="reviews__title">What patients say</h3>
+          <div class="reviews__grid" id="reviewsGrid"></div>
+        </div>
+      </div>
     </section>
 
     <!-- ==================== FEATURE MARQUEE ==================== -->
@@ -890,71 +947,7 @@
       </div>
     </section>
 
-    <!-- ==================== RESULTS ====================
-       V3's three testimonials and the ★★★★★ rating were removed here: they were
-       unattributed and unsourced, which is a real ASCI / Consumer Protection Act
-       exposure on a medical practice page. Genuine, patient-submitted reviews are
-       rendered below by initReviews() once Phase 3 is deployed — the block stays
-       hidden until there are real approved ones.
 
-       One figure only, and it is a real one. Every claim on this section must be
-       substantiable — do not pad it out with numbers that only look impressive.
-  -->
-    <section class="section" id="results" data-spy="Results" aria-labelledby="st-title">
-      <div class="container">
-        <div class="section-head section-head--center" data-reveal="up">
-          <span class="eyebrow">By the numbers</span>
-          <h2 class="h2" id="st-title">Care that <span class="accent">adds up.</span></h2>
-          <p class="lead">A straightforward number from the practice — no exaggeration, no stock quotes.</p>
-        </div>
-
-        <div class="stats-grid stats-grid--single" data-reveal="up" style="--d:100ms">
-          <div class="card stat">
-            <b class="stat__num" data-count="1600" data-suffix="+">1600+</b>
-            <span class="stat__label">Patients treated</span>
-          </div>
-        </div>
-
-        <!-- Posture & Spine Alignment Transformation Showcase -->
-        <div class="results-showcase" data-reveal="up" style="--d:150ms">
-          <div class="card result-card">
-            <div class="result-card__header">
-              <span class="eyebrow" style="margin-bottom: 6px;">Clinical Transformation</span>
-              <h3 class="result-card__title">Spine Alignment &amp; Posture Correction</h3>
-              <p class="result-card__sub">Real patient transformation achieved through guided online therapy &amp; targeted spinal alignment exercises.</p>
-            </div>
-
-            <div class="result-card__media">
-              <figure class="result-card__figure">
-                <img src="assets/img/spine-posture-result.jpg" 
-                     alt="Before and after posture alignment analysis showing visible spinal straightness improvement" 
-                     class="result-card__img" loading="lazy" />
-                <div class="result-card__badges">
-                  <span class="res-tag res-tag--before">Before: Spinal Deviation</span>
-                  <span class="res-tag res-tag--after">After: Corrected Alignment</span>
-                </div>
-              </figure>
-            </div>
-
-            <div class="result-card__footer">
-              <div class="res-meta">
-                <span class="res-meta__item"><strong>Target:</strong> Lateral Postural Shift &amp; Spine Curve</span>
-                <span class="res-meta__item"><strong>Outcome:</strong> Restored Symmetry &amp; Zero Pain</span>
-              </div>
-              <a class="btn btn--wa btn--sm" href="#book" data-cta="results-case">
-                <svg class="ic"><use href="#ic-cal" /></svg> Start Your Transformation
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Populated at runtime from approved reviews only. Stays hidden when empty. -->
-        <div class="reviews" id="reviewsBlock" hidden>
-          <h3 class="reviews__title">What patients say</h3>
-          <div class="reviews__grid" id="reviewsGrid"></div>
-        </div>
-      </div>
-    </section>
 
     <!-- ==================== FAQ ==================== -->
     <section class="section section--tight" id="faq" data-spy="FAQ" aria-labelledby="faq-title">
