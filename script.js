@@ -48,6 +48,7 @@
     initWheel();
     initApptForm();
     initReviews();
+    initCounters();
 
     var ticking = false;
     function tick() {
@@ -420,6 +421,15 @@
   var wheelSel  = { date: "", hour: 0, minute: 0, ampm: "AM" };
   var wheelCols = {};
 
+  /* Per-detent haptic tick. Android Chrome only — iOS Safari has never shipped
+     the Vibration API, so iPhones get the visual detent and nothing more.
+     Needs prior user activation, which opening the disclosure provides. */
+  var canVibrate = typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
+  function haptic() {
+    if (!canVibrate || reduced) return;
+    try { navigator.vibrate(8); } catch (e) {}
+  }
+
   function pad2(n) { return String(n).padStart(2, "0"); }
   function isoOf(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
   function to24(h12, ampm) {
@@ -467,9 +477,11 @@
     return out;
   }
 
+  /* Falls back to 44 when the disclosure is collapsed: a hidden element reports
+     offsetHeight 0, and dividing by that would send every column to index 0. */
   function itemH(col) {
     var f = col.firstElementChild;
-    return f ? f.offsetHeight : 44;
+    return (f && f.offsetHeight) ? f.offsetHeight : 44;
   }
   function indexOfScroll(col) { return Math.round(col.scrollTop / itemH(col)); }
 
@@ -535,8 +547,8 @@
     applyCol("hour", hourOptions(iso, wheelSel.ampm), wheelSel.hour);
     applyCol("minute", minuteOptions(iso, wheelSel.hour, wheelSel.ampm), wheelSel.minute);
 
-    var out = document.getElementById("whenOut");
-    if (out) out.textContent = wheelText();
+    var out = document.getElementById("whenValue");
+    if (out) out.textContent = wheelText() || "Tap to choose";
     updatePreview();
   }
   function wheelText() {
@@ -581,8 +593,18 @@
       var col = wheelCols[k];
       if (!col) return;
       var t = null;
+      col._lastIdx = -1;
       // Debounced rather than `scrollend` — Safari still lacks that event.
       col.addEventListener("scroll", function () {
+        // Tick the highlight and haptics per detent as it passes the centre,
+        // rather than waiting for the debounce — that's what makes it feel
+        // like a physical wheel instead of a scrolling list.
+        var i = indexOfScroll(col);
+        if (i !== col._lastIdx && i >= 0 && i < (col._options || []).length) {
+          col._lastIdx = i;
+          markSelected(k, i);
+          haptic();
+        }
         clearTimeout(t);
         t = setTimeout(function () { commit(k); }, 110);
       }, { passive: true });
@@ -598,6 +620,49 @@
         commitIndex(k, next);
       });
     });
+
+    initWhenDisclosure();
+  }
+
+  /* ---------- date/time disclosure ----------
+     Collapsed by default so a thumb drag down the page can't land inside the
+     wheel. Everything below exists because a hidden column has no layout:
+     scrollTo() on it is a no-op, so positions have to be re-applied the
+     moment the panel becomes visible. */
+  var whenOpen = false;
+  function setWhenOpen(open) {
+    var toggle = document.getElementById("whenToggle");
+    var panel = document.getElementById("whenPanel");
+    if (!toggle || !panel) return;
+    whenOpen = open;
+    panel.hidden = !open;
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    if (!open) return;
+
+    // Now that the panel has layout, put every column back on its selection.
+    ["date", "hour", "minute", "ampm"].forEach(function (k) {
+      var col = wheelCols[k];
+      if (!col || !col._options) return;
+      var idx = 0;
+      for (var i = 0; i < col._options.length; i++) {
+        if (String(col._options[i].value) === String(wheelSel[k])) { idx = i; break; }
+      }
+      col._lastIdx = idx;
+      selectIndex(k, idx);
+    });
+  }
+
+  function initWhenDisclosure() {
+    var toggle = document.getElementById("whenToggle");
+    var done = document.getElementById("whenDone");
+    if (!toggle) return;
+    toggle.addEventListener("click", function () { setWhenOpen(!whenOpen); });
+    if (done) {
+      done.addEventListener("click", function () {
+        setWhenOpen(false);
+        toggle.focus({ preventScroll: true });
+      });
+    }
   }
 
   /* ---------- appointment form + live WhatsApp preview ---------- */
@@ -713,7 +778,10 @@
         return;
       }
       if (!concern) return fail("Please choose your primary concern.", concernEl);
-      if (!wheelText()) return fail("Please pick a preferred date and time.");
+      if (!wheelText()) {
+        setWhenOpen(true);            // don't point at a collapsed panel
+        return fail("Please pick a preferred date and time.");
+      }
       if (!issue) return fail("Please describe the issue briefly.", issueEl);
       if (!consentEl.checked) return fail("Please accept the privacy terms to continue.", consentEl);
 
@@ -744,6 +812,35 @@
         status.textContent = msg;
         if (el) markInvalid(el, "apptStatus");
       }
+    });
+  }
+
+  /* ---------- stat count-up ----------
+     The real figure is written in the HTML, so it is correct with JS disabled
+     and for crawlers; this only animates up to it. Static under reduced
+     motion — the number is the point, not the movement. */
+  function initCounters() {
+    var els = Array.prototype.slice.call(document.querySelectorAll("[data-count]"));
+    els.forEach(function (el) {
+      var target = parseInt(el.getAttribute("data-count"), 10) || 0;
+      var suffix = el.getAttribute("data-suffix") || "";
+      if (reduced) { el.textContent = target + suffix; return; }
+
+      var started = false;
+      onScroll(function () {
+        if (started) return;
+        var r = el.getBoundingClientRect();
+        if (r.top > window.innerHeight - 60 || r.bottom < 0) return;
+        started = true;
+        var t0 = null;
+        requestAnimationFrame(function step(ts) {
+          if (t0 === null) t0 = ts;
+          var p = Math.min(1, (ts - t0) / 1400);
+          var eased = 1 - Math.pow(1 - p, 3);              // ease-out cubic
+          el.textContent = Math.round(target * eased) + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        });
+      });
     });
   }
 

@@ -878,6 +878,12 @@ html.menu-open, .menu-open body { overflow: hidden; }
 
 /* ---------- Results: stat band + approved reviews ------------------------------------------------------------- */
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+/* A single substantiated figure reads better centred and enlarged than
+   stretched across a four-column grid. */
+.stats-grid--single { grid-template-columns: minmax(0, 360px); justify-content: center; }
+.stats-grid--single .stat { padding: 40px 30px; }
+.stats-grid--single .stat__num { font-size: clamp(48px, 7.5vw, 68px); }
+.stats-grid--single .stat__label { margin-top: 12px; font-size: 15px; }
 .stat {
   border-radius: var(--r-lg);
   padding: 30px 22px;
@@ -1016,20 +1022,25 @@ fieldset.field legend { font: 600 13.5px/1 var(--f-body); color: var(--heading);
 .consent > span { font: 400 13px/1.55 var(--f-body); color: var(--muted); }
 .consent a { color: var(--accent-text); text-decoration: underline; }
 
-/* --- Segmented control (gender) --- */
+/* --- Segmented control (gender) ---
+   Wraps at every width and the options flex, so a longer label ("Prefer not to
+   say") or a device running enlarged system text pushes the control onto a
+   second row instead of colliding. Rounded corners rather than full pills:
+   at pill radius the wrapped rows read as overlapping lozenges. */
 .seg {
-  display: inline-flex; gap: 6px;
+  display: flex; flex-wrap: wrap; gap: 6px;
   background: var(--tab-rail);
   border: 1px solid var(--glass-border);
-  padding: 5px; border-radius: var(--r-pill);
+  padding: 5px; border-radius: 14px;
   box-shadow: inset 0 1px 0 var(--glass-hi);
 }
 .seg-opt {
-  position: relative; text-align: center; white-space: nowrap; cursor: pointer;
-  font: 600 13.5px/1 var(--f-body); color: var(--muted);
+  position: relative; text-align: center; cursor: pointer;
+  flex: 1 1 auto;
+  font: 600 13.5px/1.25 var(--f-body); color: var(--muted);
   /* 44px min height — V3's chips were ~37px, below the tap-target guideline. */
   min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
-  padding: 10px 20px; border-radius: var(--r-pill);
+  padding: 10px 14px; border-radius: 10px;
   transition: background .2s var(--ease), color .2s var(--ease);
   user-select: none;
 }
@@ -1094,10 +1105,67 @@ fieldset.field legend { font: 600 13.5px/1 var(--f-body); color: var(--heading);
   user-select: none;
 }
 .wheel__opt.is-sel { color: var(--heading); transform: scale(1.06); }
-.wheel__out {
-  margin: 12px 2px 0; min-height: 18px;
-  font: 600 13.5px/1.4 var(--f-body); color: var(--accent-text);
+
+/* --- Disclosure wrapping the wheel --- */
+.when-toggle {
+  width: 100%;
+  display: flex; align-items: center; gap: 14px;
+  text-align: left; cursor: pointer;
+  padding: 14px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--input-bg);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18);
+  transition: border-color .18s var(--ease), box-shadow .18s var(--ease);
 }
+.when-toggle:hover { border-color: var(--teal); }
+.when-toggle:focus-visible {
+  outline: none; border-color: var(--teal);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 0 0 3.5px rgba(46, 139, 143, .2);
+}
+.when-toggle__icon {
+  width: 42px; height: 42px; flex: none;
+  display: grid; place-items: center;
+  border-radius: 12px;
+  background: var(--ic-bg); color: var(--h-accent);
+}
+.when-toggle__icon .ic { font-size: 22px; }
+.when-toggle__text { flex: 1; min-width: 0; }
+.when-toggle__label {
+  display: block;
+  font: 700 10.5px/1 var(--f-body); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted);
+}
+.when-toggle__value {
+  display: block; margin-top: 6px;
+  font: 600 15.5px/1.35 var(--f-body); color: var(--heading);
+}
+.when-toggle__action { display: flex; align-items: center; gap: 7px; flex: none; color: var(--accent-text); }
+.when-toggle__cta { font: 600 13px/1 var(--f-body); }
+.when-toggle__chev { display: grid; place-items: center; transition: transform .3s var(--ease); }
+.when-toggle__chev .ic { font-size: 18px; }
+.when-toggle[aria-expanded="true"] .when-toggle__chev { transform: rotate(180deg); }
+.when-toggle[aria-expanded="true"] {
+  border-color: var(--teal);
+  border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+}
+
+.when-panel {
+  border: 1px solid var(--teal); border-top: 0;
+  border-radius: 0 0 14px 14px;
+  padding: 16px;
+  background: var(--input-bg);
+}
+.when-panel[hidden] { display: none; }
+.when-done {
+  width: 100%; margin-top: 14px; cursor: pointer;
+  padding: 13px 18px; min-height: 44px;
+  border: 0; border-radius: 12px;
+  background: var(--teal); color: #fff;
+  font: 600 14.5px/1 var(--f-body);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28);
+}
+.when-done:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
 
 .wa-preview {
   position: sticky; top: 96px;
@@ -1230,7 +1298,8 @@ html.shotmode .scroll-cue { display: none; }
   .scroll-cue { display: none; }
   .svc-grid { grid-template-columns: 1fr 1fr; }
   .persona-grid { grid-template-columns: repeat(2, 1fr); }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  /* :not() keeps the centred single-stat layout from being clobbered here. */
+  .stats-grid:not(.stats-grid--single) { grid-template-columns: repeat(2, 1fr); }
   .why__grid { grid-template-columns: 1fr; }
   .physio__card { grid-template-columns: 1fr; }
   .physio__photo { min-height: 280px; }
@@ -1305,15 +1374,19 @@ html.shotmode .scroll-cue { display: none; }
   /* The date column carries the longest string ("Wed, 23 Sept" ≈ 102px), so it
      gets the extra room; hour/minute/AM-PM never exceed two glyphs. */
   .wheel { grid-template-columns: 2.4fr 1fr 1fr 1fr; gap: 2px; padding: 0 6px; }
+  .when-toggle { padding: 12px 13px; gap: 11px; }
+  .when-toggle__cta { display: none; }        /* the chevron alone reads fine here */
+  .when-toggle__icon { width: 38px; height: 38px; }
+  .when-toggle__icon .ic { font-size: 20px; }
+  .when-panel { padding: 12px; }
   .wheel__opt { font-size: 14px; }
-  .seg { flex-wrap: wrap; }
 }
 @media (max-width: 480px) {
   .brand__tag { display: none; }
 }
 @media (max-width: 400px) {
   .persona-grid { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: 1fr; }
+  .stats-grid:not(.stats-grid--single) { grid-template-columns: 1fr; }
 }
 
 /* ---------- Mobile / touch: kill the last backdrop-filters for performance,

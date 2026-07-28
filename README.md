@@ -32,6 +32,12 @@ An audit of V3 found the funnel, not the design, was the problem:
   which is what enforces the 6:00 AM–11:00 PM window and hides times that have
   already passed today (60-minute lead). At 11 PM only `:00` remains, so the
   last bookable start is exactly 11:00 PM. Keyboard-operable, `role="listbox"`.
+  It sits **behind a collapsed disclosure**: a nested scroll container parked in
+  the middle of a long page swallows every thumb drag that lands on it, so on a
+  phone the page would stop scrolling and the wheel would spin instead. Collapsed,
+  it can only be scrolled deliberately; the summary row shows the chosen slot.
+  Each detent fires an 8 ms `navigator.vibrate` tick — Android Chrome only, since
+  iOS Safari has never shipped the Vibration API.
 - **New fields**: age, gender, email (optional — only used to send a calendar
   invite if given), and a required consent checkbox. No phone field: the
   booking arrives as a WhatsApp message from the patient's own number, so the
@@ -43,17 +49,23 @@ An audit of V3 found the funnel, not the design, was the problem:
 
 ## ⚠ Before this goes live
 
-1. **Supply the real numbers.** The four tiles in the Results section are
-   `0+` placeholders (`index.html`, search `TODO`). Replace them with genuine
-   figures or delete the tiles — they are the site's only trust proof now.
-2. **Set the domain.** Replace `https://drvarunsoni.in` throughout `index.html`
+1. **Set the domain.** Replace `https://drvarunsoni.in` throughout `index.html`
    and `privacy.html` (canonical, `og:image`, `twitter:image`, JSON-LD).
-3. **Fill in `privacy.html`** — publication date, grievance email, retention
+2. **Fill in `privacy.html`** — publication date, grievance email, retention
    period. It is a working draft, not legal advice; have it reviewed.
-4. **Deploy the backend** and set the `API` constant in `script.js` *and*
+3. **Deploy the backend** and set the `API` constant in `script.js` *and*
    `review.html`. Without it the site still works; bookings just aren't recorded.
-5. **Re-encode `assets/og-image.png`** (380 KB) to JPEG/WebP at ~40–60 KB and
+4. **Re-encode `assets/og-image.png`** (380 KB) to JPEG/WebP at ~40–60 KB and
    save it as `assets/og-image.jpg` — the meta tags already point at `.jpg`.
+
+## The one number on the page
+
+The Results section shows a single figure: **1600+ patients treated**, supplied
+by the practice. It is deliberately the only claim there. Anything added beside
+it must be equally substantiable — unverifiable stats on a medical page carry
+the same ASCI / Consumer Protection Act exposure that got V3's fabricated
+testimonials removed. `initCounters()` animates it; the real value lives in the
+HTML so it is still correct with JS off.
 
 ## Files
 
@@ -89,6 +101,14 @@ position back. Both are load-bearing, and both are commented in place.
 **The booking POST must stay `Content-Type: text/plain;charset=utf-8`.** That
 keeps it a CORS "simple request". `application/json` triggers a preflight that
 Apps Script cannot answer, and every booking would silently fail to record.
+
+**The wheel must be repositioned when its disclosure opens.** A hidden element
+has no layout: `offsetHeight` is 0 and `scrollTo()` does nothing. So while the
+panel is collapsed the columns cannot be positioned at all, and `itemH()`
+deliberately falls back to 44 rather than dividing by zero and sending every
+column to index 0. `setWhenOpen(true)` re-applies each column's scroll position
+once the panel is visible — without it, opening the picker would show the right
+value in the summary but the wrong rows under the highlight band.
 
 ## Inherited from V3
 

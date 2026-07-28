@@ -49,7 +49,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500;1,9..144,700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=10" />
+  <link rel="stylesheet" href="styles.css?v=13" />
 
   <script type="application/ld+json">
   {
@@ -709,33 +709,21 @@
        rendered below by initReviews() once Phase 3 is deployed — the block stays
        hidden until there are real approved ones.
 
-       ⚠ TODO: the four figures below are PLACEHOLDERS. Replace data-count and the
-       label text with your real numbers, or delete any tile you cannot substantiate.
+       One figure only, and it is a real one. Every claim on this section must be
+       substantiable — do not pad it out with numbers that only look impressive.
   -->
   <section class="section" id="results" data-spy="Results" aria-labelledby="st-title">
     <div class="container">
       <div class="section-head section-head--center" data-reveal="up">
         <span class="eyebrow">By the numbers</span>
         <h2 class="h2" id="st-title">Care that <span class="accent">adds up.</span></h2>
-        <p class="lead">Straightforward numbers from the practice — no exaggeration, no stock quotes.</p>
+        <p class="lead">A straightforward number from the practice — no exaggeration, no stock quotes.</p>
       </div>
 
-      <div class="stats-grid" data-reveal="up" style="--d:100ms">
+      <div class="stats-grid stats-grid--single" data-reveal="up" style="--d:100ms">
         <div class="card stat">
-          <b class="stat__num" data-count="0" data-suffix="+">0+</b>
+          <b class="stat__num" data-count="1600" data-suffix="+">1600+</b>
           <span class="stat__label">Patients treated</span>
-        </div>
-        <div class="card stat">
-          <b class="stat__num" data-count="0" data-suffix="+">0+</b>
-          <span class="stat__label">Years of practice</span>
-        </div>
-        <div class="card stat">
-          <b class="stat__num" data-count="0" data-suffix="+">0+</b>
-          <span class="stat__label">Sessions delivered</span>
-        </div>
-        <div class="card stat">
-          <b class="stat__num" data-count="0" data-suffix="+">0+</b>
-          <span class="stat__label">Conditions covered</span>
         </div>
       </div>
 
@@ -840,16 +828,35 @@
               </select>
             </div>
 
+            <!-- Collapsed by default. The wheel is a nested scroll container, so
+                 leaving it open in the middle of a long page means every thumb
+                 drag that lands on it scrolls the wheel instead of the page.
+                 Behind a disclosure it can only be scrolled deliberately. -->
             <fieldset class="field wheel-field" id="whenFs">
               <legend>Preferred Date &amp; Time <span class="req">*</span></legend>
-              <div class="wheel" id="wheel">
-                <div class="wheel__band" aria-hidden="true"></div>
-                <div class="wheel__col wheel__col--date" data-wheel="date" tabindex="0" role="listbox" aria-label="Date"></div>
-                <div class="wheel__col" data-wheel="hour" tabindex="0" role="listbox" aria-label="Hour"></div>
-                <div class="wheel__col" data-wheel="minute" tabindex="0" role="listbox" aria-label="Minute"></div>
-                <div class="wheel__col" data-wheel="ampm" tabindex="0" role="listbox" aria-label="AM or PM"></div>
+
+              <button type="button" class="when-toggle" id="whenToggle" aria-expanded="false" aria-controls="whenPanel">
+                <span class="when-toggle__icon"><svg class="ic"><use href="#ic-cal"/></svg></span>
+                <span class="when-toggle__text">
+                  <span class="when-toggle__label">Your appointment</span>
+                  <span class="when-toggle__value" id="whenValue" aria-live="polite">—</span>
+                </span>
+                <span class="when-toggle__action">
+                  <span class="when-toggle__cta">Change</span>
+                  <span class="when-toggle__chev" aria-hidden="true"><svg class="ic"><use href="#ic-chev"/></svg></span>
+                </span>
+              </button>
+
+              <div class="when-panel" id="whenPanel" hidden>
+                <div class="wheel" id="wheel">
+                  <div class="wheel__band" aria-hidden="true"></div>
+                  <div class="wheel__col wheel__col--date" data-wheel="date" tabindex="0" role="listbox" aria-label="Date"></div>
+                  <div class="wheel__col" data-wheel="hour" tabindex="0" role="listbox" aria-label="Hour"></div>
+                  <div class="wheel__col" data-wheel="minute" tabindex="0" role="listbox" aria-label="Minute"></div>
+                  <div class="wheel__col" data-wheel="ampm" tabindex="0" role="listbox" aria-label="AM or PM"></div>
+                </div>
+                <button type="button" class="when-done" id="whenDone">Done</button>
               </div>
-              <p class="wheel__out" id="whenOut" aria-live="polite"></p>
             </fieldset>
 
             <div class="field">
@@ -945,6 +952,6 @@
   </a>
 </div>
 
-<script src="script.js?v=10" defer></script>
+<script src="script.js?v=13" defer></script>
 </body>
 </html>
