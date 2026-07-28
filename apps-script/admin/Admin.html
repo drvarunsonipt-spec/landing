@@ -47,10 +47,40 @@
 
   <div class="tabs">
     <button id="tB" class="on" onclick="show('b')">Bookings</button>
+    <button id="tS" onclick="show('s')">📅 Schedule Manager</button>
     <button id="tR" onclick="show('r')">Reviews</button>
   </div>
 
   <div id="b"><div class="empty">Loading…</div></div>
+  <div id="s" style="display:none">
+    <div class="card">
+      <div class="who" style="margin-bottom:12px">Block a Date / Time Slot</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <input type="date" id="blockDate" style="padding:8px 12px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--text);" />
+        <select id="blockTime" style="padding:8px 12px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--text);">
+          <option value="">-- Full Day Block --</option>
+          <option value="6:00 AM">6:00 AM</option>
+          <option value="7:00 AM">7:00 AM</option>
+          <option value="8:00 AM">8:00 AM</option>
+          <option value="9:00 AM">9:00 AM</option>
+          <option value="10:00 AM">10:00 AM</option>
+          <option value="11:00 AM">11:00 AM</option>
+          <option value="12:00 PM">12:00 PM</option>
+          <option value="1:00 PM">1:00 PM</option>
+          <option value="2:00 PM">2:00 PM</option>
+          <option value="3:00 PM">3:00 PM</option>
+          <option value="4:00 PM">4:00 PM</option>
+          <option value="5:00 PM">5:00 PM</option>
+          <option value="6:00 PM">6:00 PM</option>
+          <option value="7:00 PM">7:00 PM</option>
+          <option value="8:00 PM">8:00 PM</option>
+        </select>
+        <input type="text" id="blockReason" placeholder="Reason (optional)" style="padding:8px 12px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--text); flex:1;" />
+        <button class="row go" style="margin-top:0;" onclick="submitBlock()">Block Slot</button>
+      </div>
+    </div>
+    <div id="blockedList"><div class="empty">Loading schedule…</div></div>
+  </div>
   <div id="r" style="display:none"><div class="empty">Loading…</div></div>
 
 <script>
@@ -62,9 +92,43 @@
 
   function show(which) {
     document.getElementById('b').style.display = which === 'b' ? '' : 'none';
+    document.getElementById('s').style.display = which === 's' ? '' : 'none';
     document.getElementById('r').style.display = which === 'r' ? '' : 'none';
     document.getElementById('tB').className = which === 'b' ? 'on' : '';
+    document.getElementById('tS').className = which === 's' ? 'on' : '';
     document.getElementById('tR').className = which === 'r' ? 'on' : '';
+    if (which === 's') loadBlocked();
+  }
+
+  /* ---------- schedule manager ---------- */
+  function loadBlocked() {
+    google.script.run.withSuccessHandler(renderBlocked).listBlockedSlots();
+  }
+  function renderBlocked(list) {
+    var el = document.getElementById('blockedList');
+    if (!list || !list.length) { el.innerHTML = '<div class="empty">No custom blocked slots.</div>'; return; }
+    el.innerHTML = list.map(function (x) {
+      return '<div class="card">' +
+        '<div class="top"><div>' +
+          '<div class="who">' + esc(x.date) + ' — ' + esc(x.time) + '</div>' +
+          '<div class="meta">' + (x.reason ? esc(x.reason) : 'Blocked by admin') + '</div>' +
+        '</div>' +
+        '<button class="row bad" style="margin:0" onclick="delBlock(' + x.row + ')">Unblock / Remove</button>' +
+        '</div></div>';
+    }).join('');
+  }
+  function submitBlock() {
+    var d = document.getElementById('blockDate').value;
+    var t = document.getElementById('blockTime').value;
+    var r = document.getElementById('blockReason').value;
+    if (!d) { alert('Please select a date'); return; }
+    google.script.run.withSuccessHandler(function () {
+      document.getElementById('blockReason').value = '';
+      loadBlocked();
+    }).addBlockedSlot(d, t, r);
+  }
+  function delBlock(row) {
+    google.script.run.withSuccessHandler(loadBlocked).deleteBlockedSlot(row);
   }
 
   /* ---------- bookings ---------- */

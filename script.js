@@ -442,12 +442,69 @@
     if (ampm === "AM") return h12 === 12 ? 0 : h12;
     return h12 === 12 ? 12 : h12 + 12;
   }
-  function minAllowed(iso) {
-    var now = new Date();
-    if (iso !== isoOf(now)) return OPEN_MIN;
-    return Math.max(OPEN_MIN, now.getHours() * 60 + now.getMinutes() + LEAD_MIN);
+  var unavailableMap = {};
+
+  function loadLocalBlockedMap() {
+    try {
+      var local = JSON.parse(localStorage.getItem("physio_blocked_slots") || "{}");
+      Object.keys(local).forEach(function (k) {
+        if (!unavailableMap[k]) unavailableMap[k] = [];
+        (local[k] || []).forEach(function (slot) {
+          if (unavailableMap[k].indexOf(slot) === -1) unavailableMap[k].push(slot);
+        });
+      });
+    } catch (e) {}
   }
-  function slotOk(iso, mins) { return mins >= minAllowed(iso) && mins <= CLOSE_MIN; }
+
+  function fetchAvailability() {
+    loadLocalBlockedMap();
+    syncWheel();
+    if (!API) return;
+    try {
+      fetch(API + "?action=availability")
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d && d.availability) {
+            unavailableMap = d.availability;
+            loadLocalBlockedMap();
+            syncWheel();
+          }
+        })
+        .catch(function () {});
+    } catch (e) {}
+  }
+
+  try {
+    window.addEventListener("storage", function (e) {
+      if (e.key === "physio_blocked_slots") {
+        fetchAvailability();
+      }
+    });
+  } catch (e) {}
+
+  function minsToTimeStr(mins) {
+    var h24 = Math.floor(mins / 60);
+    var m = mins % 60;
+    var ampm = h24 >= 12 ? "PM" : "AM";
+    var h12 = h24 % 12;
+    if (h12 === 0) h12 = 12;
+    return h12 + ":" + pad2(m) + " " + ampm;
+  }
+
+  function slotOk(iso, mins) {
+    if (mins < minAllowed(iso) || mins > CLOSE_MIN) return false;
+    var list = unavailableMap[iso];
+    if (list && list.length) {
+      if (list.indexOf("FULL_DAY") !== -1) return false;
+      var tStr = minsToTimeStr(mins);
+      var tStrPad = pad2(Math.floor(mins / 60) % 12 || 12) + ":" + pad2(mins % 60) + " " + (Math.floor(mins / 60) >= 12 ? "PM" : "AM");
+      for (var i = 0; i < list.length; i++) {
+        var un = String(list[i]).trim();
+        if (un === tStr || un === tStrPad) return false;
+      }
+    }
+    return true;
+  }
 
   function minuteOptions(iso, h12, ampm) {
     var base = to24(h12, ampm) * 60, out = [];
@@ -594,6 +651,7 @@
     wheelSel.hour = h0.length ? h0[0].value : 6;
     wheelSel.minute = 0;
     syncWheel();
+    fetchAvailability();
 
     ["date", "hour", "minute", "ampm"].forEach(function (k) {
       var col = wheelCols[k];

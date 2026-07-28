@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhysioBeats — Admin Control Panel</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=14" />
+  <style>
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--f-body);
+      min-height: 100vh;
+      padding: 30px 16px;
+    }
+    .admin-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--glass-border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .admin-title {
+      font: 800 24px/1.2 var(--f-head);
+      color: var(--heading);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .auth-card {
+      max-width: 420px;
+      margin: 80px auto;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .auth-title {
+      font: 800 22px/1.2 var(--f-head);
+      color: var(--heading);
+      margin-bottom: 8px;
+    }
+    .auth-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .pin-input {
+      width: 100%;
+      padding: 14px;
+      font-size: 24px;
+      letter-spacing: 12px;
+      text-align: center;
+      border-radius: 12px;
+      border: 1px solid var(--border-strong);
+      background: var(--input-bg);
+      color: var(--heading);
+      margin-bottom: 20px;
+    }
+    .pin-input:focus {
+      outline: none;
+      border-color: var(--teal);
+    }
+    .admin-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+    .admin-tab-btn {
+      padding: 12px 20px;
+      border-radius: 12px;
+      font: 600 14px/1 var(--f-body);
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s var(--ease);
+    }
+    .admin-tab-btn.active {
+      background: var(--teal);
+      color: #ffffff;
+      border-color: var(--teal);
+      box-shadow: 0 4px 14px rgba(193, 39, 45, 0.35);
+    }
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .slot-item {
+      padding: 10px 8px;
+      border-radius: 10px;
+      text-align: center;
+      font: 600 13px/1 var(--f-body);
+      border: 1px solid var(--glass-border);
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      background: var(--glass-card);
+      color: var(--heading);
+    }
+    .slot-item.available {
+      background: rgba(37, 211, 102, 0.12);
+      border-color: rgba(37, 211, 102, 0.4);
+      color: #25D366;
+    }
+    .slot-item.blocked {
+      background: rgba(193, 39, 45, 0.16);
+      border-color: rgba(193, 39, 45, 0.4);
+      color: #FF6B6B;
+    }
+    .blocked-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="admin-container">
+
+    <!-- Auth Security Gate Screen -->
+    <div id="authGate" class="card auth-card">
+      <div class="auth-title">PhysioBeats Admin</div>
+      <div class="auth-sub">Enter Security PIN to unlock Control Panel</div>
+      <input type="password" id="pinInput" class="pin-input" maxlength="6" placeholder="••••" autofocus />
+      <button class="btn btn--wa btn--block" onclick="verifyPin()">Unlock Control Panel</button>
+      <p id="authError" style="color:#FF6B6B; font-size:13px; margin-top:14px; display:none;"></p>
+    </div>
+
+    <!-- Main Admin Dashboard (Hidden until unlocked) -->
+    <div id="adminApp" style="display: none;">
+      
+      <div class="admin-header">
+        <div class="admin-title">
+          <svg viewBox="0 0 250 48" fill="none" style="height: 32px; width: auto; color: var(--heading);">
+            <text x="0" y="34" font-family="system-ui, sans-serif" font-weight="800" font-size="36" fill="#c1272d" letter-spacing="-1.5">PB</text>
+            <circle cx="52" cy="9" r="4.5" fill="#f15a24"/>
+            <text x="66" y="26" font-family="system-ui, sans-serif" font-weight="800" font-size="22" fill="currentColor" letter-spacing="-0.5">PhysioBeats</text>
+          </svg>
+          <span>Admin Portal</span>
+        </div>
+        <div>
+          <button class="btn btn--ghost btn--sm" onclick="lockAdmin()">Lock Panel</button>
+        </div>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab-btn active" id="tabBtnSchedule" onclick="switchTab('schedule')">📅 Schedule & Slot Manager</button>
+        <button class="admin-tab-btn" id="tabBtnBookings" onclick="switchTab('bookings')">📑 Consultation Bookings</button>
+      </div>
+
+      <!-- TAB 1: SCHEDULE & SLOT MANAGER -->
+      <div id="tabSchedule" class="tab-content">
+        <div class="card" style="padding:24px; margin-bottom:20px;">
+          <h3 class="h3" style="font-size:18px; margin-bottom:14px; color:var(--heading);">Block / Unblock Time Slots</h3>
+          <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-bottom:20px;">
+            <div style="flex:1; min-width:200px;">
+              <label style="display:block; font-size:12px; color:var(--muted); margin-bottom:6px;">Select Date</label>
+              <input type="date" id="slotDate" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--border-strong); background:var(--input-bg); color:var(--heading);" />
+            </div>
+            <div style="flex:1; min-width:200px;">
+              <label style="display:block; font-size:12px; color:var(--muted); margin-bottom:6px;">Action Reason (Optional)</label>
+              <input type="text" id="slotReason" placeholder="e.g. Booked, Personal leave" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--border-strong); background:var(--input-bg); color:var(--heading);" />
+            </div>
+            <div style="padding-top:20px;">
+              <button class="btn btn--ghost btn--sm" style="border-color:#FF6B6B; color:#FF6B6B;" onclick="blockFullDay()">Block Entire Day</button>
+            </div>
+          </div>
+
+          <label style="display:block; font-size:13px; color:var(--heading); font-weight:600; margin-bottom:10px;">Tap any slot to toggle Available / Blocked:</label>
+          <div class="slot-grid" id="slotsGrid"></div>
+        </div>
+
+        <div class="card" style="padding:24px;">
+          <h3 class="h3" style="font-size:18px; margin-bottom:14px; color:var(--heading);">Currently Blocked / Booked Slots</h3>
+          <div id="blockedSlotsList"></div>
+        </div>
+      </div>
+
+      <!-- TAB 2: BOOKINGS MANAGER -->
+      <div id="tabBookings" class="tab-content" style="display: none;">
+        <div id="bookingsList"><p class="empty" style="color:var(--muted); text-align:center; padding:30px;">Bookings are managed via Google Sheets and WhatsApp. Connect your Apps Script API URL to sync here directly.</p></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    var DEFAULT_PIN = "9680";
+    
+    function getStoredPin() {
+      return localStorage.getItem("admin_pin") || DEFAULT_PIN;
+    }
+
+    function verifyPin() {
+      var input = document.getElementById("pinInput").value;
+      if (input === getStoredPin()) {
+        sessionStorage.setItem("admin_auth", "true");
+        document.getElementById("authGate").style.display = "none";
+        document.getElementById("adminApp").style.display = "block";
+        initAdminApp();
+      } else {
+        var err = document.getElementById("authError");
+        err.textContent = "Invalid PIN. Please try again.";
+        err.style.display = "block";
+      }
+    }
+
+    function lockAdmin() {
+      sessionStorage.removeItem("admin_auth");
+      location.reload();
+    }
+
+    if (sessionStorage.getItem("admin_auth") === "true") {
+      document.getElementById("authGate").style.display = "none";
+      document.getElementById("adminApp").style.display = "block";
+      window.addEventListener("DOMContentLoaded", initAdminApp);
+    }
+
+    var ALL_SLOTS = [
+      "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
+      "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM",
+      "6:00 PM", "7:00 PM", "8:00 PM"
+    ];
+
+    function getLocalBlocked() {
+      try { return JSON.parse(localStorage.getItem("physio_blocked_slots") || "{}"); }
+      catch (e) { return {}; }
+    }
+
+    function saveLocalBlocked(map) {
+      localStorage.setItem("physio_blocked_slots", JSON.stringify(map));
+      // Notify other tabs immediately
+      window.dispatchEvent(new Event("storage"));
+    }
+
+    function initAdminApp() {
+      var dateInput = document.getElementById("slotDate");
+      var today = new Date().toISOString().split("T")[0];
+      dateInput.value = today;
+      dateInput.addEventListener("change", renderSlotGrid);
+      renderSlotGrid();
+      renderBlockedList();
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll(".tab-content").forEach(function(el) { el.style.display = "none"; });
+      document.querySelectorAll(".admin-tab-btn").forEach(function(el) { el.classList.remove("active"); });
+      
+      if (tab === "schedule") {
+        document.getElementById("tabSchedule").style.display = "block";
+        document.getElementById("tabBtnSchedule").classList.add("active");
+      } else if (tab === "bookings") {
+        document.getElementById("tabBookings").style.display = "block";
+        document.getElementById("tabBtnBookings").classList.add("active");
+      }
+    }
+
+    function renderSlotGrid() {
+      var date = document.getElementById("slotDate").value;
+      var grid = document.getElementById("slotsGrid");
+      grid.innerHTML = "";
+      
+      var map = getLocalBlocked();
+      var blockedList = map[date] || [];
+      var isFullDay = blockedList.indexOf("FULL_DAY") !== -1;
+
+      ALL_SLOTS.forEach(function(slot) {
+        var isBlocked = isFullDay || blockedList.indexOf(slot) !== -1;
+        var div = document.createElement("div");
+        div.className = "slot-item " + (isBlocked ? "blocked" : "available");
+        div.textContent = slot + (isBlocked ? " ✕" : " ✓");
+        div.onclick = function() { toggleSlot(date, slot); };
+        grid.appendChild(div);
+      });
+    }
+
+    function toggleSlot(date, slot) {
+      var map = getLocalBlocked();
+      if (!map[date]) map[date] = [];
+      var idx = map[date].indexOf(slot);
+      if (idx > -1) {
+        map[date].splice(idx, 1);
+      } else {
+        map[date].push(slot);
+      }
+      saveLocalBlocked(map);
+      renderSlotGrid();
+      renderBlockedList();
+    }
+
+    function blockFullDay() {
+      var date = document.getElementById("slotDate").value;
+      if (!date) return;
+      var map = getLocalBlocked();
+      map[date] = ["FULL_DAY"];
+      saveLocalBlocked(map);
+      renderSlotGrid();
+      renderBlockedList();
+    }
+
+    function removeBlock(date, slot) {
+      var map = getLocalBlocked();
+      if (!map[date]) return;
+      if (slot === "FULL_DAY") {
+        delete map[date];
+      } else {
+        var idx = map[date].indexOf(slot);
+        if (idx > -1) map[date].splice(idx, 1);
+      }
+      saveLocalBlocked(map);
+      renderSlotGrid();
+      renderBlockedList();
+    }
+
+    function renderBlockedList() {
+      var listEl = document.getElementById("blockedSlotsList");
+      var map = getLocalBlocked();
+      var keys = Object.keys(map);
+      
+      if (!keys.length) {
+        listEl.innerHTML = '<p style="color:var(--muted); font-size:14px;">No slots currently blocked.</p>';
+        return;
+      }
+
+      var html = "";
+      keys.forEach(function(date) {
+        var slots = map[date];
+        slots.forEach(function(slot) {
+          html += '<div class="blocked-row">' +
+                    '<div><b>' + date + '</b> — <span style="color:#FF6B6B;">' + slot + '</span></div>' +
+                    '<button class="btn btn--ghost btn--sm" style="border-color:#FF6B6B; color:#FF6B6B;" onclick="removeBlock(\'' + date + '\', \'' + slot + '\')">Unblock</button>' +
+                  '</div>';
+        });
+      });
+      listEl.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
