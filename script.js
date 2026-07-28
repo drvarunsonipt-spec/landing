@@ -85,7 +85,7 @@
 
     function apply(theme, animate) {
       document.documentElement.setAttribute("data-theme", theme);
-      try { localStorage.setItem("theme", theme); } catch (e) {}
+      try { localStorage.setItem("theme", theme); } catch (e) { }
       if (meta) meta.content = theme === "dark" ? "#070D1F" : "#F5F8FB";
       if (btn) btn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
       gradientNow();
@@ -416,15 +416,15 @@
 
   /* ---------- date + time scroll wheel ----------
      Four snap-scrolling columns. Hour/minute/AM-PM are rebuilt whenever an
-     earlier column changes — that rebuild is what enforces the 6:00 AM–11:00 PM
+     earlier column changes — that rebuild is what enforces the 6:00 AM–11:45 PM
      window and removes times that have already passed today, so an invalid
      combination can never be selected in the first place. */
-  var WHEEL_DAYS  = 60;
-  var OPEN_MIN    = 6 * 60;    // 06:00 — first bookable start
-  var CLOSE_MIN   = 23 * 60;   // 23:00 — last bookable start
-  var LEAD_MIN    = 60;        // never offer a slot less than an hour away
+  var WHEEL_DAYS = 60;
+  var OPEN_MIN = 6 * 60;        // 06:00 — first bookable start (6:00 AM)
+  var CLOSE_MIN = 23 * 60 + 45; // 23:45 — last bookable start (11:45 PM)
+  var LEAD_MIN = 60;        // never offer a slot less than an hour away
 
-  var wheelSel  = { date: "", hour: 0, minute: 0, ampm: "AM" };
+  var wheelSel = { date: "", hour: 0, minute: 0, ampm: "AM" };
   var wheelCols = {};
 
   /* Per-detent haptic tick. Android Chrome only — iOS Safari has never shipped
@@ -433,7 +433,7 @@
   var canVibrate = typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
   function haptic() {
     if (!canVibrate || reduced) return;
-    try { navigator.vibrate(8); } catch (e) {}
+    try { navigator.vibrate(8); } catch (e) { }
   }
 
   function pad2(n) { return String(n).padStart(2, "0"); }
@@ -441,6 +441,11 @@
   function to24(h12, ampm) {
     if (ampm === "AM") return h12 === 12 ? 0 : h12;
     return h12 === 12 ? 12 : h12 + 12;
+  }
+  function from24(h24) {
+    var ampm = h24 < 12 ? "AM" : "PM";
+    var h12 = h24 === 0 ? 12 : (h24 > 12 ? h24 - 12 : h24);
+    return { h12: h12, ampm: ampm };
   }
   function minAllowed(iso) {
     var now = new Date();
@@ -451,18 +456,28 @@
 
   function minuteOptions(iso, h12, ampm) {
     var base = to24(h12, ampm) * 60, out = [];
-    for (var m = 0; m < 60; m++) {
+    for (var m = 0; m < 60; m += 15) {
       if (slotOk(iso, base + m)) out.push({ value: m, label: pad2(m) });
     }
     return out;
   }
-  function hourOptions(iso, ampm) {
-    // AM tops out at 11; PM runs 12 → 11 in clock order.
-    var base = ampm === "AM" ? [6, 7, 8, 9, 10, 11] : [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  function hourOptions(iso) {
     var out = [];
-    base.forEach(function (h12) {
-      if (minuteOptions(iso, h12, ampm).length) out.push({ value: h12, label: String(h12) });
-    });
+    for (var h24 = 6; h24 <= 23; h24++) {
+      var f = from24(h24);
+      if (minuteOptions(iso, f.h12, f.ampm).length > 0) {
+        out.push({ value: h24, h12: f.h12, ampm: f.ampm, label: String(f.h12) });
+      }
+    }
+    return out;
+  }
+  function ampmOptions(iso) {
+    var hours = hourOptions(iso);
+    var hasAM = hours.some(function (h) { return h.ampm === "AM"; });
+    var hasPM = hours.some(function (h) { return h.ampm === "PM"; });
+    var out = [];
+    if (hasAM) out.push({ value: "AM", label: "AM" });
+    if (hasPM) out.push({ value: "PM", label: "PM" });
     return out;
   }
   function dateOptions() {
@@ -483,6 +498,33 @@
     return out;
   }
 
+  function update3DRotation(col) {
+    if (!col || !col.children || !col.children.length) return;
+    var h = itemH(col);
+    var centerLine = col.scrollTop + col.clientHeight / 2;
+    var radius = 85; // Cylinder radius in px
+
+    for (var i = 0; i < col.children.length; i++) {
+      var child = col.children[i];
+      var itemCenter = child.offsetTop + h / 2;
+      var dist = itemCenter - centerLine;
+      var norm = dist / (h * 2.15);
+      norm = Math.max(-1.3, Math.min(1.3, norm));
+
+      var angleDeg = -norm * 66; // rotate up to 66 degrees
+      var angleRad = (angleDeg * Math.PI) / 180;
+
+      // Exact 3D Cylinder arc geometry:
+      // Items curve backwards along a cylinder surface of radius 85px
+      var transZ = radius * (Math.cos(angleRad) - 1);
+      var scale = 0.84 + 0.16 * Math.cos(angleRad);
+      var opacity = Math.max(0.08, Math.pow(Math.cos(angleRad), 2.2));
+
+      child.style.transform = "rotateX(" + angleDeg.toFixed(2) + "deg) translateZ(" + transZ.toFixed(2) + "px) scale(" + scale.toFixed(3) + ")";
+      child.style.opacity = opacity.toFixed(3);
+    }
+  }
+
   /* Falls back to 44 when the disclosure is collapsed: a hidden element reports
      offsetHeight 0, and dividing by that would send every column to index 0. */
   function itemH(col) {
@@ -493,6 +535,7 @@
 
   function markSelected(key, idx) {
     var col = wheelCols[key];
+    if (!col) return;
     Array.prototype.forEach.call(col.children, function (c, i) {
       c.classList.toggle("is-sel", i === idx);
       c.setAttribute("aria-selected", i === idx ? "true" : "false");
@@ -509,6 +552,7 @@
     idx = Math.max(0, Math.min(opts.length - 1, idx));
     col.scrollTo({ top: idx * itemH(col), behavior: "instant" });
     markSelected(key, idx);
+    update3DRotation(col);
   }
   function buildCol(key, options) {
     var col = wheelCols[key];
@@ -522,13 +566,14 @@
       col.appendChild(el);
     });
     col._options = options;
+    update3DRotation(col);
   }
   function sameOpts(a, b) {
     if (!a || a.length !== b.length) return false;
     for (var i = 0; i < a.length; i++) if (String(a[i].value) !== String(b[i].value)) return false;
     return true;
   }
-  function applyCol(key, options, want) {
+  function applyCol(key, options, want, skipScroll) {
     var col = wheelCols[key];
     if (!col) return;
     if (!sameOpts(col._options, options)) buildCol(key, options);
@@ -536,22 +581,45 @@
     for (var i = 0; i < options.length; i++) {
       if (String(options[i].value) === String(want)) { idx = i; break; }
     }
-    // If the previous choice is no longer valid, idx stays 0 — the earliest
-    // remaining option, which is always a safe clamp.
-    wheelSel[key] = options.length ? options[idx].value : "";
-    selectIndex(key, idx);
+    if (key === "date") {
+      wheelSel.date = options.length ? options[idx].value : "";
+    } else if (key === "minute") {
+      wheelSel.minute = options.length ? options[idx].value : 0;
+    }
+    if (!skipScroll) {
+      selectIndex(key, idx);
+    } else {
+      markSelected(key, idx);
+      update3DRotation(col);
+    }
   }
-  function syncWheel() {
-    applyCol("date", dateOptions(), wheelSel.date);
+  function syncWheel(activeKey) {
+    applyCol("date", dateOptions(), wheelSel.date, activeKey === "date");
     var iso = wheelSel.date;
 
-    var ap = [];
-    ["AM", "PM"].forEach(function (a) {
-      if (hourOptions(iso, a).length) ap.push({ value: a, label: a });
-    });
-    applyCol("ampm", ap, wheelSel.ampm);
-    applyCol("hour", hourOptions(iso, wheelSel.ampm), wheelSel.hour);
-    applyCol("minute", minuteOptions(iso, wheelSel.hour, wheelSel.ampm), wheelSel.minute);
+    var ap = ampmOptions(iso);
+    if (ap.length && !ap.some(function (o) { return o.value === wheelSel.ampm; })) {
+      wheelSel.ampm = ap[0].value;
+    }
+    applyCol("ampm", ap, wheelSel.ampm, activeKey === "ampm" || activeKey === "hour");
+
+    var hours = hourOptions(iso);
+    var curH24 = to24(wheelSel.hour, wheelSel.ampm);
+    var matchedHour = hours.find(function (o) { return o.value === curH24; });
+
+    if (!matchedHour && hours.length) {
+      var sameAmPm = hours.filter(function (o) { return o.ampm === wheelSel.ampm; });
+      matchedHour = sameAmPm.length ? sameAmPm[0] : hours[0];
+      wheelSel.hour = matchedHour.h12;
+      wheelSel.ampm = matchedHour.ampm;
+      applyCol("ampm", ap, wheelSel.ampm, activeKey === "ampm" || activeKey === "hour");
+    }
+
+    var wantH24 = matchedHour ? matchedHour.value : curH24;
+    applyCol("hour", hours, wantH24, activeKey === "hour");
+
+    var mins = minuteOptions(iso, wheelSel.hour, wheelSel.ampm);
+    applyCol("minute", mins, wheelSel.minute, activeKey === "minute");
 
     var out = document.getElementById("whenValue");
     if (out) out.textContent = wheelText() || "Tap to choose";
@@ -568,10 +636,32 @@
     var col = wheelCols[key], opts = col._options || [];
     if (!opts.length) return;
     idx = Math.max(0, Math.min(opts.length - 1, idx));
-    selectIndex(key, idx);
-    if (String(wheelSel[key]) === String(opts[idx].value)) return;
-    wheelSel[key] = opts[idx].value;
-    syncWheel();
+    var selOpt = opts[idx];
+    if (!selOpt) return;
+
+    if (key === "date") {
+      wheelSel.date = selOpt.value;
+    } else if (key === "hour") {
+      wheelSel.hour = selOpt.h12;
+      wheelSel.ampm = selOpt.ampm;
+    } else if (key === "ampm") {
+      var newAmPm = selOpt.value;
+      var targetH24 = to24(wheelSel.hour, newAmPm);
+      var hours = hourOptions(wheelSel.date);
+      var match = hours.find(function (o) { return o.value === targetH24; });
+      if (!match) {
+        var sameAmPm = hours.filter(function (o) { return o.ampm === newAmPm; });
+        match = sameAmPm.length ? sameAmPm[0] : (hours.length ? hours[0] : null);
+      }
+      wheelSel.ampm = newAmPm;
+      if (match) {
+        wheelSel.hour = match.h12;
+      }
+    } else if (key === "minute") {
+      wheelSel.minute = selOpt.value;
+    }
+
+    syncWheel(key);
   }
   /* Touch/wheel path: the snap has already settled, so derive from position. */
   function commit(key) {
@@ -589,9 +679,14 @@
     // Default to the earliest slot that is actually still bookable.
     var d0 = dateOptions();
     wheelSel.date = d0.length ? d0[0].value : isoOf(new Date());
-    wheelSel.ampm = hourOptions(wheelSel.date, "AM").length ? "AM" : "PM";
-    var h0 = hourOptions(wheelSel.date, wheelSel.ampm);
-    wheelSel.hour = h0.length ? h0[0].value : 6;
+    var h0 = hourOptions(wheelSel.date);
+    if (h0.length) {
+      wheelSel.hour = h0[0].h12;
+      wheelSel.ampm = h0[0].ampm;
+    } else {
+      wheelSel.hour = 6;
+      wheelSel.ampm = "AM";
+    }
     wheelSel.minute = 0;
     syncWheel();
 
@@ -602,6 +697,7 @@
       col._lastIdx = -1;
       // Debounced rather than `scrollend` — Safari still lacks that event.
       col.addEventListener("scroll", function () {
+        update3DRotation(col);
         // Tick the highlight and haptics per detent as it passes the centre,
         // rather than waiting for the debounce — that's what makes it feel
         // like a physical wheel instead of a scrolling list.
@@ -609,6 +705,21 @@
         if (i !== col._lastIdx && i >= 0 && i < (col._options || []).length) {
           col._lastIdx = i;
           markSelected(k, i);
+          if (k === "hour") {
+            var opt = col._options[i];
+            if (opt && opt.ampm) {
+              var ampmCol = wheelCols["ampm"];
+              if (ampmCol && ampmCol._options) {
+                for (var ai = 0; ai < ampmCol._options.length; ai++) {
+                  if (ampmCol._options[ai].value === opt.ampm) {
+                    markSelected("ampm", ai);
+                    update3DRotation(ampmCol);
+                    break;
+                  }
+                }
+              }
+            }
+          }
           haptic();
         }
         clearTimeout(t);
@@ -650,11 +761,13 @@
       var col = wheelCols[k];
       if (!col || !col._options) return;
       var idx = 0;
+      var wantVal = (k === "hour") ? to24(wheelSel.hour, wheelSel.ampm) : wheelSel[k];
       for (var i = 0; i < col._options.length; i++) {
-        if (String(col._options[i].value) === String(wheelSel[k])) { idx = i; break; }
+        if (String(col._options[i].value) === String(wantVal)) { idx = i; break; }
       }
       col._lastIdx = idx;
       selectIndex(k, idx);
+      update3DRotation(col);
     });
   }
 
@@ -689,7 +802,7 @@
     var g = form.querySelector('input[name="gender"]:checked');
     var email = fieldVal(form, "email");
     var lines = ["Hi Dr. Varun, I'd like to book a free consultation. 🗓"];
-    
+
     var details = [];
     var name = fieldVal(form, "name");
     var age = fieldVal(form, "age");
@@ -724,7 +837,7 @@
     // 600ms setTimeout for a spinner, which detached it from the user gesture
     // and let iOS Safari block the site's only conversion action.
     var win = window.open(url, "_blank");
-    if (win) { try { win.opener = null; } catch (e) {} return true; }
+    if (win) { try { win.opener = null; } catch (e) { } return true; }
     window.location.href = url;   // popup blocked / in-app browser
     return true;
   }
@@ -741,7 +854,7 @@
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload),
         keepalive: true
-      }).catch(function () {});
+      }).catch(function () { });
     } catch (e) { /* never block the handoff on telemetry */ }
   }
 
@@ -769,20 +882,20 @@
       status.dataset.state = "";
       status.textContent = "";
 
-      var nameEl    = form.elements["name"],
-          ageEl     = form.elements["age"],
-          emailEl   = form.elements["email"],
-          concernEl = form.elements["concern"],
-          issueEl   = form.elements["issue"],
-          consentEl = form.elements["consent"];
+      var nameEl = form.elements["name"],
+        ageEl = form.elements["age"],
+        emailEl = form.elements["email"],
+        concernEl = form.elements["concern"],
+        issueEl = form.elements["issue"],
+        consentEl = form.elements["consent"];
       [nameEl, ageEl, emailEl, concernEl, issueEl, consentEl].forEach(clearInvalid);
 
-      var name    = (nameEl.value || "").trim();
-      var email   = (emailEl.value || "").trim();
-      var age     = parseInt(ageEl.value, 10);
-      var gender  = form.querySelector('input[name="gender"]:checked');
+      var name = (nameEl.value || "").trim();
+      var email = (emailEl.value || "").trim();
+      var age = parseInt(ageEl.value, 10);
+      var gender = form.querySelector('input[name="gender"]:checked');
       var concern = concernEl.value;
-      var issue   = (issueEl.value || "").trim();
+      var issue = (issueEl.value || "").trim();
 
       if (!name) return fail("Please enter your name.", nameEl);
       if (!age || age < 1 || age > 120) return fail("Please enter a valid age.", ageEl);
