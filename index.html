@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,13 +12,14 @@
       var t = null;
       var m = location.search.match(/[?&]theme=(light|dark)/);
       if (m) { t = m[1]; }
-      else { try { t = localStorage.getItem('theme'); } catch (e) {} }
+      else { try { t = localStorage.getItem('theme'); } catch (e) { } }
       if (t !== 'light' && t !== 'dark') t = 'dark';
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
   <title>Dr. Varun Soni (PT) — Online Physiotherapy | Book a Free Consultation</title>
-  <meta name="description" content="Evidence-based online physiotherapy with Dr. Varun Soni (PT). Recover from back, neck, knee and ACL pain with a personalized plan you can follow from home — anywhere in India. Start with a free consultation." />
+  <meta name="description"
+    content="Evidence-based online physiotherapy with Dr. Varun Soni (PT). Recover from back, neck, knee and ACL pain with a personalized plan you can follow from home — anywhere in India. Start with a free consultation." />
   <meta name="theme-color" content="#0F1C42" />
 
   <!-- ⚠ TODO before launch: replace every occurrence of https://drvarunsoni.in with the
@@ -31,7 +33,8 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://drvarunsoni.in/" />
   <meta property="og:title" content="Dr. Varun Soni (PT) — Online Physiotherapy" />
-  <meta property="og:description" content="Expert Care. Anywhere, Anytime. Book a free consultation and recover from home." />
+  <meta property="og:description"
+    content="Expert Care. Anywhere, Anytime. Book a free consultation and recover from home." />
   <meta property="og:image" content="https://drvarunsoni.in/assets/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -39,7 +42,8 @@
   <meta property="og:image:alt" content="Dr. Varun Soni (PT) — Online Physiotherapy. Expert care, anywhere, anytime." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Dr. Varun Soni (PT) — Online Physiotherapy" />
-  <meta name="twitter:description" content="Expert Care. Anywhere, Anytime. Book a free consultation and recover from home." />
+  <meta name="twitter:description"
+    content="Expert Care. Anywhere, Anytime. Book a free consultation and recover from home." />
   <meta name="twitter:image" content="https://drvarunsoni.in/assets/og-image.jpg" />
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
@@ -47,7 +51,9 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500;1,9..144,700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500;1,9..144,700&display=swap"
+    rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css?v=13" />
 
@@ -102,607 +108,788 @@
   }
   </script>
 </head>
+
 <body>
 
-<!-- ==================== ICON SPRITE ==================== -->
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
-  <symbol id="ic-consult" viewBox="0 0 48 48" fill="none">
-    <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10"/>
-    <rect x="8" y="10" width="32" height="22" rx="3.4" stroke="currentColor" stroke-width="2.6"/>
-    <path d="M18 38h12M24 32.4V38" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-    <circle cx="20.5" cy="18.2" r="3.1" fill="currentColor"/>
-    <path d="M14.8 27.2c.5-3.4 2.8-5.2 5.7-5.2s5.2 1.8 5.7 5.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-    <rect x="29.5" y="14.5" width="7.4" height="6.4" rx="1.8" stroke="#2E8B8F" stroke-width="2.2"/>
-    <path d="M36.9 16.6l3-1.7v5.6l-3-1.7" fill="#2E8B8F"/>
-  </symbol>
-  <symbol id="ic-spine" viewBox="0 0 48 48" fill="none">
-    <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10"/>
-    <circle cx="25.5" cy="31" r="7" fill="#C8453B" opacity=".22"/>
-    <path d="M23.2 6.5c-3.4 3.2-3.4 6.4 0 9.1 3 2.4 3 5.4 0 7.8-3.2 2.6-3.2 5.9.4 8.4 3 2.1 3.2 5 .6 7.7" stroke="#2E8B8F" stroke-width="2" stroke-linecap="round" opacity=".55"/>
-    <g fill="currentColor">
-      <rect x="18.4" y="6.4" width="10.4" height="4.6" rx="2.3"/>
-      <rect x="16.9" y="13" width="10.4" height="4.6" rx="2.3" transform="rotate(-4 22.1 15.3)"/>
-      <rect x="18.6" y="19.6" width="10.4" height="4.6" rx="2.3" transform="rotate(3 23.8 21.9)"/>
-    </g>
-    <g fill="#C8453B">
-      <rect x="19.9" y="26.2" width="10.9" height="4.8" rx="2.4" transform="rotate(-3 25.3 28.6)"/>
-      <rect x="18.9" y="33" width="10.9" height="4.8" rx="2.4" transform="rotate(4 24.3 35.4)"/>
-    </g>
-    <rect x="20.8" y="39.7" width="8.6" height="4.2" rx="2.1" fill="currentColor"/>
-  </symbol>
-  <symbol id="ic-neck" viewBox="0 0 48 48" fill="none">
-    <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10"/>
-    <path d="M36.5 9v32" stroke="#2E8B8F" stroke-width="1.8" stroke-dasharray="1.5 4.5" stroke-linecap="round" opacity=".8"/>
-    <path d="M28.6 7.6c-6.4-1.4-11.9 2.6-12.6 8.6-.3 2.6.4 4.7 1.6 6.7 1 1.6 1.2 2.7.6 4.4l-1 2.7 3.4.8c1.6.4 2.3 1.2 2.3 2.9V41" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M28.6 7.6c3.4 1 5.6 3.6 6 7.2.3 3-.6 5.4-2.4 7.6-1.4 1.8-2 3.4-1.8 5.6.2 2.6 1 4.4 2.8 6.2 1.5 1.5 2.2 3 2.4 5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-    <g fill="#C8453B">
-      <circle cx="31" cy="23.2" r="1.7"/>
-      <circle cx="30.6" cy="28.2" r="1.7"/>
-      <circle cx="31.8" cy="33.2" r="1.7"/>
-    </g>
-  </symbol>
-  <symbol id="ic-knee" viewBox="0 0 48 48" fill="none">
-    <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10"/>
-    <circle cx="27" cy="22" r="7.5" fill="#C8453B" opacity=".18"/>
-    <path d="M9.5 13.5L25 21" stroke="currentColor" stroke-width="4.8" stroke-linecap="round"/>
-    <path d="M26.2 23.6L24.6 37.5" stroke="currentColor" stroke-width="4.4" stroke-linecap="round"/>
-    <path d="M24.6 38.5h6.6" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-    <circle cx="27.4" cy="21.4" r="3" fill="#C8453B"/>
-    <path d="M36.5 11a15.5 15.5 0 015 13" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M41.8 19.6l-.3 4.6-4.2-1.7" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="ic-acl" viewBox="0 0 48 48" fill="none">
-    <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10"/>
-    <rect x="18.5" y="4.5" width="11" height="6.5" rx="3.2" fill="currentColor"/>
-    <circle cx="18.9" cy="13.2" r="4.1" fill="currentColor"/>
-    <circle cx="29.1" cy="13.2" r="4.1" fill="currentColor"/>
-    <circle cx="18.9" cy="34.8" r="4.1" fill="currentColor"/>
-    <circle cx="29.1" cy="34.8" r="4.1" fill="currentColor"/>
-    <rect x="18.5" y="37" width="11" height="6.5" rx="3.2" fill="currentColor"/>
-    <path d="M19 16.5l10 15M29 16.5l-10 15" stroke="#2E8B8F" stroke-width="3.6" stroke-linecap="round"/>
-    <circle cx="24" cy="24" r="2.2" fill="#C8453B"/>
-  </symbol>
-  <symbol id="ic-mobility" viewBox="0 0 48 48" fill="none">
-    <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10"/>
-    <circle cx="19" cy="9.4" r="4" fill="currentColor"/>
-    <path d="M20 13.8c1 3.8 1.4 7.4 1.5 11.4" stroke="currentColor" stroke-width="5.2" stroke-linecap="round"/>
-    <path d="M20.5 15.8C24 11.6 28.5 9 34 8.2" stroke="currentColor" stroke-width="4.4" stroke-linecap="round"/>
-    <path d="M20.2 17.4l-5.8 4.2 1.4 4.8" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M21.5 25.2l-2 6.8-.4 7.8" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M21.5 25.2l6.8 5.4 1.6 8.6" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M25.5 6.5c3.8-2.6 8.2-3 12.4-1.2" stroke="#2E8B8F" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="1.5 5"/>
-  </symbol>
-  <symbol id="ic-plan" viewBox="0 0 48 48" fill="none">
-    <rect x="10" y="8" width="24" height="32" rx="3.6" stroke="currentColor" stroke-width="2.6"/>
-    <rect x="17" y="4.8" width="10" height="6.4" rx="2.4" fill="#2E8B8F"/>
-    <path d="M15.5 19.5l2.2 2.2 4-4.4" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M25.5 20.5h4.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M15.5 28l2.2 2.2 4-4.4" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M25.5 29h4.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M38.6 26.8l-7.3 7.3-3.1.8.8-3.1 7.3-7.3a1.9 1.9 0 012.3 2.3z" fill="#fff" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="ic-assess" viewBox="0 0 48 48" fill="none">
-    <rect x="7" y="9" width="34" height="23" rx="3.4" stroke="currentColor" stroke-width="2.6"/>
-    <path d="M17.5 39h13M24 32.6V39" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-    <path d="M14.5 26V15.5l9.6 8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M14.5 20.8a7.4 7.4 0 015.7 3.4" stroke="#2E8B8F" stroke-width="2.2" stroke-linecap="round"/>
-    <circle cx="14.5" cy="15.5" r="1.9" fill="#2E8B8F"/>
-    <circle cx="24.1" cy="23.7" r="1.9" fill="#2E8B8F"/>
-    <circle cx="14.5" cy="26" r="1.9" fill="#2E8B8F"/>
-    <path d="M27.5 16h2.6l1.7-3 2.4 6 1.7-3h2.6" stroke="#2E8B8F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="ic-india" viewBox="0 0 48 48" fill="none">
-    <path d="M24 42c8.4-9.5 13-15.7 13-22.3C37 12 31.2 6.5 24 6.5S11 12 11 19.7C11 26.3 15.6 32.5 24 42z" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>
-    <circle cx="24" cy="19.5" r="4.6" fill="#2E8B8F"/>
-    <path d="M16 41.6a8.6 2.9 0 0016 0" stroke="#2E8B8F" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M10.5 40.2a13.8 4.8 0 0027 0" stroke="#2E8B8F" stroke-width="2" stroke-linecap="round" opacity=".45"/>
-  </symbol>
-  <symbol id="ic-office" viewBox="0 0 48 48" fill="none">
-    <path d="M9.5 17v13M9.5 30h8M12 30v8" stroke="#2E8B8F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="17" cy="10.5" r="3.9" fill="currentColor"/>
-    <path d="M17.6 15c.8 3.4.9 6.2.5 9.6" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-    <path d="M17.9 17.8l6.8 3.8 4.6.4" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M18.1 24.6l7.6 1.6" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-    <path d="M25.7 26.4v11.6" stroke="currentColor" stroke-width="4.4" stroke-linecap="round"/>
-    <path d="M27 22.9h14.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-    <path d="M38.5 23v15" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-    <path d="M31 22.7l1.6-7.2 6.2 1.4-1.6 5.9z" fill="#2E8B8F"/>
-  </symbol>
-  <symbol id="ic-elderly" viewBox="0 0 48 48" fill="none">
-    <circle cx="21.6" cy="9.6" r="4" fill="currentColor"/>
-    <path d="M21.9 14.2c-.5 4.4-.7 8.4-.5 12.6" stroke="currentColor" stroke-width="5.2" stroke-linecap="round"/>
-    <path d="M21.7 17.8l5.4 4.4 1.5 3.2" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M28.6 25.2l2.2 14.3" stroke="#2E8B8F" stroke-width="2.9" stroke-linecap="round"/>
-    <path d="M21.4 26.8l3.4 6.4.6 6.8" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M21.4 26.8l-2.6 6.6-1.2 6.6" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="ic-athlete" viewBox="0 0 48 48" fill="none">
-    <circle cx="30.6" cy="8.8" r="4" fill="currentColor"/>
-    <path d="M29.2 13.2l-4.6 10.6" stroke="currentColor" stroke-width="5.2" stroke-linecap="round"/>
-    <path d="M28.4 14.6l6.8 2.6 4.8-2.4" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M27.8 16.8l-7 .2-4.6 3.8" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M24.6 23.8l7 5.4 1.6 8.6" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M24.6 23.8l-6.4 6-8 2.6" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M7.5 12.5h6M5.5 18.5h5" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round"/>
-  </symbol>
-  <symbol id="ic-painpt" viewBox="0 0 48 48" fill="none">
-    <circle cx="22.8" cy="9.2" r="4" fill="currentColor"/>
-    <path d="M22.9 13.8c-.3 4.5-.3 8.6 0 13" stroke="currentColor" stroke-width="5.2" stroke-linecap="round"/>
-    <path d="M22.9 16.9l6.2 2.8-1.3 5.9" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M22.9 17.4l-5.4 3.2-.8 6" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M22.9 26.8l2.6 6.4.4 6.6" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M22.9 26.8l-2.8 6.4-.6 6.6" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M31.9 22.4l3.2-1.4M31.4 25.6l3.4.6M30.2 19.6l2.2-2.6" stroke="#C8453B" stroke-width="2.4" stroke-linecap="round"/>
-  </symbol>
-  <symbol id="ic-home" viewBox="0 0 48 48" fill="none">
-    <path d="M8 22L24 9l16 13" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M12.5 20.5V38h23V20.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
-    <path d="M24 32.6s-6-3.7-6-7.6c0-2.1 1.7-3.6 3.6-3.6 1 0 2 .5 2.4 1.4.4-.9 1.4-1.4 2.4-1.4 1.9 0 3.6 1.5 3.6 3.6 0 3.9-6 7.6-6 7.6z" fill="#2E8B8F"/>
-  </symbol>
-  <symbol id="ic-clock" viewBox="0 0 48 48" fill="none">
-    <circle cx="24" cy="25" r="13.5" stroke="currentColor" stroke-width="2.8"/>
-    <path d="M24 17.5V25l5.4 3.4" stroke="#2E8B8F" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M37.8 12.6a19 19 0 013.7 5.9M10.2 12.6a19 19 0 00-3.7 5.9" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-  </symbol>
-  <symbol id="ic-recovery" viewBox="0 0 48 48" fill="none">
-    <path d="M7 32.5h6.2l3.6-8 5 13 4-9.5 2.4 4.5h5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M35 24l6-6m0 0h-5.2M41 18v5.2" stroke="#2E8B8F" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="ic-shield" viewBox="0 0 48 48" fill="none">
-    <path d="M24 5.5l14 5.6v9.4c0 9.3-6 15.7-14 18.5-8-2.8-14-9.2-14-18.5v-9.4z" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/>
-    <path d="M17.5 23.6l4.4 4.4 8.6-9.4" stroke="#2E8B8F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="ic-cal" viewBox="0 0 48 48" fill="none">
-    <rect x="7" y="10" width="28" height="28" rx="4" stroke="currentColor" stroke-width="2.8"/>
-    <path d="M7 18.5h28M15 6.5v7M27 6.5v7" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
-    <rect x="12.6" y="23.5" width="7" height="6" rx="1.6" fill="#2E8B8F"/>
-    <circle cx="35.5" cy="35.5" r="8.5" fill="#fff" stroke="currentColor" stroke-width="2.6"/>
-    <path d="M35.5 31.8v3.7l2.7 1.7" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="ic-chat" viewBox="0 0 48 48" fill="none">
-    <path d="M40 21.5c0 7.5-7.2 13.5-16 13.5-1.9 0-3.8-.3-5.5-.8L10 37l1.7-6.4C9.4 28.2 8 25 8 21.5 8 14 15.2 8 24 8s16 6 16 13.5z" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/>
-    <circle cx="17.5" cy="21.5" r="2" fill="#2E8B8F"/>
-    <circle cx="24" cy="21.5" r="2" fill="#2E8B8F"/>
-    <circle cx="30.5" cy="21.5" r="2" fill="#2E8B8F"/>
-  </symbol>
-  <symbol id="ic-step-tell" viewBox="0 0 48 48" fill="none">
-    <path d="M38 20c0 6.6-6.3 12-14 12-1.7 0-3.3-.2-4.8-.7L12 33l1.5-5.6C11.3 25.2 10 22.7 10 20c0-6.6 6.3-12 14-12s14 5.4 14 12z" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/>
-    <path d="M24 15.5v9M19.5 20h9" stroke="#7FD6D9" stroke-width="2.8" stroke-linecap="round"/>
-    <path d="M16 39.5h16" stroke="#7FD6D9" stroke-width="2.6" stroke-linecap="round" opacity=".55"/>
-  </symbol>
-  <symbol id="ic-step-scan" viewBox="0 0 48 48" fill="none">
-    <path d="M8 15v-3.4A3.6 3.6 0 0111.6 8H15M33 8h3.4A3.6 3.6 0 0140 11.6V15M40 33v3.4a3.6 3.6 0 01-3.6 3.6H33M15 40h-3.4A3.6 3.6 0 018 36.4V33" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
-    <circle cx="24" cy="19" r="4" fill="currentColor"/>
-    <path d="M16.5 33c.7-4.4 3.6-6.8 7.5-6.8s6.8 2.4 7.5 6.8" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
-    <path d="M8 24h32" stroke="#7FD6D9" stroke-width="2.4" stroke-linecap="round" opacity=".85"/>
-  </symbol>
-  <symbol id="ic-step-plan" viewBox="0 0 48 48" fill="none">
-    <path d="M10 40V10" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
-    <path d="M10 12h20.5c1.8 0 2.6 1.4 1.6 2.8L28.5 20l3.6 5.2c1 1.4.2 2.8-1.6 2.8H10" stroke="#7FD6D9" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="#7FD6D9" fill-opacity=".16"/>
-    <path d="M18 40h-8" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
-  </symbol>
-  <symbol id="ic-wa" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm0 18.15c-1.52 0-3.01-.41-4.3-1.18l-.31-.18-3.12.82.83-3.04-.2-.31a8.24 8.24 0 01-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 012.41 5.82c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43-.14-.01-.31-.01-.48-.01-.17 0-.43.06-.66.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29z"/>
-  </symbol>
-  <symbol id="ic-pin" viewBox="0 0 24 24" fill="none">
-    <path d="M12 21c4-5 6.5-8 6.5-11a6.5 6.5 0 10-13 0c0 3 2.5 6 6.5 11z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
-    <circle cx="12" cy="10" r="2.4" fill="currentColor"/>
-  </symbol>
-  <symbol id="ic-arrow" viewBox="0 0 24 24" fill="none">
-    <path d="M4 12h15M13.5 5.5L20 12l-6.5 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="ic-chev" viewBox="0 0 24 24" fill="none">
-    <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="ic-check" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.9"/>
-    <path d="M8 12.4l2.6 2.6 5-5.4" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="ic-video" viewBox="0 0 24 24" fill="none">
-    <rect x="2.5" y="6" width="13" height="12" rx="3" stroke="currentColor" stroke-width="2"/>
-    <path d="M15.5 10.2l6-3.4v10.4l-6-3.4" fill="currentColor"/>
-  </symbol>
-  <symbol id="ic-sun" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="4.4" stroke="currentColor" stroke-width="2"/>
-    <path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5 5l1.8 1.8M17.2 17.2L19 19M19 5l-1.8 1.8M6.8 17.2L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-  </symbol>
-  <symbol id="ic-moon" viewBox="0 0 24 24" fill="none">
-    <path d="M20.5 14.2A8.8 8.8 0 019.8 3.5a8.8 8.8 0 1010.7 10.7z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-  </symbol>
-</svg>
+  <!-- ==================== ICON SPRITE ==================== -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="ic-consult" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10" />
+      <rect x="8" y="10" width="32" height="22" rx="3.4" stroke="currentColor" stroke-width="2.6" />
+      <path d="M18 38h12M24 32.4V38" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+      <circle cx="20.5" cy="18.2" r="3.1" fill="currentColor" />
+      <path d="M14.8 27.2c.5-3.4 2.8-5.2 5.7-5.2s5.2 1.8 5.7 5.2" stroke="currentColor" stroke-width="2.4"
+        stroke-linecap="round" />
+      <rect x="29.5" y="14.5" width="7.4" height="6.4" rx="1.8" stroke="#2E8B8F" stroke-width="2.2" />
+      <path d="M36.9 16.6l3-1.7v5.6l-3-1.7" fill="#2E8B8F" />
+    </symbol>
+    <symbol id="ic-spine" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10" />
+      <circle cx="25.5" cy="31" r="7" fill="#C8453B" opacity=".22" />
+      <path d="M23.2 6.5c-3.4 3.2-3.4 6.4 0 9.1 3 2.4 3 5.4 0 7.8-3.2 2.6-3.2 5.9.4 8.4 3 2.1 3.2 5 .6 7.7"
+        stroke="#2E8B8F" stroke-width="2" stroke-linecap="round" opacity=".55" />
+      <g fill="currentColor">
+        <rect x="18.4" y="6.4" width="10.4" height="4.6" rx="2.3" />
+        <rect x="16.9" y="13" width="10.4" height="4.6" rx="2.3" transform="rotate(-4 22.1 15.3)" />
+        <rect x="18.6" y="19.6" width="10.4" height="4.6" rx="2.3" transform="rotate(3 23.8 21.9)" />
+      </g>
+      <g fill="#C8453B">
+        <rect x="19.9" y="26.2" width="10.9" height="4.8" rx="2.4" transform="rotate(-3 25.3 28.6)" />
+        <rect x="18.9" y="33" width="10.9" height="4.8" rx="2.4" transform="rotate(4 24.3 35.4)" />
+      </g>
+      <rect x="20.8" y="39.7" width="8.6" height="4.2" rx="2.1" fill="currentColor" />
+    </symbol>
+    <symbol id="ic-neck" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10" />
+      <path d="M36.5 9v32" stroke="#2E8B8F" stroke-width="1.8" stroke-dasharray="1.5 4.5" stroke-linecap="round"
+        opacity=".8" />
+      <path
+        d="M28.6 7.6c-6.4-1.4-11.9 2.6-12.6 8.6-.3 2.6.4 4.7 1.6 6.7 1 1.6 1.2 2.7.6 4.4l-1 2.7 3.4.8c1.6.4 2.3 1.2 2.3 2.9V41"
+        stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path
+        d="M28.6 7.6c3.4 1 5.6 3.6 6 7.2.3 3-.6 5.4-2.4 7.6-1.4 1.8-2 3.4-1.8 5.6.2 2.6 1 4.4 2.8 6.2 1.5 1.5 2.2 3 2.4 5"
+        stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+      <g fill="#C8453B">
+        <circle cx="31" cy="23.2" r="1.7" />
+        <circle cx="30.6" cy="28.2" r="1.7" />
+        <circle cx="31.8" cy="33.2" r="1.7" />
+      </g>
+    </symbol>
+    <symbol id="ic-knee" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10" />
+      <circle cx="27" cy="22" r="7.5" fill="#C8453B" opacity=".18" />
+      <path d="M9.5 13.5L25 21" stroke="currentColor" stroke-width="4.8" stroke-linecap="round" />
+      <path d="M26.2 23.6L24.6 37.5" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" />
+      <path d="M24.6 38.5h6.6" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+      <circle cx="27.4" cy="21.4" r="3" fill="#C8453B" />
+      <path d="M36.5 11a15.5 15.5 0 015 13" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round" />
+      <path d="M41.8 19.6l-.3 4.6-4.2-1.7" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </symbol>
+    <symbol id="ic-acl" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10" />
+      <rect x="18.5" y="4.5" width="11" height="6.5" rx="3.2" fill="currentColor" />
+      <circle cx="18.9" cy="13.2" r="4.1" fill="currentColor" />
+      <circle cx="29.1" cy="13.2" r="4.1" fill="currentColor" />
+      <circle cx="18.9" cy="34.8" r="4.1" fill="currentColor" />
+      <circle cx="29.1" cy="34.8" r="4.1" fill="currentColor" />
+      <rect x="18.5" y="37" width="11" height="6.5" rx="3.2" fill="currentColor" />
+      <path d="M19 16.5l10 15M29 16.5l-10 15" stroke="#2E8B8F" stroke-width="3.6" stroke-linecap="round" />
+      <circle cx="24" cy="24" r="2.2" fill="#C8453B" />
+    </symbol>
+    <symbol id="ic-mobility" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="20" fill="#2E8B8F" opacity=".10" />
+      <circle cx="19" cy="9.4" r="4" fill="currentColor" />
+      <path d="M20 13.8c1 3.8 1.4 7.4 1.5 11.4" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" />
+      <path d="M20.5 15.8C24 11.6 28.5 9 34 8.2" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" />
+      <path d="M20.2 17.4l-5.8 4.2 1.4 4.8" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M21.5 25.2l-2 6.8-.4 7.8" stroke="currentColor" stroke-width="5" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M21.5 25.2l6.8 5.4 1.6 8.6" stroke="currentColor" stroke-width="5" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M25.5 6.5c3.8-2.6 8.2-3 12.4-1.2" stroke="#2E8B8F" stroke-width="2.2" stroke-linecap="round"
+        stroke-dasharray="1.5 5" />
+    </symbol>
+    <symbol id="ic-plan" viewBox="0 0 48 48" fill="none">
+      <rect x="10" y="8" width="24" height="32" rx="3.6" stroke="currentColor" stroke-width="2.6" />
+      <rect x="17" y="4.8" width="10" height="6.4" rx="2.4" fill="#2E8B8F" />
+      <path d="M15.5 19.5l2.2 2.2 4-4.4" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M25.5 20.5h4.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+      <path d="M15.5 28l2.2 2.2 4-4.4" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M25.5 29h4.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+      <path d="M38.6 26.8l-7.3 7.3-3.1.8.8-3.1 7.3-7.3a1.9 1.9 0 012.3 2.3z" fill="#fff" stroke="currentColor"
+        stroke-width="2.2" stroke-linejoin="round" />
+    </symbol>
+    <symbol id="ic-assess" viewBox="0 0 48 48" fill="none">
+      <rect x="7" y="9" width="34" height="23" rx="3.4" stroke="currentColor" stroke-width="2.6" />
+      <path d="M17.5 39h13M24 32.6V39" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+      <path d="M14.5 26V15.5l9.6 8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M14.5 20.8a7.4 7.4 0 015.7 3.4" stroke="#2E8B8F" stroke-width="2.2" stroke-linecap="round" />
+      <circle cx="14.5" cy="15.5" r="1.9" fill="#2E8B8F" />
+      <circle cx="24.1" cy="23.7" r="1.9" fill="#2E8B8F" />
+      <circle cx="14.5" cy="26" r="1.9" fill="#2E8B8F" />
+      <path d="M27.5 16h2.6l1.7-3 2.4 6 1.7-3h2.6" stroke="#2E8B8F" stroke-width="2.2" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </symbol>
+    <symbol id="ic-india" viewBox="0 0 48 48" fill="none">
+      <path d="M24 42c8.4-9.5 13-15.7 13-22.3C37 12 31.2 6.5 24 6.5S11 12 11 19.7C11 26.3 15.6 32.5 24 42z"
+        stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" />
+      <circle cx="24" cy="19.5" r="4.6" fill="#2E8B8F" />
+      <path d="M16 41.6a8.6 2.9 0 0016 0" stroke="#2E8B8F" stroke-width="2.2" stroke-linecap="round" />
+      <path d="M10.5 40.2a13.8 4.8 0 0027 0" stroke="#2E8B8F" stroke-width="2" stroke-linecap="round" opacity=".45" />
+    </symbol>
+    <symbol id="ic-office" viewBox="0 0 48 48" fill="none">
+      <path d="M9.5 17v13M9.5 30h8M12 30v8" stroke="#2E8B8F" stroke-width="2.6" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <circle cx="17" cy="10.5" r="3.9" fill="currentColor" />
+      <path d="M17.6 15c.8 3.4.9 6.2.5 9.6" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+      <path d="M17.9 17.8l6.8 3.8 4.6.4" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M18.1 24.6l7.6 1.6" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+      <path d="M25.7 26.4v11.6" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" />
+      <path d="M27 22.9h14.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+      <path d="M38.5 23v15" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+      <path d="M31 22.7l1.6-7.2 6.2 1.4-1.6 5.9z" fill="#2E8B8F" />
+    </symbol>
+    <symbol id="ic-elderly" viewBox="0 0 48 48" fill="none">
+      <circle cx="21.6" cy="9.6" r="4" fill="currentColor" />
+      <path d="M21.9 14.2c-.5 4.4-.7 8.4-.5 12.6" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" />
+      <path d="M21.7 17.8l5.4 4.4 1.5 3.2" stroke="currentColor" stroke-width="4.4" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M28.6 25.2l2.2 14.3" stroke="#2E8B8F" stroke-width="2.9" stroke-linecap="round" />
+      <path d="M21.4 26.8l3.4 6.4.6 6.8" stroke="currentColor" stroke-width="5" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M21.4 26.8l-2.6 6.6-1.2 6.6" stroke="currentColor" stroke-width="5" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </symbol>
+    <symbol id="ic-athlete" viewBox="0 0 48 48" fill="none">
+      <circle cx="30.6" cy="8.8" r="4" fill="currentColor" />
+      <path d="M29.2 13.2l-4.6 10.6" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" />
+      <path d="M28.4 14.6l6.8 2.6 4.8-2.4" stroke="currentColor" stroke-width="4.4" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M27.8 16.8l-7 .2-4.6 3.8" stroke="currentColor" stroke-width="4.4" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M24.6 23.8l7 5.4 1.6 8.6" stroke="currentColor" stroke-width="5" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M24.6 23.8l-6.4 6-8 2.6" stroke="currentColor" stroke-width="5" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M7.5 12.5h6M5.5 18.5h5" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round" />
+    </symbol>
+    <symbol id="ic-painpt" viewBox="0 0 48 48" fill="none">
+      <circle cx="22.8" cy="9.2" r="4" fill="currentColor" />
+      <path d="M22.9 13.8c-.3 4.5-.3 8.6 0 13" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" />
+      <path d="M22.9 16.9l6.2 2.8-1.3 5.9" stroke="currentColor" stroke-width="4.4" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M22.9 17.4l-5.4 3.2-.8 6" stroke="currentColor" stroke-width="4.4" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M22.9 26.8l2.6 6.4.4 6.6" stroke="currentColor" stroke-width="5" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M22.9 26.8l-2.8 6.4-.6 6.6" stroke="currentColor" stroke-width="5" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M31.9 22.4l3.2-1.4M31.4 25.6l3.4.6M30.2 19.6l2.2-2.6" stroke="#C8453B" stroke-width="2.4"
+        stroke-linecap="round" />
+    </symbol>
+    <symbol id="ic-home" viewBox="0 0 48 48" fill="none">
+      <path d="M8 22L24 9l16 13" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M12.5 20.5V38h23V20.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" />
+      <path
+        d="M24 32.6s-6-3.7-6-7.6c0-2.1 1.7-3.6 3.6-3.6 1 0 2 .5 2.4 1.4.4-.9 1.4-1.4 2.4-1.4 1.9 0 3.6 1.5 3.6 3.6 0 3.9-6 7.6-6 7.6z"
+        fill="#2E8B8F" />
+    </symbol>
+    <symbol id="ic-clock" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="25" r="13.5" stroke="currentColor" stroke-width="2.8" />
+      <path d="M24 17.5V25l5.4 3.4" stroke="#2E8B8F" stroke-width="2.8" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M37.8 12.6a19 19 0 013.7 5.9M10.2 12.6a19 19 0 00-3.7 5.9" stroke="currentColor" stroke-width="2.6"
+        stroke-linecap="round" />
+    </symbol>
+    <symbol id="ic-recovery" viewBox="0 0 48 48" fill="none">
+      <path d="M7 32.5h6.2l3.6-8 5 13 4-9.5 2.4 4.5h5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M35 24l6-6m0 0h-5.2M41 18v5.2" stroke="#2E8B8F" stroke-width="2.8" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </symbol>
+    <symbol id="ic-shield" viewBox="0 0 48 48" fill="none">
+      <path d="M24 5.5l14 5.6v9.4c0 9.3-6 15.7-14 18.5-8-2.8-14-9.2-14-18.5v-9.4z" stroke="currentColor"
+        stroke-width="2.8" stroke-linejoin="round" />
+      <path d="M17.5 23.6l4.4 4.4 8.6-9.4" stroke="#2E8B8F" stroke-width="3" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </symbol>
+    <symbol id="ic-cal" viewBox="0 0 48 48" fill="none">
+      <rect x="7" y="10" width="28" height="28" rx="4" stroke="currentColor" stroke-width="2.8" />
+      <path d="M7 18.5h28M15 6.5v7M27 6.5v7" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" />
+      <rect x="12.6" y="23.5" width="7" height="6" rx="1.6" fill="#2E8B8F" />
+      <circle cx="35.5" cy="35.5" r="8.5" fill="#fff" stroke="currentColor" stroke-width="2.6" />
+      <path d="M35.5 31.8v3.7l2.7 1.7" stroke="#2E8B8F" stroke-width="2.4" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </symbol>
+    <symbol id="ic-chat" viewBox="0 0 48 48" fill="none">
+      <path
+        d="M40 21.5c0 7.5-7.2 13.5-16 13.5-1.9 0-3.8-.3-5.5-.8L10 37l1.7-6.4C9.4 28.2 8 25 8 21.5 8 14 15.2 8 24 8s16 6 16 13.5z"
+        stroke="currentColor" stroke-width="2.8" stroke-linejoin="round" />
+      <circle cx="17.5" cy="21.5" r="2" fill="#2E8B8F" />
+      <circle cx="24" cy="21.5" r="2" fill="#2E8B8F" />
+      <circle cx="30.5" cy="21.5" r="2" fill="#2E8B8F" />
+    </symbol>
+    <symbol id="ic-step-tell" viewBox="0 0 48 48" fill="none">
+      <path
+        d="M38 20c0 6.6-6.3 12-14 12-1.7 0-3.3-.2-4.8-.7L12 33l1.5-5.6C11.3 25.2 10 22.7 10 20c0-6.6 6.3-12 14-12s14 5.4 14 12z"
+        stroke="currentColor" stroke-width="2.8" stroke-linejoin="round" />
+      <path d="M24 15.5v9M19.5 20h9" stroke="#7FD6D9" stroke-width="2.8" stroke-linecap="round" />
+      <path d="M16 39.5h16" stroke="#7FD6D9" stroke-width="2.6" stroke-linecap="round" opacity=".55" />
+    </symbol>
+    <symbol id="ic-step-scan" viewBox="0 0 48 48" fill="none">
+      <path
+        d="M8 15v-3.4A3.6 3.6 0 0111.6 8H15M33 8h3.4A3.6 3.6 0 0140 11.6V15M40 33v3.4a3.6 3.6 0 01-3.6 3.6H33M15 40h-3.4A3.6 3.6 0 018 36.4V33"
+        stroke="currentColor" stroke-width="2.8" stroke-linecap="round" />
+      <circle cx="24" cy="19" r="4" fill="currentColor" />
+      <path d="M16.5 33c.7-4.4 3.6-6.8 7.5-6.8s6.8 2.4 7.5 6.8" stroke="currentColor" stroke-width="2.8"
+        stroke-linecap="round" />
+      <path d="M8 24h32" stroke="#7FD6D9" stroke-width="2.4" stroke-linecap="round" opacity=".85" />
+    </symbol>
+    <symbol id="ic-step-plan" viewBox="0 0 48 48" fill="none">
+      <path d="M10 40V10" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" />
+      <path d="M10 12h20.5c1.8 0 2.6 1.4 1.6 2.8L28.5 20l3.6 5.2c1 1.4.2 2.8-1.6 2.8H10" stroke="#7FD6D9"
+        stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="#7FD6D9" fill-opacity=".16" />
+      <path d="M18 40h-8" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" />
+    </symbol>
+    <symbol id="ic-wa" viewBox="0 0 24 24" fill="currentColor">
+      <path
+        d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm0 18.15c-1.52 0-3.01-.41-4.3-1.18l-.31-.18-3.12.82.83-3.04-.2-.31a8.24 8.24 0 01-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 012.41 5.82c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43-.14-.01-.31-.01-.48-.01-.17 0-.43.06-.66.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29z" />
+    </symbol>
+    <symbol id="ic-phone" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+    </symbol>
+    <symbol id="ic-pin" viewBox="0 0 24 24" fill="none">
+      <path d="M12 21c4-5 6.5-8 6.5-11a6.5 6.5 0 10-13 0c0 3 2.5 6 6.5 11z" stroke="currentColor" stroke-width="1.9"
+        stroke-linejoin="round" />
+      <circle cx="12" cy="10" r="2.4" fill="currentColor" />
+    </symbol>
+    <symbol id="ic-arrow" viewBox="0 0 24 24" fill="none">
+      <path d="M4 12h15M13.5 5.5L20 12l-6.5 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </symbol>
+    <symbol id="ic-chev" viewBox="0 0 24 24" fill="none">
+      <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    </symbol>
+    <symbol id="ic-check" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.9" />
+      <path d="M8 12.4l2.6 2.6 5-5.4" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </symbol>
+    <symbol id="ic-video" viewBox="0 0 24 24" fill="none">
+      <rect x="2.5" y="6" width="13" height="12" rx="3" stroke="currentColor" stroke-width="2" />
+      <path d="M15.5 10.2l6-3.4v10.4l-6-3.4" fill="currentColor" />
+    </symbol>
+    <symbol id="ic-sun" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="4.4" stroke="currentColor" stroke-width="2" />
+      <path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5 5l1.8 1.8M17.2 17.2L19 19M19 5l-1.8 1.8M6.8 17.2L5 19"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </symbol>
+    <symbol id="ic-moon" viewBox="0 0 24 24" fill="none">
+      <path d="M20.5 14.2A8.8 8.8 0 019.8 3.5a8.8 8.8 0 1010.7 10.7z" stroke="currentColor" stroke-width="2"
+        stroke-linejoin="round" />
+    </symbol>
+  </svg>
 
-<a class="skip-link" href="#main">Skip to content</a>
-<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
 
-<!-- Liquid blob field — morphing color glow behind all the glass -->
-<div class="fluid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <!-- Liquid blob field — morphing color glow behind all the glass -->
+  <div class="fluid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
-<!-- ==================== SPINE SECTION NAV ==================== -->
-<nav class="spine-nav" id="spineNav" aria-label="Section navigation"></nav>
+  <!-- ==================== SPINE SECTION NAV ==================== -->
+  <nav class="spine-nav" id="spineNav" aria-label="Section navigation"></nav>
 
-<!-- ==================== HEADER ==================== -->
-<header class="site-header" id="siteHeader">
-  <div class="container">
-    <a class="brand" href="#home" aria-label="Dr. Varun Soni — Online Physiotherapy, top of page">
-      <svg class="brand__logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <rect x="5" y="8" width="38" height="27" rx="4.5" stroke="currentColor" stroke-width="2.4"/>
-        <path d="M19 40h10M24 35v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-        <path d="M24 12c-2.6 1.1-2.6 3.9 0 5s2.6 3.9 0 5-2.6 3.9 0 5" stroke="#2E8B8F" stroke-width="2.6" stroke-linecap="round"/>
-        <circle cx="24" cy="12" r="1.7" fill="#2E8B8F"/>
-        <circle cx="24" cy="31.5" r="1.7" fill="#2E8B8F"/>
-      </svg>
-      <span>
-        <span class="brand__name">Dr. Varun Soni <em>(PT)</em></span>
-        <span class="brand__tag">Online Physiotherapy</span>
-      </span>
-    </a>
-
-    <nav class="nav" aria-label="Primary" id="primaryNav">
-      <a href="#services">Services</a>
-      <a href="#how">How It Works</a>
-      <a href="#results">Results</a>
-      <a href="#faq">FAQ</a>
-      <a href="#book">Book</a>
-    </nav>
-
-    <div class="header-actions">
-      <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch to light mode">
-        <svg class="ic tb-sun"><use href="#ic-sun"/></svg>
-        <svg class="ic tb-moon"><use href="#ic-moon"/></svg>
-      </button>
-      <a class="btn btn--wa btn--sm" href="#book" data-cta="header">
-        <svg class="ic"><use href="#ic-cal"/></svg><span class="full">Free Consultation</span>
+  <!-- ==================== HEADER ==================== -->
+  <header class="site-header" id="siteHeader">
+    <div class="container">
+      <a class="brand" href="#home" aria-label="PhysioBeats — Physiotherapy, Fitness, Rehab, top of page">
+        <svg viewBox="0 0 250 48" fill="none" style="height: 42px; width: auto; color: var(--heading);"
+          aria-hidden="true">
+          <text x="0" y="34" font-family="system-ui, sans-serif" font-weight="800" font-size="36" fill="#c1272d"
+            letter-spacing="-1.5">PB</text>
+          <circle cx="52" cy="9" r="4.5" fill="#f15a24" />
+          <text x="66" y="26" font-family="system-ui, sans-serif" font-weight="800" font-size="22" fill="currentColor"
+            letter-spacing="-0.5">PhysioBeats</text>
+          <line x1="66" y1="33" x2="250" y2="33" stroke="currentColor" stroke-opacity="0.15" stroke-width="1" />
+          <text x="66" y="44" font-family="system-ui, sans-serif" font-weight="500" font-size="9.5"
+            fill="#c1272d">Physiotherapy | Fitness | Rehab</text>
+        </svg>
       </a>
-      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </div>
-</header>
 
-<!-- ==================== MOBILE MENU ==================== -->
-<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <a class="mm-link" style="--i:0" href="#home"><small>01</small>Home</a>
-  <a class="mm-link" style="--i:1" href="#services"><small>02</small>Services</a>
-  <a class="mm-link" style="--i:2" href="#how"><small>03</small>How It Works</a>
-  <a class="mm-link" style="--i:3" href="#results"><small>04</small>Results</a>
-  <a class="mm-link" style="--i:4" href="#faq"><small>05</small>FAQ</a>
-  <a class="mm-link" style="--i:5" href="#book"><small>06</small>Book Free Consultation</a>
-  <div class="mm-cta">
-    <a class="btn btn--wa btn--block" href="#book" data-cta="mobile-menu">
-      <svg class="ic"><use href="#ic-cal"/></svg> Book Your Free Consultation
-    </a>
-  </div>
-</div>
+      <nav class="nav" aria-label="Primary" id="primaryNav">
+        <a href="#services">Services</a>
+        <a href="#how">How It Works</a>
+        <a href="#results">Results</a>
+        <a href="#faq">FAQ</a>
+        <a href="#book">Book</a>
+      </nav>
 
-<main id="main">
-
-  <!-- ==================== HERO ==================== -->
-  <section class="hero grain" id="home" data-spy="Home">
-    <div class="container">
-      <div class="hero__copy">
-        <span class="hero__chip" data-reveal="up">
-          <span class="dot"><svg class="ic"><use href="#ic-video"/></svg></span>
-          First consultation free · Pan-India
-        </span>
-
-        <h1>
-          <span class="w" style="--i:0">Expert</span> <span class="w" style="--i:1">care.</span><br />
-          <span class="w" style="--i:2">Anywhere,</span> <span class="w" style="--i:3"><em class="serif">anytime.</em></span>
-        </h1>
-
-        <p class="hero__sub" data-reveal="up" style="--d:120ms">
-          Recover from pain from the comfort of your home — evidence-based physiotherapy
-          with Dr.&nbsp;Varun&nbsp;Soni&nbsp;(PT), guided entirely online across India.
-          <b>Your first consultation is free.</b>
-        </p>
-
-        <div class="hero__cta" data-reveal="up" style="--d:220ms">
-          <a class="btn btn--wa btn--lg btn--pulse" data-magnetic href="#book" data-cta="hero">
-            <svg class="ic"><use href="#ic-cal"/></svg> Book Your Free Consultation
-          </a>
-          <a class="btn btn--ghost btn--lg" data-magnetic href="#how">
-            <svg class="ic"><use href="#ic-arrow"/></svg> See how it works
-          </a>
-        </div>
-
-        <p class="hero__meta" data-reveal="up" style="--d:320ms">
-          <span>No payment to book · Consultations across India</span>
-          <span class="creds">BPT · COMT · CDCT · CDNT · CSTT · CIASTM</span>
-        </p>
-      </div>
-
-      <div class="hero__stack" id="heroStack">
-        <div class="tilt" id="heroTilt">
-          <figure class="hero__photo" data-reveal="clip">
-            <img src="assets/img/hero-home-session.jpg" data-parallax="0.09" alt="A patient following a guided physiotherapy session at home, exercising on a mat in front of a laptop" fetchpriority="high" />
-            <figcaption>Guided home session <small>Live on video · corrected in real time</small></figcaption>
-          </figure>
-
-          <div class="g-chip g-chip--live float" data-reveal="left" style="--d:350ms">
-            <span class="bubble"><span class="live-dot"></span></span>
-            <span><b>Live guided session</b><span>Real-time form correction</span></span>
-          </div>
-
-          <div class="g-chip g-chip--shield float float--b" data-reveal="right" style="--d:480ms">
-            <span class="bubble"><svg class="ic"><use href="#ic-shield"/></svg></span>
-            <span><b>SAFE · EFFECTIVE</b><span>Trusted, evidence-based care</span></span>
-          </div>
-
-          <aside class="spine-card" data-reveal="up" style="--d:600ms" aria-label="Spine assessment illustration">
-            <svg viewBox="0 0 56 112" fill="none" aria-hidden="true">
-              <g class="vert" opacity=".9"><rect x="16" y="4" width="24" height="9" rx="4.5" fill="#8FA3D8"/><circle cx="46" cy="8.5" r="2.2" fill="#8FA3D8"/></g>
-              <g class="vert"><rect x="13" y="19" width="26" height="9.5" rx="4.7" fill="#9DB0E0"/><circle cx="45" cy="23.7" r="2.2" fill="#9DB0E0"/></g>
-              <g class="vert"><rect x="15" y="35" width="25" height="9.5" rx="4.7" fill="#9DB0E0"/><circle cx="46" cy="39.7" r="2.2" fill="#9DB0E0"/></g>
-              <g class="vert"><circle cx="27" cy="68" r="16" fill="#C8453B" opacity=".28"/><rect x="12" y="51" width="27" height="10" rx="5" fill="#F0897E"/><circle cx="45" cy="56" r="2.3" fill="#F0897E"/></g>
-              <g class="vert"><rect x="14" y="67" width="26" height="10" rx="5" fill="#E85C50"/><circle cx="46" cy="72" r="2.3" fill="#E85C50"/></g>
-              <g class="vert"><rect x="16" y="83" width="23" height="9" rx="4.5" fill="#9DB0E0"/><circle cx="45" cy="87.5" r="2.2" fill="#9DB0E0"/></g>
-              <rect x="19" y="97" width="17" height="8" rx="4" fill="#8FA3D8"/>
-            </svg>
-            <b>Lumbar focus</b>
-            <span>Assessment view</span>
-          </aside>
-        </div>
-      </div>
-    </div>
-
-    <div class="scroll-cue" aria-hidden="true"><i></i>Scroll</div>
-  </section>
-
-  <!-- ==================== CREDENTIAL MARQUEE ==================== -->
-  <section class="marquee" aria-label="Credentials">
-    <div class="marquee__track">
-      <div class="marquee__group">
-        <span>BPT</span><span>COMT</span><span>CDCT</span><span>CDNT</span><span>CSTT</span><span>CIASTM</span>
-        <span>Serving patients across India</span><span>Consult · Treat · Recover — all online</span>
-      </div>
-      <div class="marquee__group" aria-hidden="true">
-        <span>BPT</span><span>COMT</span><span>CDCT</span><span>CDNT</span><span>CSTT</span><span>CIASTM</span>
-        <span>Serving patients across India</span><span>Consult · Treat · Recover — all online</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== VALUE PROPS ==================== -->
-  <section class="section section--tight" aria-labelledby="vp-title">
-    <div class="container">
-      <h2 id="vp-title" class="visually-hidden">Why patients choose online care</h2>
-      <div class="vp-grid">
-        <div class="card vp-card" data-reveal="up">
-          <span class="ic-wrap"><svg class="ic"><use href="#ic-plan"/></svg></span>
-          <h3>Personalized Plan</h3>
-          <p>A recovery programme built around your body, symptoms and daily routine — never a generic template.</p>
-        </div>
-        <div class="card vp-card" data-reveal="up" style="--d:110ms">
-          <span class="ic-wrap"><svg class="ic"><use href="#ic-assess"/></svg></span>
-          <h3>Online Assessment</h3>
-          <p>A thorough video evaluation of your pain, posture and movement — no clinic visit required.</p>
-        </div>
-        <div class="card vp-card" data-reveal="up" style="--d:220ms">
-          <span class="ic-wrap"><svg class="ic"><use href="#ic-india"/></svg></span>
-          <h3>India-Wide Support</h3>
-          <p>Expert physiotherapy guidance wherever you are — follow-ups and progress tracking, all from home.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== SERVICES ==================== -->
-  <section class="section" id="services" data-spy="Services" aria-labelledby="svc-title">
-    <div class="container">
-      <div class="section-head section-head--center" data-reveal="up">
-        <span class="eyebrow">Our Services</span>
-        <h2 class="h2" id="svc-title">Evidence-based treatment for <span class="accent">what actually hurts.</span></h2>
-        <p class="lead">Focused, professional care for the conditions we treat most — each guided end-to-end, online.</p>
-      </div>
-
-      <div class="svc-grid">
-        <article class="card svc-card" data-reveal="up">
-          <span class="num">01</span>
-          <span class="ic-wrap"><svg class="ic"><use href="#ic-consult"/></svg></span>
-          <h3>Online Consultation &amp; Treatment</h3>
-          <p>A complete assessment and treatment session over video — understand your condition and start care the same day.</p>
-          <a class="link-arrow" href="#book" data-cta="svc-consult" data-concern="Online Consultation &amp; Treatment">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
-        </article>
-
-        <article class="card svc-card" data-reveal="up" style="--d:90ms">
-          <span class="num">02</span>
-          <span class="ic-wrap"><svg class="ic"><use href="#ic-spine"/></svg></span>
-          <h3>Back Pain Treatment</h3>
-          <p>Relieve lower-back and spinal pain with targeted mobility, strengthening and posture correction you do at home.</p>
-          <a class="link-arrow" href="#book" data-cta="svc-back" data-concern="Back Pain Treatment">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
-        </article>
-
-        <article class="card svc-card" data-reveal="up" style="--d:180ms">
-          <span class="num">03</span>
-          <span class="ic-wrap"><svg class="ic"><use href="#ic-neck"/></svg></span>
-          <h3>Neck Pain &amp; Posture</h3>
-          <p>Ease stiffness, tension headaches and “tech neck” with posture retraining and gentle, guided release work.</p>
-          <a class="link-arrow" href="#book" data-cta="svc-neck" data-concern="Neck Pain &amp; Posture">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
-        </article>
-
-        <article class="card svc-card" data-reveal="up">
-          <span class="num">04</span>
-          <span class="ic-wrap"><svg class="ic"><use href="#ic-knee"/></svg></span>
-          <h3>Knee Pain &amp; Mobility Rehab</h3>
-          <p>Rebuild pain-free movement after injury, arthritis or overuse with progressive strengthening and load control.</p>
-          <a class="link-arrow" href="#book" data-cta="svc-knee" data-concern="Knee Pain &amp; Mobility Rehab">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
-        </article>
-
-        <article class="card svc-card" data-reveal="up" style="--d:90ms">
-          <span class="num">05</span>
-          <span class="ic-wrap"><svg class="ic"><use href="#ic-acl"/></svg></span>
-          <h3>ACL Injury / Reconstruction Rehabilitation</h3>
-          <p>Structured post-surgical and non-surgical ACL rehab to restore strength, stability and confidence to return to sport.</p>
-          <a class="link-arrow" href="#book" data-cta="svc-acl" data-concern="ACL Injury / Reconstruction Rehabilitation">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
-        </article>
-
-        <article class="card svc-card" data-reveal="up" style="--d:180ms">
-          <span class="num">06</span>
-          <span class="ic-wrap"><svg class="ic"><use href="#ic-mobility"/></svg></span>
-          <h3>Full-Body Mobility, Strength &amp; Conditioning</h3>
-          <p>Move better and stay resilient with a progressive mobility, strength and conditioning plan for everyday life.</p>
-          <a class="link-arrow" href="#book" data-cta="svc-mobility" data-concern="Full-Body Mobility, Strength &amp; Conditioning">Book free consultation <svg class="ic"><use href="#ic-arrow"/></svg></a>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== PERSONAS ==================== -->
-  <section class="section personas" id="for-you" data-spy="For You" aria-labelledby="pf-title">
-    <div class="container">
-      <div class="section-head section-head--center" data-reveal="up">
-        <span class="eyebrow">Perfect For</span>
-        <h2 class="h2" id="pf-title">Care that fits <span class="accent">real lives.</span></h2>
-      </div>
-      <div class="persona-grid">
-        <div class="card persona-card" data-reveal="up">
-          <span class="fig"><svg class="ic"><use href="#ic-office"/></svg></span>
-          <h3>Office Workers</h3>
-          <p>Desk-bound stiffness &amp; posture strain</p>
-        </div>
-        <div class="card persona-card" data-reveal="up" style="--d:90ms">
-          <span class="fig"><svg class="ic"><use href="#ic-elderly"/></svg></span>
-          <h3>Elderly People</h3>
-          <p>Gentle, safe, guided movement</p>
-        </div>
-        <div class="card persona-card" data-reveal="up" style="--d:180ms">
-          <span class="fig"><svg class="ic"><use href="#ic-athlete"/></svg></span>
-          <h3>Athletes</h3>
-          <p>Return to sport, stronger</p>
-        </div>
-        <div class="card persona-card" data-reveal="up" style="--d:270ms">
-          <span class="fig"><svg class="ic"><use href="#ic-painpt"/></svg></span>
-          <h3>Patients with Pain</h3>
-          <p>Relief that actually lasts</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== HOW IT WORKS ==================== -->
-  <section class="section how on-navy grain" id="how" data-spy="Steps" aria-labelledby="how-title">
-    <div class="container">
-      <div class="section-head section-head--center" data-reveal="up">
-        <span class="eyebrow">How It Works</span>
-        <h2 class="h2" id="how-title">Three simple steps to <span class="accent">start recovery.</span></h2>
-      </div>
-
-      <div class="steps-wrap">
-        <div class="steps-line" aria-hidden="true">
-          <svg viewBox="0 0 1000 70" preserveAspectRatio="none" fill="none">
-            <path id="howPath" d="M30 35C190 -8 330 78 500 35S810 -8 970 35" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 11"/>
+      <div class="header-actions">
+        <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch to light mode">
+          <svg class="ic tb-sun">
+            <use href="#ic-sun" />
           </svg>
-        </div>
-        <div class="steps">
-          <div class="step" data-step data-reveal="up">
-            <div class="step__badge"><svg class="ic"><use href="#ic-step-tell"/></svg><i>1</i></div>
-            <h3>Share your symptoms</h3>
-            <p>Tell us where it hurts, how long it has been happening, and what activities are limited.</p>
-          </div>
-          <div class="step" data-step data-reveal="up" style="--d:120ms">
-            <div class="step__badge"><svg class="ic"><use href="#ic-step-scan"/></svg><i>2</i></div>
-            <h3>Online assessment</h3>
-            <p>We review your concerns, ask focused questions, and observe your movement patterns.</p>
-          </div>
-          <div class="step" data-step data-reveal="up" style="--d:240ms">
-            <div class="step__badge"><svg class="ic"><use href="#ic-step-plan"/></svg><i>3</i></div>
-            <h3>Start recovery from home</h3>
-            <p>Receive a personalized plan, clear exercise instructions, and follow-up support.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="how__cta" data-reveal="up">
-        <a class="btn btn--wa btn--lg" data-magnetic href="#book" data-cta="how">
-          <svg class="ic"><use href="#ic-cal"/></svg> Start Step 1 — Book Free
+          <svg class="ic tb-moon">
+            <use href="#ic-moon" />
+          </svg>
+        </button>
+        <a class="btn btn--wa btn--sm" href="#book" data-cta="header">
+          <svg class="ic">
+            <use href="#ic-cal" />
+          </svg><span class="full">Free Consultation</span>
         </a>
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
-  </section>
+  </header>
 
-  <!-- ==================== WHY ONLINE ==================== -->
-  <section class="section" id="why" data-spy="Why Online" aria-labelledby="why-title">
-    <div class="container why__grid">
-      <div>
-        <span class="eyebrow" data-reveal="up">Why Online Care</span>
-        <h2 class="h2" id="why-title" data-reveal="up">Why patients <span class="accent">trust online care.</span></h2>
-        <p class="lead" data-reveal="up" style="--d:100ms">The same clinical rigour as an in-person visit, delivered where recovery actually happens — at home.</p>
-
-        <div class="checklist">
-          <div class="check" data-reveal="left">
-            <svg class="ic"><use href="#ic-check"/></svg>
-            <span><b>Personalized Treatment Plans</b><span>Built for your body, not a template.</span></span>
-          </div>
-          <div class="check" data-reveal="left" style="--d:90ms">
-            <svg class="ic"><use href="#ic-check"/></svg>
-            <span><b>Expert Guidance</b><span>Care from a qualified physiotherapist.</span></span>
-          </div>
-          <div class="check" data-reveal="left" style="--d:180ms">
-            <svg class="ic"><use href="#ic-check"/></svg>
-            <span><b>Safe &amp; Effective</b><span>Proven techniques, carefully progressed.</span></span>
-          </div>
-          <div class="check" data-reveal="left" style="--d:270ms">
-            <svg class="ic"><use href="#ic-check"/></svg>
-            <span><b>Track Progress from Home</b><span>Regular follow-ups keep you improving.</span></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="why__visual">
-        <div class="photo-wrap">
-          <figure class="photo-card" data-reveal="clip">
-            <img src="assets/img/stretch-home.jpg" data-parallax="0.08" alt="A patient stretching comfortably on a mat in her living room" loading="lazy" />
-          </figure>
-          <div class="why__seal" data-reveal="up" style="--d:200ms">
-            <svg class="ic"><use href="#ic-shield"/></svg>
-            <span><b>SAFE. EFFECTIVE.<br/>TRUSTED CARE.</b></span>
-          </div>
-        </div>
-        <div class="benefit-rows" data-reveal="up" style="--d:150ms">
-          <div class="benefit-row">
-            <svg class="ic"><use href="#ic-home"/></svg>
-            <span><b>At-Home Care</b><span>Recover in your own space, at your own pace.</span></span>
-          </div>
-          <div class="benefit-row">
-            <svg class="ic"><use href="#ic-clock"/></svg>
-            <span><b>Flexible Timings</b><span>Sessions that fit around your schedule.</span></span>
-          </div>
-          <div class="benefit-row">
-            <svg class="ic"><use href="#ic-recovery"/></svg>
-            <span><b>Better Recovery</b><span>Consistent guidance means lasting results.</span></span>
-          </div>
-        </div>
-      </div>
+  <!-- ==================== MOBILE MENU ==================== -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a class="mm-link" style="--i:0" href="#home"><small>01</small>Home</a>
+    <a class="mm-link" style="--i:1" href="#services"><small>02</small>Services</a>
+    <a class="mm-link" style="--i:2" href="#how"><small>03</small>How It Works</a>
+    <a class="mm-link" style="--i:3" href="#results"><small>04</small>Results</a>
+    <a class="mm-link" style="--i:4" href="#faq"><small>05</small>FAQ</a>
+    <a class="mm-link" style="--i:5" href="#book"><small>06</small>Book Free Consultation</a>
+    <div class="mm-cta">
+      <a class="btn btn--wa btn--block" href="#book" data-cta="mobile-menu">
+        <svg class="ic">
+          <use href="#ic-cal" />
+        </svg> Book Your Free Consultation
+      </a>
     </div>
-  </section>
+  </div>
 
-  <!-- ==================== PHYSIO STRIP ==================== -->
-  <section class="section section--tight physio" aria-labelledby="dr-title">
-    <div class="container">
-      <div class="physio__card" data-reveal="up">
-        <div class="physio__photo">
-          <img src="assets/img/knee-exam.jpg" data-parallax="0.06" alt="A physiotherapist performing a hands-on knee assessment" loading="lazy" />
+  <main id="main">
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero grain" id="home" data-spy="Home">
+      <div class="container">
+        <div class="hero__copy">
+          <span class="hero__chip" data-reveal="up">
+            <span class="dot"><svg class="ic">
+                <use href="#ic-video" />
+              </svg></span>
+            First consultation free · Pan-India
+          </span>
+
+          <h1>
+            <span class="w" style="--i:0">Expert</span> <span class="w" style="--i:1">care.</span><br />
+            <span class="w" style="--i:2">Anywhere,</span> <span class="w" style="--i:3"><em
+                class="serif">anytime.</em></span>
+          </h1>
+
+          <p class="hero__sub" data-reveal="up" style="--d:120ms">
+            Recover from pain from the comfort of your home — evidence-based physiotherapy
+            with PhysioBeats, guided entirely online across India.
+            <b>Your first consultation is free.</b>
+          </p>
+
+          <div class="hero__cta" data-reveal="up" style="--d:220ms">
+            <a class="btn btn--wa btn--lg btn--pulse" data-magnetic href="#book" data-cta="hero">
+              <svg class="ic">
+                <use href="#ic-cal" />
+              </svg> Book Your Free Consultation
+            </a>
+            <a class="btn btn--ghost btn--lg" data-magnetic href="#how">
+              <svg class="ic">
+                <use href="#ic-arrow" />
+              </svg> See how it works
+            </a>
+          </div>
+
+          <p class="hero__meta" data-reveal="up" style="--d:320ms">
+            <span>No payment to book · Consultations across India</span>
+          </p>
         </div>
-        <div class="physio__body">
-          <span class="eyebrow">Your Physiotherapist</span>
-          <h2 class="h2" id="dr-title" style="font-size:clamp(26px,3.4vw,36px)">Dr. Varun Soni <span class="accent">(PT)</span></h2>
-          <div class="creds-row">
+
+        <div class="hero__stack" id="heroStack">
+          <div class="tilt" id="heroTilt">
+            <figure class="hero__photo" data-reveal="clip">
+              <img src="assets/img/hero-home-session.jpg" data-parallax="0.09"
+                alt="A patient following a guided physiotherapy session at home, exercising on a mat in front of a laptop"
+                fetchpriority="high" />
+              <figcaption>Guided home session <small>Live on video · corrected in real time</small></figcaption>
+            </figure>
+
+            <div class="g-chip g-chip--live float" data-reveal="left" style="--d:350ms">
+              <span class="bubble"><span class="live-dot"></span></span>
+              <span><b>Live guided session</b><span>Real-time form correction</span></span>
+            </div>
+
+            <div class="g-chip g-chip--shield float float--b" data-reveal="right" style="--d:480ms">
+              <span class="bubble"><svg class="ic">
+                  <use href="#ic-shield" />
+                </svg></span>
+              <span><b>SAFE · EFFECTIVE</b><span>Trusted, evidence-based care</span></span>
+            </div>
+
+            <aside class="spine-card" data-reveal="up" style="--d:600ms" aria-label="Spine assessment illustration">
+              <svg viewBox="0 0 56 112" fill="none" aria-hidden="true">
+                <g class="vert" opacity=".9">
+                  <rect x="16" y="4" width="24" height="9" rx="4.5" fill="#8FA3D8" />
+                  <circle cx="46" cy="8.5" r="2.2" fill="#8FA3D8" />
+                </g>
+                <g class="vert">
+                  <rect x="13" y="19" width="26" height="9.5" rx="4.7" fill="#9DB0E0" />
+                  <circle cx="45" cy="23.7" r="2.2" fill="#9DB0E0" />
+                </g>
+                <g class="vert">
+                  <rect x="15" y="35" width="25" height="9.5" rx="4.7" fill="#9DB0E0" />
+                  <circle cx="46" cy="39.7" r="2.2" fill="#9DB0E0" />
+                </g>
+                <g class="vert">
+                  <circle cx="27" cy="68" r="16" fill="#C8453B" opacity=".28" />
+                  <rect x="12" y="51" width="27" height="10" rx="5" fill="#F0897E" />
+                  <circle cx="45" cy="56" r="2.3" fill="#F0897E" />
+                </g>
+                <g class="vert">
+                  <rect x="14" y="67" width="26" height="10" rx="5" fill="#E85C50" />
+                  <circle cx="46" cy="72" r="2.3" fill="#E85C50" />
+                </g>
+                <g class="vert">
+                  <rect x="16" y="83" width="23" height="9" rx="4.5" fill="#9DB0E0" />
+                  <circle cx="45" cy="87.5" r="2.2" fill="#9DB0E0" />
+                </g>
+                <rect x="19" y="97" width="17" height="8" rx="4" fill="#8FA3D8" />
+              </svg>
+              <b>Lumbar focus</b>
+              <span>Assessment view</span>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-cue" aria-hidden="true"><i></i>Scroll</div>
+    </section>
+
+    <!-- ==================== FEATURE MARQUEE ==================== -->
+    <section class="marquee" aria-label="Key features">
+      <div class="marquee__track">
+        <div class="marquee__group">
+          <span>100% Online Consultations</span><span>Personalized Recovery Plans</span><span>Live Video
+            Guidance</span><span>Back &amp; Neck Care</span><span>Knee &amp; Joint Rehab</span><span>Evidence-Based
+            Care</span>
+          <span>Serving Patients Across India</span><span>Consult · Treat · Recover — All From Home</span>
+        </div>
+        <div class="marquee__group" aria-hidden="true">
+          <span>100% Online Consultations</span><span>Personalized Recovery Plans</span><span>Live Video
+            Guidance</span><span>Back &amp; Neck Care</span><span>Knee &amp; Joint Rehab</span><span>Evidence-Based
+            Care</span>
+          <span>Serving Patients Across India</span><span>Consult · Treat · Recover — All From Home</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VALUE PROPS ==================== -->
+    <section class="section section--tight" aria-labelledby="vp-title">
+      <div class="container">
+        <h2 id="vp-title" class="visually-hidden">Why patients choose online care</h2>
+        <div class="vp-grid">
+          <div class="card vp-card" data-reveal="up">
+            <span class="ic-wrap"><svg class="ic">
+                <use href="#ic-plan" />
+              </svg></span>
+            <h3>Personalized Plan</h3>
+            <p>A recovery programme built around your body, symptoms and daily routine — never a generic template.</p>
+          </div>
+          <div class="card vp-card" data-reveal="up" style="--d:110ms">
+            <span class="ic-wrap"><svg class="ic">
+                <use href="#ic-assess" />
+              </svg></span>
+            <h3>Online Assessment</h3>
+            <p>A thorough video evaluation of your pain, posture and movement — no clinic visit required.</p>
+          </div>
+          <div class="card vp-card" data-reveal="up" style="--d:220ms">
+            <span class="ic-wrap"><svg class="ic">
+                <use href="#ic-india" />
+              </svg></span>
+            <h3>India-Wide Support</h3>
+            <p>Expert physiotherapy guidance wherever you are — follow-ups and progress tracking, all from home.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SERVICES ==================== -->
+    <section class="section" id="services" data-spy="Services" aria-labelledby="svc-title">
+      <div class="container">
+        <div class="section-head section-head--center" data-reveal="up">
+          <span class="eyebrow">Our Services</span>
+          <h2 class="h2" id="svc-title">Evidence-based treatment for <span class="accent">what actually hurts.</span>
+          </h2>
+          <p class="lead">Focused, professional care for the conditions we treat most — each guided end-to-end, online.
+          </p>
+        </div>
+
+        <div class="svc-grid">
+          <article class="card svc-card" data-reveal="up">
+            <span class="num">01</span>
+            <span class="ic-wrap"><svg class="ic">
+                <use href="#ic-consult" />
+              </svg></span>
+            <h3>Online Consultation &amp; Treatment</h3>
+            <p>A complete assessment and treatment session over video — understand your condition and start care the
+              same day.</p>
+            <a class="link-arrow" href="#book" data-cta="svc-consult"
+              data-concern="Online Consultation &amp; Treatment">Book free consultation <svg class="ic">
+                <use href="#ic-arrow" />
+              </svg></a>
+          </article>
+
+          <article class="card svc-card" data-reveal="up" style="--d:90ms">
+            <span class="num">02</span>
+            <span class="ic-wrap"><svg class="ic">
+                <use href="#ic-spine" />
+              </svg></span>
+            <h3>Back Pain Treatment</h3>
+            <p>Relieve lower-back and spinal pain with targeted mobility, strengthening and posture correction you do at
+              home.</p>
+            <a class="link-arrow" href="#book" data-cta="svc-back" data-concern="Back Pain Treatment">Book free
+              consultation <svg class="ic">
+                <use href="#ic-arrow" />
+              </svg></a>
+          </article>
+
+          <article class="card svc-card" data-reveal="up" style="--d:180ms">
+            <span class="num">03</span>
+            <span class="ic-wrap"><svg class="ic">
+                <use href="#ic-neck" />
+              </svg></span>
+            <h3>Neck Pain &amp; Posture</h3>
+            <p>Ease stiffness, tension headaches and “tech neck” with posture retraining and gentle, guided release
+              work.</p>
+            <a class="link-arrow" href="#book" data-cta="svc-neck" data-concern="Neck Pain &amp; Posture">Book free
+              consultation <svg class="ic">
+                <use href="#ic-arrow" />
+              </svg></a>
+          </article>
+
+          <article class="card svc-card" data-reveal="up">
+            <span class="num">04</span>
+            <span class="ic-wrap"><svg class="ic">
+                <use href="#ic-knee" />
+              </svg></span>
+            <h3>Knee Pain &amp; Mobility Rehab</h3>
+            <p>Rebuild pain-free movement after injury, arthritis or overuse with progressive strengthening and load
+              control.</p>
+            <a class="link-arrow" href="#book" data-cta="svc-knee" data-concern="Knee Pain &amp; Mobility Rehab">Book
+              free consultation <svg class="ic">
+                <use href="#ic-arrow" />
+              </svg></a>
+          </article>
+
+          <article class="card svc-card" data-reveal="up" style="--d:90ms">
+            <span class="num">05</span>
+            <span class="ic-wrap"><svg class="ic">
+                <use href="#ic-acl" />
+              </svg></span>
+            <h3>ACL Injury / Reconstruction Rehabilitation</h3>
+            <p>Structured post-surgical and non-surgical ACL rehab to restore strength, stability and confidence to
+              return to sport.</p>
+            <a class="link-arrow" href="#book" data-cta="svc-acl"
+              data-concern="ACL Injury / Reconstruction Rehabilitation">Book free consultation <svg class="ic">
+                <use href="#ic-arrow" />
+              </svg></a>
+          </article>
+
+          <article class="card svc-card" data-reveal="up" style="--d:180ms">
+            <span class="num">06</span>
+            <span class="ic-wrap"><svg class="ic">
+                <use href="#ic-mobility" />
+              </svg></span>
+            <h3>Full-Body Mobility, Strength &amp; Conditioning</h3>
+            <p>Move better and stay resilient with a progressive mobility, strength and conditioning plan for everyday
+              life.</p>
+            <a class="link-arrow" href="#book" data-cta="svc-mobility"
+              data-concern="Full-Body Mobility, Strength &amp; Conditioning">Book free consultation <svg class="ic">
+                <use href="#ic-arrow" />
+              </svg></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PERSONAS ==================== -->
+    <section class="section personas" id="for-you" data-spy="For You" aria-labelledby="pf-title">
+      <div class="container">
+        <div class="section-head section-head--center" data-reveal="up">
+          <span class="eyebrow">Perfect For</span>
+          <h2 class="h2" id="pf-title">Care that fits <span class="accent">real lives.</span></h2>
+        </div>
+        <div class="persona-grid">
+          <div class="card persona-card" data-reveal="up">
+            <span class="fig"><svg class="ic">
+                <use href="#ic-office" />
+              </svg></span>
+            <h3>Office Workers</h3>
+            <p>Desk-bound stiffness &amp; posture strain</p>
+          </div>
+          <div class="card persona-card" data-reveal="up" style="--d:90ms">
+            <span class="fig"><svg class="ic">
+                <use href="#ic-elderly" />
+              </svg></span>
+            <h3>Elderly People</h3>
+            <p>Gentle, safe, guided movement</p>
+          </div>
+          <div class="card persona-card" data-reveal="up" style="--d:180ms">
+            <span class="fig"><svg class="ic">
+                <use href="#ic-athlete" />
+              </svg></span>
+            <h3>Athletes</h3>
+            <p>Return to sport, stronger</p>
+          </div>
+          <div class="card persona-card" data-reveal="up" style="--d:270ms">
+            <span class="fig"><svg class="ic">
+                <use href="#ic-painpt" />
+              </svg></span>
+            <h3>Patients with Pain</h3>
+            <p>Relief that actually lasts</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== HOW IT WORKS ==================== -->
+    <section class="section how on-navy grain" id="how" data-spy="Steps" aria-labelledby="how-title">
+      <div class="container">
+        <div class="section-head section-head--center" data-reveal="up">
+          <span class="eyebrow">How It Works</span>
+          <h2 class="h2" id="how-title">Three simple steps to <span class="accent">start recovery.</span></h2>
+        </div>
+
+        <div class="steps-wrap">
+          <div class="steps-line" aria-hidden="true">
+            <svg viewBox="0 0 1000 70" preserveAspectRatio="none" fill="none">
+              <path id="howPath" d="M30 35C190 -8 330 78 500 35S810 -8 970 35" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-dasharray="2 11" />
+            </svg>
+          </div>
+          <div class="steps">
+            <div class="step" data-step data-reveal="up">
+              <div class="step__badge"><svg class="ic">
+                  <use href="#ic-step-tell" />
+                </svg><i>1</i></div>
+              <h3>Share your symptoms</h3>
+              <p>Tell us where it hurts, how long it has been happening, and what activities are limited.</p>
+            </div>
+            <div class="step" data-step data-reveal="up" style="--d:120ms">
+              <div class="step__badge"><svg class="ic">
+                  <use href="#ic-step-scan" />
+                </svg><i>2</i></div>
+              <h3>Online assessment</h3>
+              <p>We review your concerns, ask focused questions, and observe your movement patterns.</p>
+            </div>
+            <div class="step" data-step data-reveal="up" style="--d:240ms">
+              <div class="step__badge"><svg class="ic">
+                  <use href="#ic-step-plan" />
+                </svg><i>3</i></div>
+              <h3>Start recovery from home</h3>
+              <p>Receive a personalized plan, clear exercise instructions, and follow-up support.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="how__cta" data-reveal="up">
+          <a class="btn btn--wa btn--lg" data-magnetic href="#book" data-cta="how">
+            <svg class="ic">
+              <use href="#ic-cal" />
+            </svg> Start Step 1 — Book Free
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== WHY ONLINE ==================== -->
+    <section class="section" id="why" data-spy="Why Online" aria-labelledby="why-title">
+      <div class="container why__grid">
+        <div>
+          <span class="eyebrow" data-reveal="up">Why Online Care</span>
+          <h2 class="h2" id="why-title" data-reveal="up">Why patients <span class="accent">trust online care.</span>
+          </h2>
+          <p class="lead" data-reveal="up" style="--d:100ms">The same clinical rigour as an in-person visit, delivered
+            where recovery actually happens — at home.</p>
+
+          <div class="checklist">
+            <div class="check" data-reveal="left">
+              <svg class="ic">
+                <use href="#ic-check" />
+              </svg>
+              <span><b>Personalized Treatment Plans</b><span>Built for your body, not a template.</span></span>
+            </div>
+            <div class="check" data-reveal="left" style="--d:90ms">
+              <svg class="ic">
+                <use href="#ic-check" />
+              </svg>
+              <span><b>Expert Guidance</b><span>Care from a qualified physiotherapist.</span></span>
+            </div>
+            <div class="check" data-reveal="left" style="--d:180ms">
+              <svg class="ic">
+                <use href="#ic-check" />
+              </svg>
+              <span><b>Safe &amp; Effective</b><span>Proven techniques, carefully progressed.</span></span>
+            </div>
+            <div class="check" data-reveal="left" style="--d:270ms">
+              <svg class="ic">
+                <use href="#ic-check" />
+              </svg>
+              <span><b>Track Progress from Home</b><span>Regular follow-ups keep you improving.</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="why__visual">
+          <div class="photo-wrap">
+            <figure class="photo-card" data-reveal="clip">
+              <img src="assets/img/stretch-home.jpg" data-parallax="0.08"
+                alt="A patient stretching comfortably on a mat in her living room" loading="lazy" />
+            </figure>
+            <div class="why__seal" data-reveal="up" style="--d:200ms">
+              <svg class="ic">
+                <use href="#ic-shield" />
+              </svg>
+              <span><b>SAFE. EFFECTIVE.<br />TRUSTED CARE.</b></span>
+            </div>
+          </div>
+          <div class="benefit-rows" data-reveal="up" style="--d:150ms">
+            <div class="benefit-row">
+              <svg class="ic">
+                <use href="#ic-home" />
+              </svg>
+              <span><b>At-Home Care</b><span>Recover in your own space, at your own pace.</span></span>
+            </div>
+            <div class="benefit-row">
+              <svg class="ic">
+                <use href="#ic-clock" />
+              </svg>
+              <span><b>Flexible Timings</b><span>Sessions that fit around your schedule.</span></span>
+            </div>
+            <div class="benefit-row">
+              <svg class="ic">
+                <use href="#ic-recovery" />
+              </svg>
+              <span><b>Better Recovery</b><span>Consistent guidance means lasting results.</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== OUR DOCTORS ==================== -->
+    <section class="section section--tight" aria-labelledby="dr-title">
+      <div class="container">
+        <div class="section-head text-center" style="margin-bottom: 40px;">
+          <h2 class="h2" id="dr-title">Our Doctors</h2>
+        </div>
+        <div class="card" data-reveal="up"
+          style="max-width: 680px; margin: 0 auto; text-align: center; padding: 40px 24px;">
+          <h3 class="h3" style="font-size:clamp(24px,3.4vw,32px); margin-bottom: 16px; color: var(--heading);">Dr. Varun
+            Soni <span class="accent">(PT)</span></h3>
+          <div class="creds-row" style="justify-content: center; margin-bottom: 24px;">
             <span class="cred-chip">BPT</span><span class="cred-chip">COMT</span><span class="cred-chip">CDCT</span>
             <span class="cred-chip">CDNT</span><span class="cred-chip">CSTT</span><span class="cred-chip">CIASTM</span>
           </div>
-          <p class="bio">
+          <p class="bio" style="font-size: 16px; line-height: 1.6; color: var(--muted); margin-bottom: 20px;">
             A certified physiotherapist helping patients recover from back, neck, knee and sports
             injuries through structured, evidence-based online care. Every plan is assessed,
             personalised and followed up — so you always know your next step.
           </p>
-          <p class="physio__tag">“Your Partner in Pain Relief, Recovery &amp; Performance”</p>
+          <p class="physio__tag" style="font-style: italic; font-weight: 500; color: var(--h-accent);">“Your Partner in
+            Pain Relief, Recovery &amp; Performance”</p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ==================== RESULTS ====================
+    <!-- ==================== RESULTS ====================
        V3's three testimonials and the ★★★★★ rating were removed here: they were
        unattributed and unsourced, which is a real ASCI / Consumer Protection Act
        exposure on a medical practice page. Genuine, patient-submitted reviews are
@@ -712,242 +899,307 @@
        One figure only, and it is a real one. Every claim on this section must be
        substantiable — do not pad it out with numbers that only look impressive.
   -->
-  <section class="section" id="results" data-spy="Results" aria-labelledby="st-title">
-    <div class="container">
-      <div class="section-head section-head--center" data-reveal="up">
-        <span class="eyebrow">By the numbers</span>
-        <h2 class="h2" id="st-title">Care that <span class="accent">adds up.</span></h2>
-        <p class="lead">A straightforward number from the practice — no exaggeration, no stock quotes.</p>
-      </div>
+    <section class="section" id="results" data-spy="Results" aria-labelledby="st-title">
+      <div class="container">
+        <div class="section-head section-head--center" data-reveal="up">
+          <span class="eyebrow">By the numbers</span>
+          <h2 class="h2" id="st-title">Care that <span class="accent">adds up.</span></h2>
+          <p class="lead">A straightforward number from the practice — no exaggeration, no stock quotes.</p>
+        </div>
 
-      <div class="stats-grid stats-grid--single" data-reveal="up" style="--d:100ms">
-        <div class="card stat">
-          <b class="stat__num" data-count="1600" data-suffix="+">1600+</b>
-          <span class="stat__label">Patients treated</span>
+        <div class="stats-grid stats-grid--single" data-reveal="up" style="--d:100ms">
+          <div class="card stat">
+            <b class="stat__num" data-count="1600" data-suffix="+">1600+</b>
+            <span class="stat__label">Patients treated</span>
+          </div>
+        </div>
+
+        <!-- Populated at runtime from approved reviews only. Stays hidden when empty. -->
+        <div class="reviews" id="reviewsBlock" hidden>
+          <h3 class="reviews__title">What patients say</h3>
+          <div class="reviews__grid" id="reviewsGrid"></div>
         </div>
       </div>
+    </section>
 
-      <!-- Populated at runtime from approved reviews only. Stays hidden when empty. -->
-      <div class="reviews" id="reviewsBlock" hidden>
-        <h3 class="reviews__title">What patients say</h3>
-        <div class="reviews__grid" id="reviewsGrid"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== FAQ ==================== -->
-  <section class="section section--tight" id="faq" data-spy="FAQ" aria-labelledby="faq-title">
-    <div class="container">
-      <div class="section-head section-head--center" data-reveal="up">
-        <span class="eyebrow">FAQ</span>
-        <h2 class="h2" id="faq-title">Questions, <span class="accent">answered.</span></h2>
-      </div>
-
-      <div class="faq2">
-        <div class="faq2-item" data-open="true" data-reveal="up">
-          <button class="faq2-q" aria-expanded="true" aria-controls="fa1">
-            Is online physiotherapy effective?
-            <span class="tgl"><svg class="ic"><use href="#ic-chev"/></svg></span>
-          </button>
-          <div class="faq2-a" id="fa1"><div><p>Yes, for many pain, posture, mobility, and rehabilitation needs, online physiotherapy can provide a thorough assessment, guided exercises, and follow-up support.</p></div></div>
+    <!-- ==================== FAQ ==================== -->
+    <section class="section section--tight" id="faq" data-spy="FAQ" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-head section-head--center" data-reveal="up">
+          <span class="eyebrow">FAQ</span>
+          <h2 class="h2" id="faq-title">Questions, <span class="accent">answered.</span></h2>
         </div>
-        <div class="faq2-item" data-open="false" data-reveal="up" style="--d:80ms">
-          <button class="faq2-q" aria-expanded="false" aria-controls="fa2">
-            How do I book a consultation?
-            <span class="tgl"><svg class="ic"><use href="#ic-chev"/></svg></span>
-          </button>
-          <div class="faq2-a" id="fa2"><div><p>Fill in the booking form on this page with your details and preferred date and time. Your first consultation is free. Submitting the form opens WhatsApp with your request pre-filled, so you can confirm in one tap.</p></div></div>
-        </div>
-        <div class="faq2-item" data-open="false" data-reveal="up" style="--d:160ms">
-          <button class="faq2-q" aria-expanded="false" aria-controls="fa3">
-            Do you support clients across India?
-            <span class="tgl"><svg class="ic"><use href="#ic-chev"/></svg></span>
-          </button>
-          <div class="faq2-a" id="fa3"><div><p>Yes. The service is designed for people anywhere in India who want expert physiotherapy guidance from home.</p></div></div>
-        </div>
-        <div class="faq2-item" data-open="false" data-reveal="up" style="--d:240ms">
-          <button class="faq2-q" aria-expanded="false" aria-controls="fa4">
-            What should I prepare before the session?
-            <span class="tgl"><svg class="ic"><use href="#ic-chev"/></svg></span>
-          </button>
-          <div class="faq2-a" id="fa4"><div><p>Keep a phone or laptop ready, wear comfortable clothing, and be prepared to show the area of concern and perform a few simple movements if needed.</p></div></div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- ==================== BOOK ==================== -->
-  <section class="section book on-navy grain" id="book" data-spy="Book" aria-labelledby="bk-title">
-    <div class="container">
-      <div class="section-head section-head--center" data-reveal="up">
-        <span class="eyebrow">Free Consultation</span>
-        <h2 class="h2" id="bk-title">Book your <span class="accent">free consultation.</span></h2>
-        <p class="lead">Tell us who you are and when suits you. No payment, no card — it takes under a minute.</p>
-      </div>
-
-      <div class="book__card" data-reveal="up" style="--d:120ms">
-        <div class="book__grid">
-          <form id="apptForm" novalidate>
-            <!-- Honeypot: hidden from humans, filled by bots. Server drops any row with it set. -->
-            <div class="hp" aria-hidden="true">
-              <label for="a-website">Leave this field empty</label>
-              <input id="a-website" name="website" type="text" tabindex="-1" autocomplete="off" />
-            </div>
-
-            <div class="two-col">
-              <div class="field">
-                <label for="a-name">Your Name <span class="req">*</span></label>
-                <input id="a-name" name="name" type="text" autocomplete="name" placeholder="Full name" required />
-              </div>
-              <div class="field">
-                <label for="a-age">Age <span class="req">*</span></label>
-                <input id="a-age" name="age" type="number" inputmode="numeric" min="1" max="120" placeholder="e.g. 34" required />
+        <div class="faq2">
+          <div class="faq2-item" data-open="true" data-reveal="up">
+            <button class="faq2-q" aria-expanded="true" aria-controls="fa1">
+              Is online physiotherapy effective?
+              <span class="tgl"><svg class="ic">
+                  <use href="#ic-chev" />
+                </svg></span>
+            </button>
+            <div class="faq2-a" id="fa1">
+              <div>
+                <p>Yes, for many pain, posture, mobility, and rehabilitation needs, online physiotherapy can provide a
+                  thorough assessment, guided exercises, and follow-up support.</p>
               </div>
             </div>
-
-            <div class="field">
-              <label for="a-email">Email <span class="opt">(optional)</span></label>
-              <input id="a-email" name="email" type="email" autocomplete="email" placeholder="Submit your email to get a calendar invite" />
+          </div>
+          <div class="faq2-item" data-open="false" data-reveal="up" style="--d:80ms">
+            <button class="faq2-q" aria-expanded="false" aria-controls="fa2">
+              How do I book a consultation?
+              <span class="tgl"><svg class="ic">
+                  <use href="#ic-chev" />
+                </svg></span>
+            </button>
+            <div class="faq2-a" id="fa2">
+              <div>
+                <p>Fill in the booking form on this page with your details and preferred date and time. Your first
+                  consultation is free. Submitting the form opens WhatsApp with your request pre-filled, so you can
+                  confirm in one tap.</p>
+              </div>
             </div>
-
-            <fieldset class="field">
-              <legend>Gender <span class="req">*</span></legend>
-              <div class="seg" id="genderSeg" role="radiogroup" aria-label="Gender"></div>
-            </fieldset>
-
-            <div class="field">
-              <label for="a-concern">Primary Concern <span class="req">*</span></label>
-              <select id="a-concern" name="concern" required>
-                <option value="" selected disabled>Select a concern</option>
-                <option>Online Consultation &amp; Treatment</option>
-                <option>Back Pain Treatment</option>
-                <option>Neck Pain &amp; Posture</option>
-                <option>Knee Pain &amp; Mobility Rehab</option>
-                <option>ACL Injury / Reconstruction Rehabilitation</option>
-                <option>Full-Body Mobility, Strength &amp; Conditioning</option>
-              </select>
+          </div>
+          <div class="faq2-item" data-open="false" data-reveal="up" style="--d:160ms">
+            <button class="faq2-q" aria-expanded="false" aria-controls="fa3">
+              Do you support clients across India?
+              <span class="tgl"><svg class="ic">
+                  <use href="#ic-chev" />
+                </svg></span>
+            </button>
+            <div class="faq2-a" id="fa3">
+              <div>
+                <p>Yes. The service is designed for people anywhere in India who want expert physiotherapy guidance from
+                  home.</p>
+              </div>
             </div>
+          </div>
+          <div class="faq2-item" data-open="false" data-reveal="up" style="--d:240ms">
+            <button class="faq2-q" aria-expanded="false" aria-controls="fa4">
+              What should I prepare before the session?
+              <span class="tgl"><svg class="ic">
+                  <use href="#ic-chev" />
+                </svg></span>
+            </button>
+            <div class="faq2-a" id="fa4">
+              <div>
+                <p>Keep a phone or laptop ready, wear comfortable clothing, and be prepared to show the area of concern
+                  and perform a few simple movements if needed.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <!-- Collapsed by default. The wheel is a nested scroll container, so
+    <!-- ==================== BOOK ==================== -->
+    <section class="section book on-navy grain" id="book" data-spy="Book" aria-labelledby="bk-title">
+      <div class="container">
+        <div class="section-head section-head--center" data-reveal="up">
+          <span class="eyebrow">Free Consultation</span>
+          <h2 class="h2" id="bk-title">Book your <span class="accent">free consultation.</span></h2>
+          <p class="lead">Tell us who you are and when suits you. No payment, no card — it takes under a minute.</p>
+        </div>
+
+        <div class="book__card" data-reveal="up" style="--d:120ms">
+          <div class="book__grid">
+            <form id="apptForm" novalidate>
+              <!-- Honeypot: hidden from humans, filled by bots. Server drops any row with it set. -->
+              <div class="hp" aria-hidden="true">
+                <label for="a-website">Leave this field empty</label>
+                <input id="a-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="two-col">
+                <div class="field">
+                  <label for="a-name">Your Name <span class="req">*</span></label>
+                  <input id="a-name" name="name" type="text" autocomplete="name" placeholder="Full name" required />
+                </div>
+                <div class="field">
+                  <label for="a-age">Age <span class="req">*</span></label>
+                  <input id="a-age" name="age" type="number" inputmode="numeric" min="1" max="120" placeholder="e.g. 34"
+                    required />
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="a-email">Email <span class="opt">(optional)</span></label>
+                <input id="a-email" name="email" type="email" autocomplete="email"
+                  placeholder="Submit your email to get a calendar invite" />
+              </div>
+
+              <fieldset class="field">
+                <legend>Gender <span class="req">*</span></legend>
+                <div class="seg" id="genderSeg" role="radiogroup" aria-label="Gender"></div>
+              </fieldset>
+
+              <div class="field">
+                <label for="a-concern">Primary Concern <span class="req">*</span></label>
+                <select id="a-concern" name="concern" required>
+                  <option value="" selected disabled>Select a concern</option>
+                  <option>Online Consultation &amp; Treatment</option>
+                  <option>Back Pain Treatment</option>
+                  <option>Neck Pain &amp; Posture</option>
+                  <option>Knee Pain &amp; Mobility Rehab</option>
+                  <option>ACL Injury / Reconstruction Rehabilitation</option>
+                  <option>Full-Body Mobility, Strength &amp; Conditioning</option>
+                </select>
+              </div>
+
+              <!-- Collapsed by default. The wheel is a nested scroll container, so
                  leaving it open in the middle of a long page means every thumb
                  drag that lands on it scrolls the wheel instead of the page.
                  Behind a disclosure it can only be scrolled deliberately. -->
-            <fieldset class="field wheel-field" id="whenFs">
-              <legend>Preferred Date &amp; Time <span class="req">*</span></legend>
+              <fieldset class="field wheel-field" id="whenFs">
+                <legend>Preferred Date &amp; Time <span class="req">*</span></legend>
 
-              <button type="button" class="when-toggle" id="whenToggle" aria-expanded="false" aria-controls="whenPanel">
-                <span class="when-toggle__icon"><svg class="ic"><use href="#ic-cal"/></svg></span>
-                <span class="when-toggle__text">
-                  <span class="when-toggle__label">Your appointment</span>
-                  <span class="when-toggle__value" id="whenValue" aria-live="polite">—</span>
-                </span>
-                <span class="when-toggle__action">
-                  <span class="when-toggle__cta">Change</span>
-                  <span class="when-toggle__chev" aria-hidden="true"><svg class="ic"><use href="#ic-chev"/></svg></span>
-                </span>
-              </button>
+                <button type="button" class="when-toggle" id="whenToggle" aria-expanded="false"
+                  aria-controls="whenPanel">
+                  <span class="when-toggle__icon"><svg class="ic">
+                      <use href="#ic-cal" />
+                    </svg></span>
+                  <span class="when-toggle__text">
+                    <span class="when-toggle__label">Your appointment</span>
+                    <span class="when-toggle__value" id="whenValue" aria-live="polite">—</span>
+                  </span>
+                  <span class="when-toggle__action">
+                    <span class="when-toggle__cta">Change</span>
+                    <span class="when-toggle__chev" aria-hidden="true"><svg class="ic">
+                        <use href="#ic-chev" />
+                      </svg></span>
+                  </span>
+                </button>
 
-              <div class="when-panel" id="whenPanel" hidden>
-                <div class="wheel" id="wheel">
-                  <div class="wheel__band" aria-hidden="true"></div>
-                  <div class="wheel__col wheel__col--date" data-wheel="date" tabindex="0" role="listbox" aria-label="Date"></div>
-                  <div class="wheel__col" data-wheel="hour" tabindex="0" role="listbox" aria-label="Hour"></div>
-                  <div class="wheel__col" data-wheel="minute" tabindex="0" role="listbox" aria-label="Minute"></div>
-                  <div class="wheel__col" data-wheel="ampm" tabindex="0" role="listbox" aria-label="AM or PM"></div>
+                <div class="when-panel" id="whenPanel" hidden>
+                  <div class="wheel" id="wheel">
+                    <div class="wheel__band" aria-hidden="true"></div>
+                    <div class="wheel__col wheel__col--date" data-wheel="date" tabindex="0" role="listbox"
+                      aria-label="Date"></div>
+                    <div class="wheel__col" data-wheel="hour" tabindex="0" role="listbox" aria-label="Hour"></div>
+                    <div class="wheel__col" data-wheel="minute" tabindex="0" role="listbox" aria-label="Minute"></div>
+                    <div class="wheel__col" data-wheel="ampm" tabindex="0" role="listbox" aria-label="AM or PM"></div>
+                  </div>
+                  <button type="button" class="when-done" id="whenDone">Done</button>
                 </div>
-                <button type="button" class="when-done" id="whenDone">Done</button>
+              </fieldset>
+
+              <div class="field">
+                <label for="a-issue">What's troubling you? <span class="req">*</span></label>
+                <textarea id="a-issue" name="issue"
+                  placeholder="Briefly describe the issue — where it hurts, since when, and what makes it worse."
+                  required></textarea>
               </div>
-            </fieldset>
-
-            <div class="field">
-              <label for="a-issue">What's troubling you? <span class="req">*</span></label>
-              <textarea id="a-issue" name="issue" placeholder="Briefly describe the issue — where it hurts, since when, and what makes it worse." required></textarea>
-            </div>
 
 
-            <div class="field field--consent">
-              <label class="consent">
-                <input id="a-consent" name="consent" type="checkbox" required />
-                <span>I agree that my details and description of symptoms will be used to arrange
-                and deliver my consultation, as set out in the
-                <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. <span class="req">*</span></span>
-              </label>
-            </div>
+              <div class="field field--consent">
+                <label class="consent">
+                  <input id="a-consent" name="consent" type="checkbox" required />
+                  <span>I agree that my details and description of symptoms will be used to arrange
+                    and deliver my consultation, as set out in the
+                    <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. <span
+                      class="req">*</span></span>
+                </label>
+              </div>
 
-            <button class="btn btn--wa btn--lg btn--block" type="submit" id="apptSubmit">
-              <svg class="ic"><use href="#ic-wa"/></svg> Book Free Consultation
-            </button>
-            <p class="form-status" id="apptStatus" role="status" aria-live="polite"></p>
-            <p class="form-note">Opens WhatsApp with your request pre-filled — send it to confirm your slot.</p>
-          </form>
+              <button class="btn btn--wa btn--lg btn--block" type="submit" id="apptSubmit">
+                <svg class="ic">
+                  <use href="#ic-wa" />
+                </svg> Book Free Consultation
+              </button>
+              <p class="form-status" id="apptStatus" role="status" aria-live="polite"></p>
+              <p class="form-note">Opens WhatsApp with your request pre-filled — send it to confirm your slot.</p>
+            </form>
 
-          <aside class="wa-preview" aria-label="Preview of your WhatsApp message">
-            <div class="wa-preview__head">
-              <span class="pfp">VS</span>
-              <span><b>Dr. Varun Soni (PT)</b><span>Online Physiotherapy</span></span>
-            </div>
-            <div class="wa-bubble" id="waPreview">Hi Dr. Varun, I'd like to book a free consultation. 🗓</div>
-            <p class="wa-preview__note">Live preview — this is exactly what you'll send.</p>
-          </aside>
+            <aside class="wa-preview" aria-label="Preview of your WhatsApp message">
+              <div class="wa-preview__head">
+                <span class="pfp">VS</span>
+                <span><b>Dr. Varun Soni (PT)</b><span>Online Physiotherapy</span></span>
+              </div>
+              <div class="wa-bubble" id="waPreview">Hi Dr. Varun, I'd like to book a free consultation. 🗓</div>
+              <p class="wa-preview__note">Live preview — this is exactly what you'll send.</p>
+            </aside>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-</main>
+    </section>
+  </main>
 
-<!-- ==================== FOOTER ==================== -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer__top">
-      <div>
-        <a class="brand" href="#home">
-          <svg class="brand__logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-            <rect x="5" y="8" width="38" height="27" rx="4.5" stroke="currentColor" stroke-width="2.4"/>
-            <path d="M19 40h10M24 35v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-            <path d="M24 12c-2.6 1.1-2.6 3.9 0 5s2.6 3.9 0 5-2.6 3.9 0 5" stroke="#2E8B8F" stroke-width="2.6" stroke-linecap="round"/>
-            <circle cx="24" cy="12" r="1.7" fill="#2E8B8F"/>
-            <circle cx="24" cy="31.5" r="1.7" fill="#2E8B8F"/>
-          </svg>
-          <span class="brand__name" style="color:#fff">Dr. Varun Soni (PT)</span>
-        </a>
-        <p class="footer__tagline">Your Partner in Pain Relief, Recovery &amp; Performance</p>
-      </div>
-
-      <nav aria-label="Footer">
-        <h3>Explore</h3>
-        <div class="footer__links">
-          <a href="#services">Services</a>
-          <a href="#how">How It Works</a>
-          <a href="#results">Results</a>
-          <a href="#faq">FAQ</a>
-          <a href="#book">Book Free Consultation</a>
-          <a href="privacy.html">Privacy Policy</a>
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div>
+          <a class="brand" href="#home">
+            <svg class="brand__logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <rect x="5" y="8" width="38" height="27" rx="4.5" stroke="currentColor" stroke-width="2.4" />
+              <path d="M19 40h10M24 35v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+              <path d="M24 12c-2.6 1.1-2.6 3.9 0 5s2.6 3.9 0 5-2.6 3.9 0 5" stroke="#2E8B8F" stroke-width="2.6"
+                stroke-linecap="round" />
+              <circle cx="24" cy="12" r="1.7" fill="#2E8B8F" />
+              <circle cx="24" cy="31.5" r="1.7" fill="#2E8B8F" />
+            </svg>
+            <span class="brand__name" style="color:#fff">Dr. Varun Soni (PT)</span>
+          </a>
+          <p class="footer__tagline">Your Partner in Pain Relief, Recovery &amp; Performance</p>
         </div>
-      </nav>
 
-      <div class="footer__contact">
-        <h3>Get in Touch</h3>
-        <a class="footer__wa" href="#book" data-cta="footer">
-          <svg class="ic"><use href="#ic-cal"/></svg> Book a Free Consultation
-        </a>
-        <p>Expert Care. Anywhere, Anytime.<br/>Consultations available across India.</p>
+        <nav aria-label="Footer">
+          <h3>Explore</h3>
+          <div class="footer__links">
+            <a href="#services">Services</a>
+            <a href="#how">How It Works</a>
+            <a href="#results">Results</a>
+            <a href="#faq">FAQ</a>
+            <a href="#book">Book Free Consultation</a>
+            <a href="privacy.html">Privacy Policy</a>
+          </div>
+        </nav>
+
+        <div class="footer__contact">
+          <h3>Get in Touch</h3>
+          <a class="footer__wa" href="#book" data-cta="footer">
+            <svg class="ic">
+              <use href="#ic-cal" />
+            </svg> Book a Free Consultation
+          </a>
+          <p>Expert Care. Anywhere, Anytime.<br />Consultations available across India.</p>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>BPT&nbsp;|&nbsp;COMT&nbsp;|&nbsp;CDCT&nbsp;|&nbsp;CDNT&nbsp;|&nbsp;CSTT&nbsp;|&nbsp;CIASTM</span>
+        <span>© <span id="year">2026</span> Dr. Varun Soni (PT) · Online Physiotherapy. Photos via Unsplash.</span>
       </div>
     </div>
+  </footer>
 
-    <div class="footer__bottom">
-      <span>BPT&nbsp;|&nbsp;COMT&nbsp;|&nbsp;CDCT&nbsp;|&nbsp;CDNT&nbsp;|&nbsp;CSTT&nbsp;|&nbsp;CIASTM</span>
-      <span>© <span id="year">2026</span> Dr. Varun Soni (PT) · Online Physiotherapy. Photos via Unsplash.</span>
-    </div>
-  </div>
-</footer>
-
-<!-- ==================== MOBILE STICKY BAR ==================== -->
-<div class="mobile-bar" id="mobileBar">
-  <a class="btn btn--wa btn--block" href="#book" data-cta="mobile-bar">
-    <svg class="ic"><use href="#ic-cal"/></svg> Book Your Free Consultation
+  <!-- Floating Call Quick Button -->
+  <a class="wa-fab call-fab" href="tel:+919680049176" aria-label="Call now">
+    <svg class="ic">
+      <use href="#ic-phone" />
+    </svg>
+    <span class="wa-fab__tooltip">Call now</span>
   </a>
-</div>
 
-<script src="script.js?v=13" defer></script>
+  <!-- Floating WhatsApp Quick Button -->
+  <a class="wa-fab" href="https://wa.me/919680049176" target="_blank" rel="noopener noreferrer"
+    aria-label="Quick chat on WhatsApp">
+    <svg class="ic">
+      <use href="#ic-wa" />
+    </svg>
+    <span class="wa-fab__tooltip">Chat with us</span>
+  </a>
+
+  <!-- ==================== MOBILE STICKY BAR ==================== -->
+  <div class="mobile-bar" id="mobileBar">
+    <a class="btn btn--wa btn--block" href="#book" data-cta="mobile-bar">
+      <svg class="ic">
+        <use href="#ic-cal" />
+      </svg> Book Your Free Consultation
+    </a>
+  </div>
+
+  <script src="script.js?v=13" defer></script>
 </body>
+
 </html>

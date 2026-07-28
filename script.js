@@ -155,15 +155,9 @@
   function initHeader() {
     var header = document.getElementById("siteHeader");
     if (!header) return;
-    var lastY = window.scrollY;
     onScroll(function () {
       var y = window.scrollY;
       header.classList.toggle("scrolled", y > 30);
-      if (!document.documentElement.classList.contains("menu-open")) {
-        if (y > 160 && y > lastY + 4) header.classList.add("hidden");
-        else if (y < lastY - 4 || y <= 160) header.classList.remove("hidden");
-      }
-      lastY = y;
     });
   }
 
@@ -207,23 +201,35 @@
     });
   }
 
-  /* ---------- parallax (images inside clipped cards + aurora) ---------- */
+  /* ---------- parallax & smooth scroll zoom for image containers & borders ---------- */
   function initParallax() {
-    if (reduced || !finePointer) return;   // off on touch/coarse pointers (perf)
-    var els = Array.prototype.slice.call(document.querySelectorAll("[data-parallax]"));
-    if (!els.length) return;
+    if (reduced) return;
+    var containers = Array.prototype.slice.call(document.querySelectorAll(".hero__photo, figure, [data-parallax]"));
+    if (!containers.length) return;
+
+    containers.forEach(function (el) {
+      el.style.transition = "transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)";
+    });
+
     onScroll(function () {
       var vh = window.innerHeight || document.documentElement.clientHeight;
-      els.forEach(function (el) {
+      containers.forEach(function (el) {
         var r = el.getBoundingClientRect();
-        if (r.bottom < -80 || r.top > vh + 80) return;
-        var speed = parseFloat(el.getAttribute("data-parallax")) || 0.1;
+        if (r.bottom < -100 || r.top > vh + 100) return;
+
+        // Calculate normalized distance from center of screen (0 at center, 1 at edge)
+        var centerDist = Math.abs((r.top + r.height / 2) - vh / 2);
+        var maxDist = vh / 2 + r.height / 2;
+        var normDist = Math.min(1, centerDist / maxDist);
+
+        // Smooth container/border zoom: 1.05x at viewport center, scales down to 0.94x at viewport edges
+        var scale = 1.05 - (normDist * 0.11);
+
+        var speed = parseFloat(el.getAttribute("data-parallax")) || 0.04;
         var delta = (r.top + r.height / 2) - vh / 2;
-        var isImg = el.tagName === "IMG";
-        // never shift past the headroom the 1.14 pre-scale provides
-        var limit = isImg ? Math.max(0, (r.height * 0.14) / 2 - 2) : 70;
-        var y = Math.max(-limit, Math.min(limit, -delta * speed));
-        el.style.transform = "translate3d(0," + y.toFixed(1) + "px,0)" + (isImg ? " scale(1.14)" : "");
+        var y = -delta * speed;
+
+        el.style.transform = "translate3d(0," + y.toFixed(1) + "px,0) scale(" + scale.toFixed(3) + ")";
       });
     });
   }
@@ -889,9 +895,18 @@
     document.addEventListener("DOMContentLoaded", function () {
       var bar = document.getElementById("mobileBar");
       var hero = document.getElementById("home");
+      var book = document.getElementById("book");
       if (!bar || !hero) return;
       onScroll(function () {
-        bar.classList.toggle("show", hero.getBoundingClientRect().bottom < 120);
+        var show = hero.getBoundingClientRect().bottom < 120;
+        if (book) {
+          var bRect = book.getBoundingClientRect();
+          // Hide the mobile bar when the booking section enters the viewport
+          if (bRect.top < (window.innerHeight || document.documentElement.clientHeight) && bRect.bottom > 0) {
+            show = false;
+          }
+        }
+        bar.classList.toggle("show", show);
       });
     });
   })();
