@@ -1908,6 +1908,15 @@ html.menu-open,
   border-radius: var(--r-pill);
 }
 
+.dr-designation {
+  font: 600 clamp(12.5px, 1.8vw, 14.5px)/1.5 var(--f-head);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin-top: 6px;
+  margin-bottom: 22px;
+}
+
 .physio__body p.bio {
   color: var(--muted);
   font-size: 15.5px;
