@@ -422,18 +422,52 @@
   var WHEEL_DAYS = 60;
   var OPEN_MIN = 6 * 60;        // 06:00 — first bookable start (6:00 AM)
   var CLOSE_MIN = 23 * 60 + 45; // 23:45 — last bookable start (11:45 PM)
-  var LEAD_MIN = 60;        // never offer a slot less than an hour away
+  var LEAD_MIN = 5;             // Minimum 5 minutes lead-time buffer
 
+  var wheelHasChosen = false;
   var wheelSel = { date: "", hour: 0, minute: 0, ampm: "AM" };
   var wheelCols = {};
 
-  /* Per-detent haptic tick. Android Chrome only — iOS Safari has never shipped
-     the Vibration API, so iPhones get the visual detent and nothing more.
-     Needs prior user activation, which opening the disclosure provides. */
+  /* Web Audio API mechanical detent tick synthesizer for non-haptic / desktop devices */
+  var audioCtx = null;
+  function playClickSound() {
+    try {
+      if (!audioCtx) {
+        var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.008);
+
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.008);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + 0.008);
+    } catch (e) { }
+  }
+
+  /* Per-detent feedback: Vibrate on supported mobile devices, synthesized audio click on desktop/non-haptic */
   var canVibrate = typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
-  function haptic() {
-    if (!canVibrate || reduced) return;
-    try { navigator.vibrate(8); } catch (e) { }
+  function haptic(ms) {
+    if (reduced) return;
+    if (canVibrate) {
+      var dur = typeof ms === "number" ? ms : 25;
+      try { navigator.vibrate(dur); } catch (e) { playClickSound(); }
+    } else {
+      playClickSound();
+    }
   }
 
   function pad2(n) { return String(n).padStart(2, "0"); }
@@ -622,12 +656,12 @@
     applyCol("minute", mins, wheelSel.minute, activeKey === "minute");
 
     var out = document.getElementById("whenValue");
-    if (out) out.textContent = wheelText() || "Tap to choose";
-    if (wheelText()) clearInvalid(document.getElementById("whenToggle"));
+    if (out) out.textContent = (wheelHasChosen && wheelText()) ? wheelText() : "Tap to choose date & time";
+    if (wheelHasChosen && wheelText()) clearInvalid(document.getElementById("whenToggle"));
     updatePreview();
   }
   function wheelText() {
-    if (!wheelSel.date || !wheelSel.hour) return "";
+    if (!wheelHasChosen || !wheelSel.date || !wheelSel.hour) return "";
     return fmtDate(wheelSel.date) + " at " + wheelSel.hour + ":" + pad2(wheelSel.minute) + " " + wheelSel.ampm + " IST";
   }
   /* Commits an explicit index. Keyboard uses this directly rather than moving
@@ -677,18 +711,21 @@
       wheelCols[k] = wrap.querySelector('[data-wheel="' + k + '"]');
     });
 
-    // Default to the earliest slot that is actually still bookable.
+    // Calculate earliest bookable slot for initial picker state
     var d0 = dateOptions();
     wheelSel.date = d0.length ? d0[0].value : isoOf(new Date());
     var h0 = hourOptions(wheelSel.date);
     if (h0.length) {
       wheelSel.hour = h0[0].h12;
       wheelSel.ampm = h0[0].ampm;
+      var m0 = minuteOptions(wheelSel.date, wheelSel.hour, wheelSel.ampm);
+      if (m0.length) wheelSel.minute = m0[0].value;
     } else {
       wheelSel.hour = 6;
       wheelSel.ampm = "AM";
+      wheelSel.minute = 0;
     }
-    wheelSel.minute = 0;
+    wheelHasChosen = false;
     syncWheel();
 
     ["date", "hour", "minute", "ampm"].forEach(function (k) {
@@ -698,6 +735,7 @@
       col._lastIdx = -1;
       // Debounced rather than `scrollend` — Safari still lacks that event.
       col.addEventListener("scroll", function () {
+        wheelHasChosen = true;
         update3DRotation(col);
         // Tick the highlight and haptics per detent as it passes the centre,
         // rather than waiting for the debounce — that's what makes it feel
@@ -734,6 +772,8 @@
         else if (e.key === "End") next = opts.length - 1;
         else return;
         e.preventDefault();
+        wheelHasChosen = true;
+        haptic(30);
         clearTimeout(t);              // don't let the scroll debounce re-derive
         commitIndex(k, next);
       });
@@ -779,6 +819,8 @@
     toggle.addEventListener("click", function () { setWhenOpen(!whenOpen); });
     if (done) {
       done.addEventListener("click", function () {
+        wheelHasChosen = true;
+        syncWheel();
         setWhenOpen(false);
         toggle.focus({ preventScroll: true });
       });
