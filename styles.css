@@ -2690,6 +2690,79 @@ fieldset.field legend {
   color: var(--error);
 }
 
+/* --- Glowing Lit-Up Red Border (Shining & Fading Outwards) --- */
+.field input[aria-invalid="true"],
+.field select[aria-invalid="true"],
+.field textarea[aria-invalid="true"],
+.when-toggle[aria-invalid="true"],
+.seg[aria-invalid="true"],
+input[type="checkbox"][aria-invalid="true"],
+.field input.is-invalid,
+.field select.is-invalid,
+.field textarea.is-invalid,
+.when-toggle.is-invalid,
+.seg.is-invalid,
+input[type="checkbox"].is-invalid {
+  border-color: #FF2E2E !important;
+  box-shadow: 
+    0 0 0 2px #FF2E2E,
+    0 0 12px rgba(255, 46, 46, 0.85),
+    0 0 24px rgba(255, 46, 46, 0.55),
+    0 0 36px rgba(255, 46, 46, 0.3),
+    inset 0 0 6px rgba(255, 46, 46, 0.3) !important;
+  animation: redGlowPulse 1.8s infinite alternate, shakeError 0.35s ease-in-out;
+}
+
+/* Checkbox specific: ensure the check button itself receives identical outline glow */
+input[type="checkbox"][aria-invalid="true"],
+input[type="checkbox"].is-invalid {
+  outline: 2px solid #FF2E2E !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+.field input[aria-invalid="true"]:focus,
+.field select[aria-invalid="true"]:focus,
+.field textarea[aria-invalid="true"]:focus,
+.when-toggle[aria-invalid="true"]:focus,
+.seg[aria-invalid="true"]:focus-within,
+.field input.is-invalid:focus,
+.field select.is-invalid:focus,
+.field textarea.is-invalid:focus,
+.when-toggle.is-invalid:focus {
+  border-color: #FF1111 !important;
+  box-shadow: 
+    0 0 0 2.5px #FF1111,
+    0 0 16px rgba(255, 17, 17, 0.9),
+    0 0 32px rgba(255, 17, 17, 0.6),
+    0 0 48px rgba(255, 17, 17, 0.35),
+    inset 0 0 8px rgba(255, 17, 17, 0.4) !important;
+}
+
+@keyframes redGlowPulse {
+  0% {
+    box-shadow: 
+      0 0 0 2px #FF2E2E,
+      0 0 10px rgba(255, 46, 46, 0.75),
+      0 0 20px rgba(255, 46, 46, 0.45),
+      inset 0 0 4px rgba(255, 46, 46, 0.2);
+  }
+  100% {
+    box-shadow: 
+      0 0 0 2.5px #FF5555,
+      0 0 16px rgba(255, 85, 85, 0.95),
+      0 0 32px rgba(255, 85, 85, 0.65),
+      0 0 48px rgba(255, 85, 85, 0.35),
+      inset 0 0 8px rgba(255, 85, 85, 0.4);
+  }
+}
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
 .form-note {
   text-align: center;
   font-size: 13.5px;

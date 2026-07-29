@@ -623,6 +623,7 @@
 
     var out = document.getElementById("whenValue");
     if (out) out.textContent = wheelText() || "Tap to choose";
+    if (wheelText()) clearInvalid(document.getElementById("whenToggle"));
     updatePreview();
   }
   function wheelText() {
@@ -859,13 +860,17 @@
   }
 
   function clearInvalid(el) {
-    if (el) { el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby"); }
+    if (el) {
+      el.removeAttribute("aria-invalid");
+      el.removeAttribute("aria-describedby");
+      el.classList.remove("is-invalid");
+    }
   }
   function markInvalid(el, statusId) {
     if (el) {
       el.setAttribute("aria-invalid", "true");
-      el.setAttribute("aria-describedby", statusId);
-      el.focus();
+      if (statusId) el.setAttribute("aria-describedby", statusId);
+      el.classList.add("is-invalid");
     }
   }
 
@@ -873,9 +878,26 @@
     var form = document.getElementById("apptForm");
     if (!form) return;
     var status = document.getElementById("apptStatus");
+    var genderSeg = document.getElementById("genderSeg");
+    var whenToggle = document.getElementById("whenToggle");
 
     ["input", "change"].forEach(function (ev) { form.addEventListener(ev, updatePreview); });
     updatePreview();
+
+    // Clear red error borders in real-time as missing details are filled in
+    form.querySelectorAll("input, select, textarea").forEach(function (input) {
+      ["input", "change"].forEach(function (ev) {
+        input.addEventListener(ev, function () {
+          if (input.name === "gender") {
+            clearInvalid(genderSeg);
+          } else if (input.name === "consent") {
+            if (input.checked) clearInvalid(consentEl);
+          } else if (input.value && input.value.trim() !== "") {
+            clearInvalid(input);
+          }
+        });
+      });
+    });
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -888,32 +910,79 @@
         concernEl = form.elements["concern"],
         issueEl = form.elements["issue"],
         consentEl = form.elements["consent"];
-      [nameEl, ageEl, emailEl, concernEl, issueEl, consentEl].forEach(clearInvalid);
+
+      var allCheckable = [nameEl, ageEl, emailEl, concernEl, issueEl, consentEl, genderSeg, whenToggle];
+      allCheckable.forEach(clearInvalid);
 
       var name = (nameEl.value || "").trim();
       var email = (emailEl.value || "").trim();
       var age = parseInt(ageEl.value, 10);
       var gender = form.querySelector('input[name="gender"]:checked');
-      var concern = concernEl.value;
+      var concern = concernEl ? concernEl.value : "";
       var issue = (issueEl.value || "").trim();
 
-      if (!name) return fail("Please enter your name.", nameEl);
-      if (!age || age < 1 || age > 120) return fail("Please enter a valid age.", ageEl);
-      // Email is optional — only validated if the patient chose to give one.
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail("Please enter a valid email, or leave it blank.", emailEl);
+      var invalidElements = [];
+      var firstFailMsg = "";
+
+      if (!name) {
+        markInvalid(nameEl, "apptStatus");
+        invalidElements.push(nameEl);
+        if (!firstFailMsg) firstFailMsg = "Please enter your name.";
+      }
+      if (!age || age < 1 || age > 120) {
+        markInvalid(ageEl, "apptStatus");
+        invalidElements.push(ageEl);
+        if (!firstFailMsg) firstFailMsg = "Please enter a valid age.";
+      }
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        markInvalid(emailEl, "apptStatus");
+        invalidElements.push(emailEl);
+        if (!firstFailMsg) firstFailMsg = "Please enter a valid email, or leave it blank.";
+      }
       if (!gender) {
-        fail("Please select your gender.");
-        var g0 = form.querySelector('input[name="gender"]');
-        if (g0) g0.focus();
+        markInvalid(genderSeg, "apptStatus");
+        invalidElements.push(genderSeg);
+        if (!firstFailMsg) firstFailMsg = "Please select your gender.";
+      }
+      if (!concern) {
+        markInvalid(concernEl, "apptStatus");
+        invalidElements.push(concernEl);
+        if (!firstFailMsg) firstFailMsg = "Please choose your primary concern.";
+      }
+      if (!wheelText()) {
+        markInvalid(whenToggle, "apptStatus");
+        invalidElements.push(whenToggle);
+        if (!firstFailMsg) firstFailMsg = "Please pick a preferred date and time.";
+      }
+      if (!issue) {
+        markInvalid(issueEl, "apptStatus");
+        invalidElements.push(issueEl);
+        if (!firstFailMsg) firstFailMsg = "Please describe what's troubling you.";
+      }
+      if (!consentEl.checked) {
+        markInvalid(consentEl, "apptStatus");
+        invalidElements.push(consentEl);
+        if (!firstFailMsg) firstFailMsg = "Please accept the privacy terms to continue.";
+      }
+
+      if (invalidElements.length > 0) {
+        status.dataset.state = "error";
+        status.textContent = invalidElements.length === 1
+          ? firstFailMsg
+          : "Please fill in the required details highlighted in red.";
+
+        var firstEl = invalidElements[0];
+        if (firstEl === whenToggle && !whenOpen) {
+          setWhenOpen(true);
+        }
+        if (firstEl === genderSeg) {
+          var g0 = form.querySelector('input[name="gender"]');
+          if (g0) g0.focus();
+        } else if (firstEl.focus) {
+          firstEl.focus();
+        }
         return;
       }
-      if (!concern) return fail("Please choose your primary concern.", concernEl);
-      if (!wheelText()) {
-        setWhenOpen(true);            // don't point at a collapsed panel
-        return fail("Please pick a preferred date and time.");
-      }
-      if (!issue) return fail("Please describe the issue briefly.", issueEl);
-      if (!consentEl.checked) return fail("Please accept the privacy terms to continue.", consentEl);
 
       // Honeypot: humans never see this field. Accept quietly, send nothing.
       if (fieldVal(form, "website")) {
@@ -922,10 +991,6 @@
         return;
       }
 
-      // Record first so an abandoned or blocked handoff still leaves a trace,
-      // then hand off to WhatsApp synchronously while the gesture is live.
-      // No phone field: the booking arrives as a WhatsApp message, so the
-      // sender's number is already known the moment it lands.
       record({
         name: name, age: age, gender: gender.value, email: email,
         date: wheelSel.date,
@@ -936,12 +1001,6 @@
       openWhatsApp(apptMessage());
       status.dataset.state = "ok";
       status.textContent = "Opening WhatsApp — press send to confirm. ✓";
-
-      function fail(msg, el) {
-        status.dataset.state = "error";
-        status.textContent = msg;
-        if (el) markInvalid(el, "apptStatus");
-      }
     });
   }
 

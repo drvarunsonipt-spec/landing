@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,7 +8,7 @@
     document.documentElement.classList.add('js');
     (function () {
       var t = null;
-      try { t = localStorage.getItem('theme'); } catch (e) {}
+      try { t = localStorage.getItem('theme'); } catch (e) { }
       if (t !== 'light' && t !== 'dark') t = 'dark';
       document.documentElement.setAttribute('data-theme', t);
     })();
@@ -20,169 +21,225 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=13" />
   <style>
-    .rv-wrap { max-width: 560px; margin-inline: auto; }
-    .rv-wrap h1 { font: 800 clamp(28px, 5vw, 40px)/1.15 var(--f-head); color: var(--heading); margin-bottom: 10px; }
-    .rv-wrap .lead { margin-bottom: 28px; }
+    .rv-wrap {
+      max-width: 560px;
+      margin-inline: auto;
+    }
+
+    .rv-wrap h1 {
+      font: 800 clamp(28px, 5vw, 40px)/1.15 var(--f-head);
+      color: var(--heading);
+      margin-bottom: 10px;
+    }
+
+    .rv-wrap .lead {
+      margin-bottom: 28px;
+    }
+
     .rv-card {
-      background: var(--glass-card); border: 1px solid var(--glass-border);
-      border-radius: var(--r-lg); padding: clamp(24px, 4vw, 36px);
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--r-lg);
+      padding: clamp(24px, 4vw, 36px);
       box-shadow: inset 0 1px 0 var(--glass-hi);
     }
-    .stars-in { display: flex; gap: 6px; }
+
+    .stars-in {
+      display: flex;
+      gap: 6px;
+    }
+
     .stars-in button {
-      width: 46px; height: 46px; border-radius: 12px; cursor: pointer;
-      border: 1px solid var(--border-strong); background: var(--input-bg);
-      font-size: 22px; line-height: 1; color: var(--muted);
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 1px solid var(--border-strong);
+      background: var(--input-bg);
+      font-size: 22px;
+      line-height: 1;
+      color: var(--muted);
       transition: background .18s, color .18s, border-color .18s;
     }
-    .stars-in button.on { background: var(--teal); border-color: var(--teal); color: #fff; }
-    .rv-msg { margin-top: 16px; text-align: center; font: 600 15px/1.5 var(--f-body); color: var(--accent-text); min-height: 24px; }
-    .rv-msg[data-state="error"] { color: var(--error); }
-    .rv-done { text-align: center; }
-    .rv-done .tick { font-size: 46px; line-height: 1; color: var(--h-accent); }
+
+    .stars-in button.on {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+    }
+
+    .rv-msg {
+      margin-top: 16px;
+      text-align: center;
+      font: 600 15px/1.5 var(--f-body);
+      color: var(--accent-text);
+      min-height: 24px;
+    }
+
+    .rv-msg[data-state="error"] {
+      color: var(--error);
+    }
+
+    .rv-done {
+      text-align: center;
+    }
+
+    .rv-done .tick {
+      font-size: 46px;
+      line-height: 1;
+      color: var(--h-accent);
+    }
   </style>
 </head>
+
 <body>
-<main id="main">
-  <section class="section">
-    <div class="container rv-wrap">
-      <h1>How did it go?</h1>
-      <p class="lead">Your feedback helps other people decide whether online physiotherapy is right for them. It is published only after Dr. Soni reviews it.</p>
+  <main id="main">
+    <section class="section">
+      <div class="container rv-wrap">
+        <h1>How did it go?</h1>
+        <p class="lead">Your feedback helps other people decide whether online physiotherapy is right for them. It is
+          published only after Dr. Soni reviews it.</p>
 
-      <div class="rv-card" id="rvCard">
-        <form id="rvForm" novalidate>
-          <div class="hp" aria-hidden="true">
-            <label for="r-website">Leave this field empty</label>
-            <input id="r-website" name="website" type="text" tabindex="-1" autocomplete="off" />
-          </div>
-
-          <fieldset class="field">
-            <legend>Your rating <span class="req">*</span></legend>
-            <div class="stars-in" id="starsIn" role="radiogroup" aria-label="Rating out of five"></div>
-          </fieldset>
-
-          <div class="two-col">
-            <div class="field">
-              <label for="r-name">Your Name <span class="req">*</span></label>
-              <input id="r-name" name="name" type="text" autocomplete="name" placeholder="First name is fine" required />
+        <div class="rv-card" id="rvCard">
+          <form id="rvForm" novalidate>
+            <div class="hp" aria-hidden="true">
+              <label for="r-website">Leave this field empty</label>
+              <input id="r-website" name="website" type="text" tabindex="-1" autocomplete="off" />
             </div>
-            <div class="field">
-              <label for="r-city">City</label>
-              <input id="r-city" name="city" type="text" placeholder="e.g. Jaipur" />
+
+            <fieldset class="field">
+              <legend>Your rating <span class="req">*</span></legend>
+              <div class="stars-in" id="starsIn" role="radiogroup" aria-label="Rating out of five"></div>
+            </fieldset>
+
+            <div class="two-col">
+              <div class="field">
+                <label for="r-name">Your Name <span class="req">*</span></label>
+                <input id="r-name" name="name" type="text" autocomplete="name" placeholder="First name is fine"
+                  required />
+              </div>
+              <div class="field">
+                <label for="r-city">City</label>
+                <input id="r-city" name="city" type="text" placeholder="e.g. Jaipur" />
+              </div>
             </div>
-          </div>
 
-          <div class="field">
-            <label for="r-text">Your experience <span class="req">*</span></label>
-            <textarea id="r-text" name="text" placeholder="What did you come in with, and how did the consultation help?" required></textarea>
-            <small class="field__hint">Your name and city will be shown publicly if published. Please don't include private medical details you'd rather keep off the site.</small>
-          </div>
+            <div class="field">
+              <label for="r-text">Your experience <span class="req">*</span></label>
+              <textarea id="r-text" name="text"
+                placeholder="What did you come in with, and how did the consultation help?" required></textarea>
+              <small class="field__hint">Your name and city will be shown publicly if published. Please don't include
+                private medical details you'd rather keep off the site.</small>
+            </div>
 
-          <button class="btn btn--wa btn--lg btn--block" type="submit" id="rvSubmit">Submit review</button>
-          <p class="rv-msg" id="rvMsg" role="status" aria-live="polite"></p>
-        </form>
+            <button class="btn btn--wa btn--lg btn--block" type="submit" id="rvSubmit">Submit review</button>
+            <p class="rv-msg" id="rvMsg" role="status" aria-live="polite"></p>
+          </form>
+        </div>
       </div>
-    </div>
-  </section>
-</main>
+    </section>
+  </main>
 
-<script>
-(function () {
-  "use strict";
+  <script>
+    (function () {
+      "use strict";
 
-  /* Must match the API constant in script.js. */
-  var API = "";
+      /* Must match the API constant in script.js. */
+      var API = "";
 
-  var token = (location.search.match(/[?&]t=([A-Za-z0-9]+)/) || [])[1] || "";
-  var rating = 0;
-  var form = document.getElementById("rvForm");
-  var msg = document.getElementById("rvMsg");
-  var card = document.getElementById("rvCard");
+      var token = (location.search.match(/[?&]t=([A-Za-z0-9]+)/) || [])[1] || "";
+      var rating = 0;
+      var form = document.getElementById("rvForm");
+      var msg = document.getElementById("rvMsg");
+      var card = document.getElementById("rvCard");
 
-  function fail(t) { msg.dataset.state = "error"; msg.textContent = t; }
+      function fail(t) { msg.dataset.state = "error"; msg.textContent = t; }
 
-  if (!token) {
-    card.innerHTML = '<p class="lead" style="margin:0">This review link is missing its code. ' +
-      'Please use the exact link sent to you after your consultation.</p>';
-    return;
-  }
+      if (!token) {
+        card.innerHTML = '<p class="lead" style="margin:0">This review link is missing its code. ' +
+          'Please use the exact link sent to you after your consultation.</p>';
+        return;
+      }
 
-  // Star picker — real buttons so it stays keyboard-operable.
-  var wrap = document.getElementById("starsIn");
-  for (var i = 1; i <= 5; i++) {
-    (function (v) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.textContent = "★";
-      b.setAttribute("role", "radio");
-      b.setAttribute("aria-checked", "false");
-      b.setAttribute("aria-label", v + " star" + (v > 1 ? "s" : ""));
-      b.addEventListener("click", function () {
-        rating = v;
-        Array.prototype.forEach.call(wrap.children, function (c, idx) {
-          var on = idx < v;
-          c.classList.toggle("on", on);
-          c.setAttribute("aria-checked", idx === v - 1 ? "true" : "false");
-        });
+      // Star picker — real buttons so it stays keyboard-operable.
+      var wrap = document.getElementById("starsIn");
+      for (var i = 1; i <= 5; i++) {
+        (function (v) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.textContent = "★";
+          b.setAttribute("role", "radio");
+          b.setAttribute("aria-checked", "false");
+          b.setAttribute("aria-label", v + " star" + (v > 1 ? "s" : ""));
+          b.addEventListener("click", function () {
+            rating = v;
+            Array.prototype.forEach.call(wrap.children, function (c, idx) {
+              var on = idx < v;
+              c.classList.toggle("on", on);
+              c.setAttribute("aria-checked", idx === v - 1 ? "true" : "false");
+            });
+          });
+          wrap.appendChild(b);
+        })(i);
+      }
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        msg.dataset.state = "";
+        msg.textContent = "";
+
+        var name = (form.elements["name"].value || "").trim();
+        var city = (form.elements["city"].value || "").trim();
+        var text = (form.elements["text"].value || "").trim();
+
+        if (!rating) return fail("Please choose a rating.");
+        if (!name) return fail("Please enter your name.");
+        if (text.length < 10) return fail("Please write a little more about your experience.");
+        if (!API) return fail("Reviews aren't accepting submissions yet. Please try the link again later.");
+
+        var btn = document.getElementById("rvSubmit");
+        btn.disabled = true;
+        btn.textContent = "Sending…";
+
+        fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "review", token: token, rating: rating,
+            name: name, city: city, text: text,
+            website: (form.elements["website"].value || "")
+          })
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (d && d.ok) {
+              card.innerHTML = '<div class="rv-done"><div class="tick">✓</div>' +
+                '<h2 style="margin:14px 0 8px">Thank you</h2>' +
+                '<p class="lead" style="margin:0">Your review has been sent to Dr. Soni. ' +
+                'It will appear on the site once approved.</p></div>';
+              return;
+            }
+            btn.disabled = false;
+            btn.textContent = "Submit review";
+            var e2 = d && d.error;
+            fail(e2 === "already_used" ? "A review has already been submitted with this link."
+              : e2 === "bad_token" ? "This review link isn't recognised. Please check the link sent to you."
+                : e2 === "too_short" ? "Please write a little more about your experience."
+                  : "Something went wrong. Please try again in a moment.");
+          })
+          .catch(function () {
+            btn.disabled = false;
+            btn.textContent = "Submit review";
+            fail("Couldn't reach the server. Please check your connection and try again.");
+          });
       });
-      wrap.appendChild(b);
-    })(i);
-  }
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    msg.dataset.state = "";
-    msg.textContent = "";
-
-    var name = (form.elements["name"].value || "").trim();
-    var city = (form.elements["city"].value || "").trim();
-    var text = (form.elements["text"].value || "").trim();
-
-    if (!rating) return fail("Please choose a rating.");
-    if (!name) return fail("Please enter your name.");
-    if (text.length < 10) return fail("Please write a little more about your experience.");
-    if (!API) return fail("Reviews aren't accepting submissions yet. Please try the link again later.");
-
-    var btn = document.getElementById("rvSubmit");
-    btn.disabled = true;
-    btn.textContent = "Sending…";
-
-    fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        action: "review", token: token, rating: rating,
-        name: name, city: city, text: text,
-        website: (form.elements["website"].value || "")
-      })
-    })
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        if (d && d.ok) {
-          card.innerHTML = '<div class="rv-done"><div class="tick">✓</div>' +
-            '<h2 style="margin:14px 0 8px">Thank you</h2>' +
-            '<p class="lead" style="margin:0">Your review has been sent to Dr. Soni. ' +
-            'It will appear on the site once approved.</p></div>';
-          return;
-        }
-        btn.disabled = false;
-        btn.textContent = "Submit review";
-        var e2 = d && d.error;
-        fail(e2 === "already_used" ? "A review has already been submitted with this link."
-           : e2 === "bad_token"    ? "This review link isn't recognised. Please check the link sent to you."
-           : e2 === "too_short"    ? "Please write a little more about your experience."
-           : "Something went wrong. Please try again in a moment.");
-      })
-      .catch(function () {
-        btn.disabled = false;
-        btn.textContent = "Submit review";
-        fail("Couldn't reach the server. Please check your connection and try again.");
-      });
-  });
-})();
-</script>
+    })();
+  </script>
 </body>
+
 </html>
