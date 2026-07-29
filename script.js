@@ -679,6 +679,10 @@
     applyCol("hour", hours, wantH24, activeKey === "hour");
 
     var mins = minuteOptions(iso, wheelSel.hour, wheelSel.ampm);
+    var matchedMin = mins.find(function (o) { return o.value === wheelSel.minute; });
+    if (!matchedMin && mins.length) {
+      wheelSel.minute = mins[0].value;
+    }
     applyCol("minute", mins, wheelSel.minute, activeKey === "minute");
 
     var out = document.getElementById("whenValue");
@@ -702,9 +706,11 @@
 
     if (key === "date") {
       wheelSel.date = selOpt.value;
+      wheelSel.minute = 0;
     } else if (key === "hour") {
       wheelSel.hour = selOpt.h12;
       wheelSel.ampm = selOpt.ampm;
+      wheelSel.minute = 0;
     } else if (key === "ampm") {
       var newAmPm = selOpt.value;
       var targetH24 = to24(wheelSel.hour, newAmPm);
@@ -718,6 +724,7 @@
       if (match) {
         wheelSel.hour = match.h12;
       }
+      wheelSel.minute = 0;
     } else if (key === "minute") {
       wheelSel.minute = selOpt.value;
     }
