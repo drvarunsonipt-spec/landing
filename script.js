@@ -458,14 +458,40 @@
     } catch (e) { }
   }
 
-  /* Per-detent feedback: Vibrate on supported mobile devices, synthesized audio click on desktop/non-haptic */
+  /* Universal Haptic & Audio Feedback System (Android, iOS iPhone/iPad, Desktop) */
   var canVibrate = typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
+  var isIOS = typeof navigator !== "undefined" && (/iPad|iPhone|iPod/.test(navigator.userAgent || "") || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
+
+  function unlockAudio() {
+    try {
+      if (!audioCtx) {
+        var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) audioCtx = new AudioContextClass();
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+    } catch (e) { }
+  }
+
+  // Pre-unlock Web Audio on first user interaction for iOS Safari compliance
+  if (typeof window !== "undefined") {
+    ["touchstart", "touchend", "mousedown", "click"].forEach(function (evt) {
+      window.addEventListener(evt, unlockAudio, { once: true, passive: true });
+    });
+  }
+
   function haptic(ms) {
     if (reduced) return;
+    var dur = typeof ms === "number" ? ms : 25;
+    
+    // Physical motor vibration for Android and supported WebKit browsers
     if (canVibrate) {
-      var dur = typeof ms === "number" ? ms : 25;
-      try { navigator.vibrate(dur); } catch (e) { playClickSound(); }
-    } else {
+      try { navigator.vibrate(dur); } catch (e) { }
+    }
+    
+    // Tactile audio click tick for iOS Safari (where Apple restricts raw motor API) & Desktop
+    if (isIOS || !canVibrate) {
       playClickSound();
     }
   }
